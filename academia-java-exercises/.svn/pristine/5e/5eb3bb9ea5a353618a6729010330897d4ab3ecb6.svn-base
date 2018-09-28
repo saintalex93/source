@@ -1,0 +1,7 @@
+package br.com.neolog.academy.exercises.exercise3;
+
+public interface IntersectionFinder {
+
+	boolean hasIntersection(LineSegment segment1, LineSegment segment2);
+
+}

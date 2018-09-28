@@ -1,0 +1,8 @@
+package br.com.neolog.academy.exercises.exercise3;
+
+public interface Point2D {
+
+	int getX();
+
+	int getY();
+}

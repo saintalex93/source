@@ -1,0 +1,90 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+	<changeSet id="1" author="alex.santos">
+		<createTable tableName="product">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" />
+			</column>
+
+			<column name="cod" type="int" />
+
+			<column name="name" type="varchar(100)" />
+
+			<column name="price" type="double" />
+
+			<column name="description" type="varchar(100)" />
+
+			<column name="weight" type="double" />
+
+			<column name="category" type="int" />
+
+		</createTable>
+
+
+		<createTable tableName="category">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" />
+			</column>
+
+			<column name="cod" type="int" />
+
+			<column name="name" type="varchar(100)" />
+
+		</createTable>
+
+
+		<createTable tableName="stock">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="quantity" type="int" />
+			<column name="product" type="int">
+			</column>
+
+		</createTable>
+
+
+
+		<addForeignKeyConstraint baseColumnNames="product"
+			baseTableName="stock" constraintName="fk_stock_product"
+			referencedColumnNames="id" referencedTableName="product" />
+
+		<addForeignKeyConstraint baseColumnNames="category"
+			baseTableName="product" constraintName="fk_product_category"
+			referencedColumnNames="id" referencedTableName="category" />
+
+
+
+	</changeSet>
+</databaseChangeLog>
+
+
+
+
+
+
+
+
+
+
+
+<!-- <changeSet author="liquibase-docs" id="addForeignKeyConstraint-example"> 
+	<addForeignKeyConstraint baseColumnNames="person_id" baseTableName="address" 
+	constraintName="fk_address_person" deferrable="true" initiallyDeferred="true" 
+	onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="person"/> 
+	</changeSet> -->
+
+<!-- <insert tableName=""> <column></column> </insert> -->
+
+
+
+
+
+
+
+
+
+
+

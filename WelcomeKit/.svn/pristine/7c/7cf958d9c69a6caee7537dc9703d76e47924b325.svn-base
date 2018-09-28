@@ -1,0 +1,53 @@
+package br.com.neolog.ecommerce.productcategory;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "ProductCategory")
+@SequenceGenerator(name = "categoryGenerator", sequenceName = "categorySequence", initialValue = 1, allocationSize = 1)
+public class ProductCategory {
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO, generator = "categorySequence")
+	@Column(name = "id_category", updatable = false, nullable = false, unique = true)
+	private Integer id;
+
+	@Column(name = "cod_category", nullable = false, updatable = false, unique = true)
+	private Integer cod;
+
+	@Column(name = "name", nullable = false)
+	private String name;
+
+	public ProductCategory() {
+
+	}
+
+	public ProductCategory(final Integer id, final Integer cod, final String name) {
+		this.id = id;
+		this.cod = cod;
+		this.name = name;
+	}
+
+	public ProductCategory(final Integer cod, final String name) {
+		this.cod = cod;
+		this.name = name;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public int getCod() {
+		return cod;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+}

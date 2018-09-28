@@ -1,0 +1,29 @@
+package br.com.neolog.academy.exercises.exercise1;
+
+import java.util.NoSuchElementException;
+
+public interface MeanCalculator {
+
+	/**
+	 * Calcula a média utilizando divisão inteira entre os valores especificados.
+	 * <p>
+	 * Exemplos:
+	 * <ul>
+	 * <li>calculateMean(2) -> 2</li>
+	 * <li>calculateMean(2,3) -> 2</li>
+	 * <li>calculateMean(1,2,3) -> 2</li>
+	 * <li>calculateMean(2147483647, 2147483647) -> 2147483647</li>
+	 * <li>calculateMean() -> lança {@link NoSuchElementException}</li>
+	 * <li>calculateMean(null) -> lança {@link NullPointerException}</li>
+	 * </ul>
+	 * 
+	 * @param values
+	 *            valores cuja média será calculada
+	 * @return média inteira
+	 * @throws NullPointerException
+	 *             caso values seja <code>null</code>
+	 * @throws NoSuchElementException
+	 *             caso nenhum valor seja especificado
+	 */
+	int calculateMean(int... values);
+}

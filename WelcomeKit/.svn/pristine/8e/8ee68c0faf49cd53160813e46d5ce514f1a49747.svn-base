@@ -1,0 +1,30 @@
+package br.com.neolog.ecommerce.product;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+
+import org.apache.http.HttpStatus;
+import org.junit.Test;
+
+import io.restassured.http.ContentType;
+import net.minidev.json.JSONObject;
+
+public class ProductIntegrationTest extends AbstractIntegrationTest {
+
+	@Test
+	public void shouldReturnHello() {
+		given().contentType(ContentType.JSON).when().get("product/blah").then().log().everything().assertThat()
+				.statusCode(HttpStatus.SC_OK).and().body(equalTo("Hello"));
+	}
+
+	@Test
+	public void shouldReturnWorldPost() {
+		final JSONObject requestParams = new JSONObject();
+		requestParams.put("value", "Word");
+
+		given().contentType(ContentType.JSON).when().post("product/setName").then().log().everything().assertThat()
+				.statusCode(HttpStatus.SC_OK).and().body(equalTo("World"));
+
+		// request.body(requestParams.toString())
+	}
+}

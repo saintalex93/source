@@ -1,0 +1,8 @@
+package br.com.neolog.academy.exercises.exercise3;
+
+public interface LineSegment {
+
+	Point2D getStart();
+
+	Point2D getEnd();
+}
