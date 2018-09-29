@@ -3,6 +3,7 @@ package br.com.neolog.ecommerce.product;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,9 @@ import br.com.neolog.ecommerce.productcategory.Category;
 @RestController
 @RequestMapping("product")
 public class ProductController {
+
+	@Autowired
+	ProductService service;
 
 	@PostMapping(value = "setName")
 	public String getProduct(@RequestBody final Product prod) {
@@ -79,6 +83,13 @@ public class ProductController {
 		products.add(product3);
 
 		return products;
+
+	}
+
+	@GetMapping(value = "search/category/{cod}")
+	public Product getProductByCode(@PathVariable("cod") final int cod) {
+
+		return service.getProductByCode(cod);
 
 	}
 

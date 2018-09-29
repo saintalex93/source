@@ -45,7 +45,7 @@ public class Product {
 
 	@NotNull
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(foreignKey = @ForeignKey(name = "fk_stock_product"))
+	@JoinColumn(name = "category", foreignKey = @ForeignKey(name = "fk_stock_product"))
 	private Category category;
 
 	public Product() {

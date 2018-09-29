@@ -7,33 +7,21 @@
 			<column name="id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" />
 			</column>
-
 			<column name="cod" type="int" />
-
 			<column name="name" type="varchar(100)" />
-
 			<column name="price" type="double" />
-
 			<column name="description" type="varchar(100)" />
-
 			<column name="weight" type="double" />
-
 			<column name="category" type="int" />
-
 		</createTable>
-
 
 		<createTable tableName="category">
 			<column name="id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" />
 			</column>
-
 			<column name="cod" type="int" />
-
 			<column name="name" type="varchar(100)" />
-
 		</createTable>
-
 
 		<createTable tableName="stock">
 			<column name="id" type="int" autoIncrement="true">
@@ -42,10 +30,7 @@
 			<column name="quantity" type="int" />
 			<column name="product" type="int">
 			</column>
-
 		</createTable>
-
-
 
 		<addForeignKeyConstraint baseColumnNames="product"
 			baseTableName="stock" constraintName="fk_stock_product"
@@ -55,6 +40,37 @@
 			baseTableName="product" constraintName="fk_product_category"
 			referencedColumnNames="id" referencedTableName="category" />
 
+		<insert tableName="category">
+			<column name="id" value="1" />
+			<column name="cod" value="001" />
+			<column name="name" value="Eletrônicos" />
+		</insert>
+
+		<insert tableName="category">
+			<column name="id" value="2" />
+			<column name="cod" value="002" />
+			<column name="name" value="Tecnológicos" />
+		</insert>
+
+		<insert tableName="product">
+			<column name="id" value="1" />
+			<column name="cod" value="001" />
+			<column name="name" value="TV" />
+			<column name="price" value="2500.00" />
+			<column name="description" value="PlasmaTron" />
+			<column name="weight" value="1.500" />
+			<column name="category" value="1" />
+		</insert>
+
+		<insert tableName="product">
+			<column name="id" value="2" />
+			<column name="cod" value="002" />
+			<column name="name" value="Windão Original" />
+			<column name="price" value="2500.00" />
+			<column name="description" value="S.O" />
+			<column name="weight" value="5000.00" />
+			<column name="category" value="2" />
+		</insert>
 
 
 	</changeSet>
