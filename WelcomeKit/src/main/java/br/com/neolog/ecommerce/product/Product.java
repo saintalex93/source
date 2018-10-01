@@ -1,5 +1,6 @@
 package br.com.neolog.ecommerce.product;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -9,22 +10,21 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import br.com.neolog.ecommerce.productcategory.Category;
+import br.com.neolog.ecommerce.category.Category;
 
 @Entity
 @Table(name = "product")
-@SequenceGenerator(name = "productSequence", sequenceName = "productGenerator", initialValue = 1, allocationSize = 1)
 public class Product {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "productGenerator")
-	@Column(nullable = false, updatable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(updatable = false)
 	private Integer id;
 
+	@Basic(optional = false)
 	@NotNull
 	@Column(unique = true, nullable = false)
 	private Integer cod;
@@ -74,11 +74,11 @@ public class Product {
 
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public int getCod() {
+	public Integer getCod() {
 		return cod;
 	}
 

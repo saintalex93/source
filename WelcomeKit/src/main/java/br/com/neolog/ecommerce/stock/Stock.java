@@ -9,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -17,11 +16,11 @@ import br.com.neolog.ecommerce.product.Product;
 
 @Entity
 @Table(name = "stock")
-@SequenceGenerator(name = "Stock_Sequence", sequenceName = "Stock_Generator", allocationSize = 1, initialValue = 1)
-
+// @SequenceGenerator(name = "Stock_Sequence", sequenceName = "Stock_Generator",
+// allocationSize = 1, initialValue = 1)
 public class Stock {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "productGenerator")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(nullable = false, updatable = false)
 	private Integer id;
 
@@ -30,7 +29,7 @@ public class Stock {
 
 	@NotNull
 	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(foreignKey = @ForeignKey(name = "fk_stock_product"))
+	@JoinColumn(name = "product", foreignKey = @ForeignKey(name = "fk_stock_product"))
 	private Product product;
 
 	public Stock() {
@@ -47,12 +46,16 @@ public class Stock {
 		this.product = stock;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
 	public int getQuantity() {
 		return quantity;
+	}
+
+	public Product getProduct() {
+		return product;
 	}
 
 }

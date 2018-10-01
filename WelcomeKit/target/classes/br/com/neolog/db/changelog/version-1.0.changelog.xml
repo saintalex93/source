@@ -7,7 +7,9 @@
 			<column name="id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" />
 			</column>
-			<column name="cod" type="int" />
+			<column name="cod" type="int">
+				<constraints unique="true" />
+			</column>
 			<column name="name" type="varchar(100)" />
 			<column name="price" type="double" />
 			<column name="description" type="varchar(100)" />
@@ -19,7 +21,9 @@
 			<column name="id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" />
 			</column>
-			<column name="cod" type="int" />
+			<column name="cod" type="int">
+				<constraints unique="true" />
+			</column> 
 			<column name="name" type="varchar(100)" />
 		</createTable>
 
@@ -39,7 +43,7 @@
 		<addForeignKeyConstraint baseColumnNames="category"
 			baseTableName="product" constraintName="fk_product_category"
 			referencedColumnNames="id" referencedTableName="category" />
-
+			
 		<insert tableName="category">
 			<column name="id" value="1" />
 			<column name="cod" value="001" />
@@ -71,7 +75,17 @@
 			<column name="weight" value="5000.00" />
 			<column name="category" value="2" />
 		</insert>
+		
+		<insert tableName="stock">
+			<column name="quantity" value="20" />
+			<column name="product" value="1" />
+		</insert>
 
+
+		<insert tableName="stock">
+			<column name="quantity" value="500" />
+			<column name="product" value="2" />
+		</insert>
 
 	</changeSet>
 </databaseChangeLog>

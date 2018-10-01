@@ -1,23 +1,20 @@
-package br.com.neolog.ecommerce.productcategory;
+package br.com.neolog.ecommerce.category;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "category")
-@SequenceGenerator(name = "categoryGenerator", sequenceName = "categorySequence", initialValue = 1, allocationSize = 1)
 public class Category {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO, generator = "categorySequence")
-	@Column(updatable = false, nullable = false, unique = true)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column(nullable = false, updatable = false, unique = true)
+	@Column(nullable = false, unique = true)
 	private Integer cod;
 
 	@Column(nullable = false)
@@ -38,11 +35,11 @@ public class Category {
 		this.name = name;
 	}
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public int getCod() {
+	public Integer getCod() {
 		return cod;
 	}
 
