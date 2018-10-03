@@ -92,7 +92,7 @@
 	<script>
 		$.ajax({
 			type: 'GET',
-			url: 'http://localhost:8080/product/search/id/'+getSearchParams("product"),                 
+			url: 'http://localhost:8080/product/search/id/'+getSearchParams("product"),  
 			success: function(data) {   
 				console.log(data); 
 
@@ -107,7 +107,7 @@
 
 		$.ajax({
 			type: 'GET',
-			url: 'http://localhost:8080/category/search/all',                 
+			url: 'http://localhost:8080/category/search/all',  
 			success: function(data) {   
 
 				for (var i = 0; i<data.length; i++) {
@@ -124,7 +124,7 @@
 			
 			$.ajax({
 				type: 'GET',
-				url: 'http://localhost:8080/category/search/'+Category.value,                 
+				url: 'http://localhost:8080/category/search/'+Category.value,  
 				success: function(data) {   
 					$("#codeCat").val(data.cod);
 					$("#idCat").val(data.id);
@@ -134,7 +134,6 @@
 
 		$("#enviar").click(function(event) {
 
-			alert($("#price").val());
 
 			var product = {
 
@@ -152,12 +151,14 @@
 
 			};
 
-			console.log(product);
+			var productJson = '{"cod": 1231412, "name": "Celular", "price":1000, "description":"teste", "weight":1.00, "category":{"id":1, "cod":1, "name":"Eletrônicos" }}';
+
+			console.log(productJson);
 
 			$.ajax({
 				type: 'POST',
 				url: 'http://localhost:8080/product/save',  
-				data: product,               
+				data: productJson,        
 				dataType: "json",
 				contentType: 'application/json',
 				success: function(data) {   
