@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-Br">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Neolog</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+
+</head>
+
+<body>
+
+
+	<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+
+		<div class="container">
+			<a href="#" class="navbar-brand text-white" >Ecommerce</a>
+
+			<button class="navbar-toggler" data-toggle="collapse" data-target= "#navbarSupportedContent">
+				Menu
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li><a href="" class="nav-link">Produtos</a></li>
+					<li><a href="" class="nav-link">Categorias</a></li>
+					<li><a href="" class="nav-link">Estoque</a></li>
+				</ul>
+			</div>
+
+		</div>
+	</nav>
+
+
+	<main>
+		<section class="jumbotron">
+			<div class="container text-white">
+				<h1>Ecommerce</h1>
+				<p>Welcome Kit</p>
+				<form class="input-group flex-row-reverse">
+					<input type="search" class="form-control" placeholder="Procure por Produtos">
+					<span class="input-group-btn">
+						<button class="btn btn-danger mr-1">Pesquisar</button>
+					</span>
+				</form>
+			</div>
+
+		</section>
+
+
+		<section class="container-fluid">
+			<h2 class="text-center">Produtos Cadastrados</h2>
+			<div class="row text-center bg-light pt-4" id="products">
+			</div>
+		</section>
+
+    <section class="container-fluid py-2">
+      <h2 class="text-center">Categorias Cadastradas</h2>
+      <div class="row text-center bg-light pt-4" id="categories">
+      </div>
+    </section>
+
+
+
+  </main>
+
+  <script src="js/jquery.js"></script>
+  <script src="js/bootstrap.js"></script>	
+  <script src="js/urlParam.js"></script> 
+
+  <script>
+    $.ajax({
+      type: 'GET',
+      url: 'http://localhost:8080/product/list',                 
+      success: function(data) {   
+        console.log(data); 
+
+        for (var i = 0; i < data.length; i++) {
+
+         $("#products").append('<a href="product.html?product='+data[i].id+'" class="col-6 col-sm-6 col-lg-3"><figure><img class="img-fluid img-thumbnail" src="https://hipsters.jobs/files/pictures/11885290_974236812618669_3227473128634430797_n.png" alt=""><figcaption>'+data[i].name+'</figcaption></figure></a>');
+       }
+
+     }
+   });  
+
+    $.ajax({
+      type: 'GET',
+      url: 'http://localhost:8080/category/search/all',                 
+      success: function(data) {   
+        console.log(data); 
+
+        for (var i = 0; i < data.length; i++) {
+
+         $("#categories").append('<a href="" class="col-6 col-sm-6 col-lg-3"><figure><img class="img-fluid img-thumbnail" src="https://hipsters.jobs/files/pictures/11885290_974236812618669_3227473128634430797_n.png" alt=""><figcaption>'+data[i].name+'</figcaption></figure></a>');
+       }
+
+     }
+   });    
+
+
+
+    console.log(getSearchParams("city"));            
+  </script>
+
+</body>
+</html>

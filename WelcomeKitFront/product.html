@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-Br">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Neolog</title>
+	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+
+</head>
+
+<body>
+
+
+	<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+
+		<div class="container">
+			<a href="#" class="navbar-brand text-white" >Ecommerce</a>
+
+			<button class="navbar-toggler" data-toggle="collapse" data-target= "#navbarSupportedContent">
+				Menu
+			</button>
+
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+					<li><a href="" class="nav-link">Produtos</a></li>
+					<li><a href="" class="nav-link">Categorias</a></li>
+					<li><a href="" class="nav-link">Estoque</a></li>
+				</ul>
+			</div>
+
+		</div>
+	</nav>
+
+
+	<main>
+		
+		<section class="container mt-4">
+			<h2 class="text-center mb-4" id="productName"></h2>
+			<div class="row pt-4" id="products">
+
+				<figure class="col-6 col-sm-6 col-lg-3 pt-3 m-auto">
+					<img class="img-fluid img-thumbnail" src="https://hipsters.jobs/files/pictures/11885290_974236812618669_3227473128634430797_n.png" alt="">
+				</figure>
+
+				<div class="container">
+					<p>Price: <span id="price"></span></p>
+					<p>Description: <span id="description"></span></p>
+					<p>Weight: <span id="weight"></span></p>
+					<p>category: <span id="category"></span></p>
+				</div>
+
+
+
+
+			</div>
+		</section>
+
+		<section class="container mt-4">
+
+			<h2>Cadastro</h2>
+
+			<form onsubmit="return false">
+				<label>Code <input type="number" name="cod" id="prodCod"></label>
+				<label>Name <input type="text" name="name" id="prodName"></label>
+				<label>price <input type="number" name="price" id="prodPrice"></label>
+				<label>description <input type="text" name="description" id="prodDescription"></label>
+				<label>weight <input type="number" name="weight" id="prodWeight"></label>
+				<label>Category 
+
+					<select id="categoryCmb" onchange="fildCategory(this)">
+						<option>Selecione...</option>
+					</select>
+				</label>
+				<label>Code Category <input type="number" disabled name="codeCat" id="codeCat"></label>
+				<label>ID Category <input type="number" disabled name="idCat" id="idCat"></label>
+
+
+				<button id="enviar">Enviar</button>
+
+			</form>
+
+
+		</section>
+
+	</main>
+
+	<script src="js/jquery.js"></script>
+	<script src="js/bootstrap.js"></script>	
+	<script src="js/urlParam.js"></script> 
+
+	<script>
+		$.ajax({
+			type: 'GET',
+			url: 'http://localhost:8080/product/search/id/'+getSearchParams("product"),                 
+			success: function(data) {   
+				console.log(data); 
+
+				$("#productName").text(data.name);
+				$("#description").text(data.description);
+				$("#price").text(data.price);
+				$("#weight").text(data.weight);
+				$("#category").text(data.category.name);
+
+			}
+		});  
+
+		$.ajax({
+			type: 'GET',
+			url: 'http://localhost:8080/category/search/all',                 
+			success: function(data) {   
+
+				for (var i = 0; i<data.length; i++) {
+
+					$("#categoryCmb").append('<option value="'+data[i].id+'" categName = "'+data[i].name+'">'+data[i].name+'</option>')
+				}
+				
+
+			}
+		});  
+
+		function fildCategory(Category){
+
+			
+			$.ajax({
+				type: 'GET',
+				url: 'http://localhost:8080/category/search/'+Category.value,                 
+				success: function(data) {   
+					$("#codeCat").val(data.cod);
+					$("#idCat").val(data.id);
+				}
+			});  
+		}
+
+		$("#enviar").click(function(event) {
+
+			alert($("#price").val());
+
+			var product = {
+
+				"cod": $("#prodCod").val(),
+				"name": $("#prodName").val(),
+				"price": $("#prodPrice").val(),
+				"description":$("#prodDescription").val(),
+				"weight":$("#prodWeight").val(),
+				"category":{
+					"id":$("#idCat").val(),
+					"cod":$("#codeCat").val(),
+					"name":$("#categoryCmb").find(':selected').attr('categName')
+
+				}
+
+			};
+
+			console.log(product);
+
+			$.ajax({
+				type: 'POST',
+				url: 'http://localhost:8080/product/save',  
+				data: product,               
+				dataType: "json",
+				contentType: 'application/json',
+				success: function(data) {   
+					alert(data);
+				}
+			});  
+
+		});
+
+
+
+
+	</script>
+
+</body>
+</html>

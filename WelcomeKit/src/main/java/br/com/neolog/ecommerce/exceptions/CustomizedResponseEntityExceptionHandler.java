@@ -14,10 +14,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestController
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-	@ExceptionHandler(ProductNotFoundException.class)
-	public final ResponseEntity<ErrorDetails> handleUserNotFoundException(final ProductNotFoundException ex,
-			final WebRequest request) {
-		final ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
-		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
-	}
+//	@ExceptionHandler(ProductNotFoundException.class)
+//	public final ResponseEntity<ErrorDetails> handleUserNotFoundException(final ProductNotFoundException ex,
+//			final WebRequest request) {
+//		final ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(), request.getDescription(false));
+//		return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+//	}
 }
