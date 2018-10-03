@@ -5,11 +5,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import br.com.neolog.ecommerce.stock.StockRepository;
+
 @Component
 public class ProductService {
 
 	@Autowired
 	ProductRepository repository;
+
+	@Autowired
+	StockRepository stockRepository;
 
 	public Product getProductByCode(final int cod) {
 		return repository.findByCod(cod);
@@ -24,11 +29,19 @@ public class ProductService {
 	}
 
 	public Product save(final Product p) {
-		try {
-			return repository.save(p);
-		} catch (final Exception e) {
-			throw new IllegalArgumentException("Código Duplicado");
+
+		if (p.getCategory() == null) {
+			throw new IllegalArgumentException();
 		}
+
+		return repository.save(p);
+
+		// try {
+		//
+		// return repository.save(p);
+		// } catch (final Exception e) {
+		// throw new IllegalArgumentException("Código Duplicado");
+		// }
 
 	}
 
@@ -36,6 +49,18 @@ public class ProductService {
 		repository.deleteById(id);
 		return !repository.existsById(id);
 
+	}
+
+	public List<Product> getProductsByCategoryId(final int cat) {
+		return repository.findByCategoryCod(cat);
+	}
+
+	public List<Product> findByPriceGreaterThan(final double price) {
+		return repository.findByPriceGreaterThan(price);
+	}
+
+	public List<Product> findByPrieceLessThan(final double price) {
+		return repository.findByPriceLessThan(price);
 	}
 
 }

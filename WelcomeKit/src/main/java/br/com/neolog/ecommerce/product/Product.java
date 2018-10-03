@@ -20,6 +20,7 @@ import br.com.neolog.ecommerce.category.Category;
 public class Product {
 
 	@Id
+	@NotNull
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(updatable = false)
 	private Integer id;
