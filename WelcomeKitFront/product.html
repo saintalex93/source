@@ -61,7 +61,8 @@
 			<h2>Cadastro</h2>
 
 			<form onsubmit="return false">
-				<label>Code <input type="number" name="cod" id="prodCod"></label>
+
+				<label>Code <input class="form-control" type="number" name="cod" id="prodCod"></label>
 				<label>Name <input type="text" name="name" id="prodName"></label>
 				<label>price <input type="number" name="price" id="prodPrice"></label>
 				<label>description <input type="text" name="description" id="prodDescription"></label>
@@ -76,7 +77,7 @@
 				<label>ID Category <input type="number" disabled name="idCat" id="idCat"></label>
 
 
-				<button id="enviar">Enviar</button>
+				<button id="enviar" class="btn btn-primary">Enviar</button>
 
 			</form>
 
@@ -151,7 +152,7 @@
 
 			};
 
-			var productJson = '{"cod": 1231412, "name": "Celular", "price":1000, "description":"teste", "weight":1.00, "category":{"id":1, "cod":1, "name":"Eletrônicos" }}';
+			var productJson = '{"code": 1231412, "name": "Celular", "price":1000, "description":"teste", "weight":1.00, "category":{"id":1, "code":1, "name":"Eletrônicos" }}';
 
 			console.log(productJson);
 

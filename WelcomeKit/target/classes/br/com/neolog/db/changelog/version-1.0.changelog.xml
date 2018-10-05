@@ -7,13 +7,13 @@
 			<column name="id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" />
 			</column>
-			<column name="cod" type="int">
+			<column name="code" type="int">
 				<constraints unique="true" />
 			</column>
 			<column name="name" type="varchar(100)" />
-			<column name="price" type="double" />
+			<column name="price" type="long" />
 			<column name="description" type="varchar(100)" />
-			<column name="weight" type="double" />
+			<column name="weight" type="long" />
 			<column name="category" type="int" />
 		</createTable>
 
@@ -21,7 +21,7 @@
 			<column name="id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" />
 			</column>
-			<column name="cod" type="int">
+			<column name="code" type="int">
 				<constraints unique="true" />
 			</column>
 			<column name="name" type="varchar(100)" />
@@ -42,41 +42,46 @@
 
 		<addForeignKeyConstraint baseColumnNames="product"
 			baseTableName="stock" constraintName="fk_stock_product"
-			referencedColumnNames="id" referencedTableName="product" onDelete="CASCADE" />
+			referencedColumnNames="id" referencedTableName="product"/>
 
 		<addForeignKeyConstraint baseColumnNames="category"
 			baseTableName="product" constraintName="fk_product_category"
 			referencedColumnNames="id" referencedTableName="category" />
+	</changeSet>
+	
+	
+	
 
+	<changeSet id="2" author="alex.santos" context="test">
 		<insert tableName="category">
 			<column name="id" value="1" />
-			<column name="cod" value="001" />
+			<column name="code" value="001" />
 			<column name="name" value="Eletrônicos" />
 		</insert>
 
 		<insert tableName="category">
 			<column name="id" value="2" />
-			<column name="cod" value="002" />
+			<column name="code" value="002" />
 			<column name="name" value="Tecnológicos" />
 		</insert>
 
 		<insert tableName="product">
 			<column name="id" value="1" />
-			<column name="cod" value="001" />
+			<column name="code" value="001" />
 			<column name="name" value="TV" />
-			<column name="price" value="2500.00" />
+			<column name="price" value="250000" />
 			<column name="description" value="PlasmaTron" />
-			<column name="weight" value="1.500" />
+			<column name="weight" value="1500" />
 			<column name="category" value="1" />
 		</insert>
 
 		<insert tableName="product">
 			<column name="id" value="2" />
-			<column name="cod" value="002" />
+			<column name="code" value="002" />
 			<column name="name" value="Windão Original" />
-			<column name="price" value="1500.00" />
+			<column name="price" value="1000000" />
 			<column name="description" value="S.O" />
-			<column name="weight" value="5000.00" />
+			<column name="weight" value="5000" />
 			<column name="category" value="2" />
 		</insert>
 
@@ -90,7 +95,6 @@
 			<column name="quantity" value="500" />
 			<column name="product" value="2" />
 		</insert>
-
 	</changeSet>
 </databaseChangeLog>
 

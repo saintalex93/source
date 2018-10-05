@@ -3,6 +3,8 @@ package br.com.neolog.ecommerce.category;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,38 +21,54 @@ public class CategoryController {
 	CategoryService service;
 
 	@GetMapping(value = "search/all")
-	public List<Category> getCategories() {
-		return service.getCategories();
+	public ResponseEntity<List<Category>> getCategories() {
+
+		final List<Category> listCategory = service.getCategories();
+		if (listCategory.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+		return new ResponseEntity<List<Category>>(listCategory, HttpStatus.OK);
 	}
 
-	@GetMapping(value = "search/{cod}")
-	public Category getCategory(@PathVariable("cod") final int cod) {
-		return service.getCategory(cod);
+	@GetMapping(value = "search/{code}")
+	public ResponseEntity<Category> getCategory(@PathVariable("code") final int code) {
+		return new ResponseEntity<Category>(service.getCategoryByCode(code), HttpStatus.OK);
 	}
 
 	@GetMapping(value = "search")
-	public Category getProductName(@RequestParam(value = "name") final String name) {
-		return service.getCategoryByName(name);
+	public ResponseEntity<Category> getProductName(@RequestParam(value = "name") final String name) {
+		final Category category = service.getCategoryByName(name);
+		if (category == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+		return new ResponseEntity<Category>(service.getCategoryByName(name), HttpStatus.ACCEPTED);
 	}
 
 	@GetMapping(value = "search/contains")
-	public List<Category> getCategoriesByWord(@RequestParam(value = "word") final String word) {
-		return service.getCategoriesByWord(word);
+	public ResponseEntity<List<Category>> getCategoriesByWord(@RequestParam(value = "word") final String word) {
+		final List<Category> categoryList = service.getCategoriesByWord(word);
+		if (categoryList.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		}
+		return new ResponseEntity<List<Category>>(categoryList, HttpStatus.OK);
 	}
 
 	@PostMapping(value = "save")
-	public Category getProductSave(@RequestBody final Category categ) {
-		return service.save(categ);
+	public ResponseEntity<Category> getProductSave(@RequestBody final Category categ) {
+		return new ResponseEntity<Category>(service.save(categ), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "update")
-	public Category getProductUpdate(@RequestBody final Category categ) {
-		return service.save(categ);
+	public ResponseEntity<Category> getProductUpdate(@RequestBody final Category categ) {
+		return new ResponseEntity<Category>(service.update(categ), HttpStatus.OK);
 	}
 
 	@PostMapping(value = "delete/{id}")
-	public boolean getProductUpdate(@RequestBody @PathVariable("id") final int id) {
-		return service.delete(id);
+	public ResponseEntity<?> getProductUpdate(@RequestBody @PathVariable("id") final int id) {
+		if (service.delete(id)) {
+			return ResponseEntity.ok().build();
+		}
+		return ResponseEntity.badRequest().build();
 	}
 
 }

@@ -1,6 +1,5 @@
 package br.com.neolog.ecommerce.product;
 
-import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,7 +10,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 
 import br.com.neolog.ecommerce.category.Category;
 
@@ -20,29 +26,26 @@ import br.com.neolog.ecommerce.category.Category;
 public class Product {
 
 	@Id
-	@NotNull
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(updatable = false)
 	private Integer id;
 
-	@Basic(optional = false)
 	@NotNull
 	@Column(unique = true, nullable = false)
-	private Integer cod;
+	private Integer code;
 
-	@NotNull
+	@NotBlank
 	@Column(nullable = false)
 	private String name;
 
-	@NotNull
+	@Min(message = "Não pode ser inferior a 1 centavo", value = 1)
 	@Column(nullable = false)
-	private double price;
+	private long price;
 
 	private String description;
 
-	@NotNull
 	@Column(nullable = false)
-	private double weight;
+	private long weight;
 
 	@NotNull
 	@ManyToOne(fetch = FetchType.EAGER)
@@ -52,35 +55,36 @@ public class Product {
 	public Product() {
 	}
 
-	public Product(final Integer id, final Integer cod, final String name, final double price, final String description,
-			final double weight, final Category category) {
+	public Product(final Integer id, final Integer code, final String name, final double price,
+			final String description, final double weight, final Category category) {
 		this.id = id;
-		this.cod = cod;
+		this.code = code;
 		this.name = name;
-		this.price = price;
+		this.price = Math.round(price * 10 * 10);
 		this.description = description;
-		this.weight = weight;
+		this.weight = Math.round(weight * 10 * 10);
 		this.category = category;
 
 	}
 
-	public Product(final Integer cod, final String name, final double price, final String description,
-			final double weight, final Category category) {
-		this.cod = cod;
+	@JsonCreator
+	public Product(@JsonProperty("code") final Integer code, @JsonProperty("name") final String name,
+			@JsonProperty("price") final long price, @JsonProperty("description") final String description,
+			@JsonProperty("weight") final double weight, @JsonProperty("category") final Category category) {
+		this.code = code;
 		this.name = name;
-		this.price = price;
+		this.price = Math.round(price * 10 * 10);
 		this.description = description;
-		this.weight = weight;
+		this.weight = Math.round(weight * 10 * 10);
 		this.category = category;
-
 	}
 
 	public Integer getId() {
 		return id;
 	}
 
-	public Integer getCod() {
-		return cod;
+	public Integer getCode() {
+		return code;
 	}
 
 	public String getName() {
@@ -88,7 +92,8 @@ public class Product {
 	}
 
 	public double getPrice() {
-		return price;
+
+		return price / 100.0;
 	}
 
 	public String getDescription() {
@@ -96,18 +101,22 @@ public class Product {
 	}
 
 	public double getWeight() {
-		return weight;
+		return weight / 100.0;
 	}
 
 	public Category getCategory() {
 		return category;
 	}
 
+	private void setPrice(final double price) {
+		this.price = Math.round(price * 10 * 10);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (cod == null ? 0 : cod.hashCode());
+		result = prime * result + (code == null ? 0 : code.hashCode());
 		result = prime * result + (id == null ? 0 : id.hashCode());
 		return result;
 	}
@@ -117,34 +126,20 @@ public class Product {
 		if (this == obj) {
 			return true;
 		}
-		if (obj == null) {
-			return false;
-		}
 		if (!(obj instanceof Product)) {
 			return false;
 		}
 		final Product other = (Product) obj;
-		if (cod == null) {
-			if (other.cod != null) {
-				return false;
-			}
-		} else if (!cod.equals(other.cod)) {
-			return false;
-		}
-		if (id == null) {
-			if (other.id != null) {
-				return false;
-			}
-		} else if (!id.equals(other.id)) {
-			return false;
-		}
-		return true;
+		return Objects.equal(other.getId(), this.getId()) && Objects.equal(other.getCode(), this.getCode());
 	}
 
 	@Override
 	public String toString() {
-		return "ProductModel [id=" + id + ", cod=" + cod + ", name=" + name + ", price=" + price + ", description="
-				+ description + ", weight=" + weight + ", category=" + category + "]";
+
+		return MoreObjects.toStringHelper(this).add("Id: ", id).add("Code: ", code).add("Name: ", name)
+				.add("Price: ", price).add("Description: ", description).add("Weight: ", weight)
+				.add("Category: ", weight).toString();
+
 	}
 
 }

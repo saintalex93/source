@@ -1,6 +1,5 @@
 package br.com.neolog.ecommerce.stock;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,14 +21,14 @@ import br.com.neolog.ecommerce.product.Product;
 public class Stock {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(nullable = false, updatable = false)
 	private Integer id;
 
+	@NotNull
 	@Column(nullable = false)
 	private int quantity;
 
 	@NotNull
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "product", foreignKey = @ForeignKey(name = "fk_stock_product"))
 	private Product product;
 

@@ -23,6 +23,8 @@ public interface StockRepository extends JpaRepository<Stock, Integer> {
 
 	Stock findByProduct(Product p);
 
+	Stock findByProductId(int id);
+
 }
 
 // @Query("SELECT p FROM Person p WHERE LOWER(p.lastName) =

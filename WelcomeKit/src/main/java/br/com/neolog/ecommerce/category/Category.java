@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.google.common.base.MoreObjects;
+
 @Entity
 @Table(name = "category")
 public class Category {
@@ -15,7 +17,7 @@ public class Category {
 	private Integer id;
 
 	@Column(nullable = false, unique = true)
-	private Integer cod;
+	private Integer code;
 
 	@Column(nullable = false)
 	private String name;
@@ -24,14 +26,14 @@ public class Category {
 
 	}
 
-	public Category(final Integer id, final Integer cod, final String name) {
+	public Category(final Integer id, final Integer code, final String name) {
 		this.id = id;
-		this.cod = cod;
+		this.code = code;
 		this.name = name;
 	}
 
-	public Category(final Integer cod, final String name) {
-		this.cod = cod;
+	public Category(final Integer code, final String name) {
+		this.code = code;
 		this.name = name;
 	}
 
@@ -39,12 +41,19 @@ public class Category {
 		return id;
 	}
 
-	public Integer getCod() {
-		return cod;
+	public Integer getCode() {
+		return code;
 	}
 
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public String toString() {
+
+		return MoreObjects.toStringHelper(this).add("Id: ", id).add("Código: ", code).add("Nome: ", name).toString();
+
 	}
 
 }
