@@ -9,27 +9,30 @@ import org.springframework.stereotype.Repository;
 import br.com.neolog.ecommerce.product.Product;
 
 @Repository
-public interface StockRepository extends JpaRepository<Stock, Integer> {
+public interface StockRepository
+    extends
+        JpaRepository<Stock,Integer>
+{
 
-	List<Stock> findByQuantityGreaterThan(int quantity);
+    List<Stock> findByQuantityGreaterThan(
+        int quantity );
 
-	List<Stock> findByQuantityLessThan(int quantity);
+    List<Stock> findByQuantityLessThan(
+        int quantity );
 
-	@Query("SELECT s FROM Stock s WHERE s.quantity = (SELECT MAX(z.quantity) FROM Stock z)")
-	Stock maxProduct();
+    @Query( "SELECT s FROM Stock s WHERE s.quantity = (SELECT MAX(z.quantity) FROM Stock z)" )
+    Stock maxProduct();
 
-	@Query("SELECT s FROM Stock s WHERE s.quantity = (SELECT MIN(z.quantity) FROM Stock z)")
-	Stock minProduct();
+    @Query( "SELECT s FROM Stock s WHERE s.quantity = (SELECT MIN(z.quantity) FROM Stock z)" )
+    Stock minProduct();
 
-	Stock findByProduct(Product p);
+    Stock findByProduct(
+        Product p );
 
-	Stock findByProductId(int id);
+    Stock findByProductId(
+        int id );
+
+    Stock findById(
+        int id );
 
 }
-
-// @Query("SELECT p FROM Person p WHERE LOWER(p.lastName) =
-// LOWER(:lastName)")
-
-// @Query("UPDATE Stock s SET s.quantity = s.quantity - :quantity WHERE s.id
-// <> 0 AND s.product.id = :product")
-// boolean removeQuantity(int quantity, Product product);
