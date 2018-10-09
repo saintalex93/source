@@ -1,0 +1,128 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+	<changeSet id="1" author="alex.santos">
+		<createTable tableName="product">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="code" type="int">
+				<constraints unique="true" />
+			</column>
+			<column name="name" type="varchar(100)" />
+			<column name="price" type="long" />
+			<column name="description" type="varchar(100)" />
+			<column name="weight" type="long" />
+			<column name="category" type="int" />
+		</createTable>
+
+		<createTable tableName="category">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="code" type="int">
+				<constraints unique="true" />
+			</column>
+			<column name="name" type="varchar(100)" />
+		</createTable>
+
+		<createTable tableName="stock">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="quantity" type="int" />
+			<column name="product" type="int">
+
+			</column>
+		</createTable>
+
+		<addUniqueConstraint columnNames="product"
+			constraintName="product_unique" tableName="stock" />
+
+		<addForeignKeyConstraint baseColumnNames="product"
+			baseTableName="stock" constraintName="fk_stock_product"
+			referencedColumnNames="id" referencedTableName="product"/>
+
+		<addForeignKeyConstraint baseColumnNames="category"
+			baseTableName="product" constraintName="fk_product_category"
+			referencedColumnNames="id" referencedTableName="category" />
+	</changeSet>
+	
+	
+	
+
+	<changeSet id="2" author="alex.santos" context="test">
+		<insert tableName="category">
+			<column name="id" value="1" />
+			<column name="code" value="001" />
+			<column name="name" value="Eletrônicos" />
+		</insert>
+
+		<insert tableName="category">
+			<column name="id" value="2" />
+			<column name="code" value="002" />
+			<column name="name" value="Tecnológicos" />
+		</insert>
+
+		<insert tableName="product">
+			<column name="id" value="1" />
+			<column name="code" value="001" />
+			<column name="name" value="TV" />
+			<column name="price" value="250000" />
+			<column name="description" value="PlasmaTron" />
+			<column name="weight" value="1500" />
+			<column name="category" value="1" />
+		</insert>
+
+		<insert tableName="product">
+			<column name="id" value="2" />
+			<column name="code" value="002" />
+			<column name="name" value="Windão Original" />
+			<column name="price" value="1000000" />
+			<column name="description" value="S.O" />
+			<column name="weight" value="5000" />
+			<column name="category" value="2" />
+		</insert>
+
+		<insert tableName="stock">
+			<column name="quantity" value="20" />
+			<column name="product" value="1" />
+		</insert>
+
+
+		<insert tableName="stock">
+			<column name="quantity" value="500" />
+			<column name="product" value="2" />
+		</insert>
+	</changeSet>
+</databaseChangeLog>
+
+
+
+
+
+
+
+
+
+
+
+<!-- <changeSet author="liquibase-docs" id="addForeignKeyConstraint-example"> 
+	<addForeignKeyConstraint baseColumnNames="person_id" baseTableName="address" 
+	constraintName="fk_address_person" deferrable="true" initiallyDeferred="true" 
+	onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="person"/> 
+	</changeSet> -->
+
+<!-- <insert tableName=""> <column></column> </insert> -->
+
+
+
+
+
+
+
+
+
+
+
