@@ -1,0 +1,23 @@
+# ===============================
+# = DATA SOURCE
+# ===============================
+
+spring.jpa.hibernate.ddl-auto=none
+hibernate.cache.use_second_level_cache=false
+
+eureka.client.enabled=false
+
+spring.datasource.testWhileIdle = false
+spring.datasource.validationQuery = SELECT 1
+
+spring.liquibase.change-log=classpath:br/com/neolog/db/changelog/master.changelog.xml
+spring.liquibase.enabled=true
+
+spring.jpa.show-sql = true
+spring.jpa.properties.hibernate.type=trace 
+
+spring.liquibase.contexts=null
+spring.database.contexts=null
+
+#spring.profiles.include = postgresql
+spring.profiles.include = h2

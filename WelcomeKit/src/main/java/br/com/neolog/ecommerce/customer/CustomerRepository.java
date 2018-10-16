@@ -12,8 +12,7 @@ public interface CustomerRepository
     public Customer findById(
         final int id );
 
-    public Customer findByEmailAndPassword(
-        final String email,
-        final String password );
+    public Customer findByEmail(
+        final String email );
 
 }

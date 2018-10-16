@@ -1,0 +1,271 @@
+package br.com.neolog.ecommerce.product;
+
+import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.apache.http.HttpStatus;
+import org.hamcrest.Matchers;
+import org.junit.Test;
+
+import br.com.neolog.ecommerce.AbstractIntegrationTest;
+import br.com.neolog.ecommerce.exceptions.CategoryFillException;
+import br.com.neolog.ecommerce.exceptions.CategoryNotFoundException;
+import br.com.neolog.ecommerce.exceptions.ErrorDetails;
+import br.com.neolog.ecommerce.exceptions.ProductDuplicatedCodeException;
+import br.com.neolog.ecommerce.exceptions.ProductNotFoundException;
+import br.com.neolog.ecommerce.exceptions.StockProductRemoveWithQuantityException;
+import io.restassured.http.ContentType;
+
+public class ProductIntegrationTest
+    extends
+        AbstractIntegrationTest
+{
+
+    @Test
+    public void shouldAssertRecieveListOfAllProducts()
+    {
+        final Product[] productDB = given().contentType( ContentType.JSON ).when().get( "product/list" )
+            .as( Product[].class );
+        assertThat( productDB != null );
+    }
+
+    @Test
+    public void shouldAssertRecieveListOfProctsFilteredByCode()
+    {
+        final Product productDB = given().contentType( ContentType.JSON ).when().get( "product/search/code/1" )
+            .as( Product.class );
+        assertThat( productDB != null );
+    }
+
+    @Test
+    public void shouldAssertWhenReturnProductFindByContainedWord()
+    {
+        final String json = "{\"code\": 365,\"name\": \"Ubuntu\",\"price\":20.00,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"id\":1,\"code\":1,\"name\":\"Eletrônicos\"}}";
+        given().contentType( ContentType.JSON ).body( json ).when().post( "product/save" ).as( Product.class );
+
+        final Product[] y = given().contentType( ContentType.JSON ).when().get( "product/search/contains?word=Ubuntu" )
+            .as( Product[].class );
+        assertThat( y != null );
+    }
+
+    @Test
+    public void shouldAssertRecieveListOfProctsFilteredByLesserPriceThan2600()
+    {
+        final Product[] productDB = given().contentType( ContentType.JSON ).when().get( "product/list/price/lesser/2600" )
+            .as( Product[].class );
+        assertThat( productDB != null );
+    }
+
+    @Test
+    public void shouldAssertRecieveListOfProctsFilteredByGreaterThan2490()
+    {
+        final Product[] productDB = given().contentType( ContentType.JSON ).when().get( "product/list/price/greater/2490" )
+            .as( Product[].class );
+        assertThat( productDB != null );
+    }
+
+    @Test
+    public void shouldAssertRecieveListOfProctsFilteredByCategoryId()
+    {
+        final Product[] productDB = given().contentType( ContentType.JSON ).when().get( "product/search/category/2" )
+            .as( Product[].class );
+        assertThat( productDB != null );
+    }
+
+    @Test
+    public void shouldAssertWhenSendOneProductViaPostAndRecieveSameProductInResponse()
+    {
+
+        final String json = "{\"code\":9111, \"name\": \"Celular\", \"price\":10.50, \"description\":\"teste\", \"weight\":1.00, \"category\":{	\"id\":3,	\"code\":3}}";
+        final Product x = given().contentType( ContentType.JSON ).body( json ).when().post( "product/save" )
+            .as( Product.class );
+        final Product y = given().contentType( ContentType.JSON ).when().get( "product/search/id/" + x.getId() )
+            .as( Product.class );
+
+        assertThat( x ).isEqualTo( y );
+    }
+
+    @Test
+    public void shouldAssertWhenUpdateProductViaPost()
+    {
+        final Product y = given().contentType( ContentType.JSON ).when().get( "product/search/id/2" ).as( Product.class );
+        final String json = "{\"id\":2,\"code\": 2,\"name\": \"Linux\",\"price\":20.00,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"id\":1,\"code\":1,\"name\":\"Eletrônicos\"}}";
+        given().contentType( ContentType.JSON ).body( json ).when().post( "product/update" ).as( Product.class );
+        final Product x = given().contentType( ContentType.JSON ).when().get( "product/search/id/2" ).as( Product.class );
+        assertThat( x.getName() ).doesNotContain( y.getName() );
+    }
+
+    @Test
+    public void shouldAssertUpdateProductWhenCodeIsDifferenteOfDataBase()
+    {
+        final String json = "{\"id\":2,\"code\": 212,\"name\": \"Linux\",\"price\":20.00,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"id\":1,\"code\":1,\"name\":\"Eletrônicos\"}}";
+        given().contentType( ContentType.JSON ).body( json ).when().post( "product/update" ).then().assertThat().statusCode(
+            HttpStatus.SC_OK );
+    }
+
+    @Test
+    public void shouldAssertWhenProductIsInsertedAndDeletedViaPost()
+    {
+        final String json = "{\"code\":277,\"name\": \"Celular\",\"price\":10.50,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"id\":1,\"code\":1,\"name\":\"Eletrônicos\"}}";
+        final Product x = given().contentType( ContentType.JSON ).body( json ).when().post( "product/save" )
+            .then().extract().response().as( Product.class );
+
+        given().contentType( ContentType.JSON ).body( json ).when()
+            .post( "product/delete/" + x.getId() ).then().log().everything().and()
+            .body( Matchers.equalTo( "true" ) );
+
+    }
+
+    @Test
+    public void shouldThrowProductNotFoundException()
+    {
+
+        given().contentType( ContentType.JSON ).when().get( "product/search/id/22" ).then().assertThat()
+            .statusCode( HttpStatus.SC_NOT_FOUND ).and().body( "message", Matchers.equalTo( "Produto não encontrado" ) );
+
+    }
+
+    @Test
+    public void shouldThrowStockProductRemoveWithQuantityException()
+    {
+        given().contentType( ContentType.JSON ).when().post( "product/delete/1" ).then().assertThat()
+            .statusCode( HttpStatus.SC_BAD_REQUEST ).and().body( "message", Matchers.equalTo(
+                "Não é possivel remover um estoque com produtos com quantidade superior a 0." ) );
+    }
+
+    @Test
+    public void shouldThrowCategoryFillExceptionWhenCategoryNotFillID()
+    {
+        final String json = "{\"code\":8,\"name\": \"Celular\",\"price\":10.50,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"code\":2}}";
+        final ErrorDetails bodyError = given().contentType( ContentType.JSON ).body( json ).when().post( "product/save" ).then()
+            .log().everything()
+            .assertThat().extract().as( ErrorDetails.class );
+        assertThat( bodyError.getDetails() ).contains( CategoryFillException.class.getName() );
+    }
+
+    @Test
+    public void shouldThrowCategoryFillExceptionWhenCategoryNotFillCode()
+    {
+        final String json = "{\"code\":8,\"name\": \"Celular\",\"price\":10.50,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"id\":1, \"name\":\"Eletrônicos\"}}";
+        final ErrorDetails bodyError = given().contentType( ContentType.JSON ).body( json ).when().post( "product/save" ).then()
+            .log().everything()
+            .assertThat().extract().as( ErrorDetails.class );
+        assertThat( bodyError.getDetails() ).contains( CategoryFillException.class.getName() );
+    }
+
+    @Test
+    public void shouldThrowCategoryNotFoundException()
+    {
+        final String json = "{\"code\":8,\"name\": \"Celular\",\"price\":10.50,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"id\":1,\"code\":1456,\"name\":\"Eletrônicos\"}}";
+        final ErrorDetails bodyError = given().contentType( ContentType.JSON ).body( json ).when().post( "product/save" ).then()
+            .log().everything()
+            .assertThat().extract().as( ErrorDetails.class );
+        assertThat( bodyError.getDetails() ).contains( CategoryNotFoundException.class.getName() );
+    }
+
+    @Test
+    public void shouldThrowProductNotFoundExceptionWhenUpdateProductWithoutID()
+    {
+        final String json = "{\"id\":22,\"code\": 2104,\"name\": \"Linux\",\"price\":20.00,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"id\":1,\"code\":1, \"name\":\"nazo\"}}";
+        final ErrorDetails bodyError = given().contentType( ContentType.JSON ).body( json ).when().post( "product/update" ).then()
+            .log().everything()
+            .assertThat().extract().as( ErrorDetails.class );
+        assertThat( bodyError.getDetails() ).contains( ProductNotFoundException.class.getName() );
+    }
+
+    @Test
+    public void shouldThrowCategoryNotFoundExceptionWhenUpdateProductWithoutCategoryID()
+    {
+        final String json = "{\"id\":2,\"code\": 2104,\"name\": \"Linux\",\"price\":20.00,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"code\":1, \"name\":\"nazo\"}}";
+        final ErrorDetails bodyError = given().contentType( ContentType.JSON ).body( json ).when().post( "product/update" ).then()
+            .log().everything()
+            .assertThat().extract().as( ErrorDetails.class );
+        assertThat( bodyError.getDetails() ).contains( CategoryFillException.class.getName() );
+    }
+
+    @Test
+    public void shouldThrowProductDuplicatedCodeExceptionWhenUpdateProductWithIncorrectProductID()
+    {
+        final String json = "{\"id\":2,\"code\": 1,\"name\": \"Linux\",\"price\":20.00,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"id\":1,\"code\":1, \"name\":\"nazo\"}}";
+        final ErrorDetails bodyError = given().contentType( ContentType.JSON ).body( json ).when().post( "product/update" ).then()
+            .log().everything()
+            .assertThat().extract().as( ErrorDetails.class );
+        assertThat( bodyError.getDetails() ).contains( ProductDuplicatedCodeException.class.getName() );
+    }
+
+    @Test
+    public void shouldThrowProductNotFoundExceptionWhenProductIdAreIncorrect()
+    {
+        final ErrorDetails bodyError = given().contentType( ContentType.JSON ).when().get( "product/search/code/13" ).then()
+            .log().everything()
+            .assertThat().extract().as( ErrorDetails.class );
+        assertThat( bodyError.getDetails() ).contains( ProductNotFoundException.class.getName() );
+    }
+
+    @Test
+    public void shouldThrowProductNotFoundExceptionWhenDeleteProductwithoutId()
+    {
+        final ErrorDetails bodyError = given().contentType( ContentType.JSON ).when().post( "product/delete/12" ).then()
+            .log().everything()
+            .assertThat().extract().as( ErrorDetails.class );
+        assertThat( bodyError.getDetails() ).contains( ProductNotFoundException.class.getName() );
+    }
+
+    @Test
+    public void shouldAssertWhenProductWithoutStockIsDeleted()
+    {
+        final String json = "{\"code\": 3658,\"name\": \"Ubuntu\",\"price\":20.00,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"id\":1,\"code\":1,\"name\":\"Eletrônicos\"}}";
+        final Product product = given().contentType( ContentType.JSON ).body( json ).when().post( "product/save" ).as( Product.class );
+
+        given().contentType( ContentType.JSON ).when().post( "product/delete/" + product.getId() ).then().assertThat().statusCode(
+            HttpStatus.SC_OK );
+
+    }
+
+    @Test
+    public void shouldAssertWhenProductWithStockIsDeleted()
+    {
+        final String json = "{\"code\": 3658,\"name\": \"Ubuntu\",\"price\":20.00,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"id\":1,\"code\":1,\"name\":\"Eletrônicos\"}}";
+        final Product product = given().contentType( ContentType.JSON ).body( json ).when().post( "product/save" ).as( Product.class );
+
+        given().contentType( ContentType.JSON ).body( "{\"idProduct\":" + product.getId() + ",\"quantity\":1}" ).when().post(
+            "stock/create" );
+
+        given().contentType( ContentType.JSON ).body( "{\"idProduct\":" + product.getId() + ",\"quantity\":1}" ).when().post(
+            "stock/removeQuantity" );
+
+        given().contentType( ContentType.JSON ).when().post( "product/delete/" + product.getId() ).then().assertThat().statusCode(
+            HttpStatus.SC_OK );
+
+    }
+
+    @Test
+    public void shouldThrowProductNotFoundExceptionWhenDeleteProductWithQuantityInStock()
+    {
+        final ErrorDetails bodyError = given().contentType( ContentType.JSON ).when().post( "product/delete/2" ).then()
+            .log().everything()
+            .assertThat().extract().as( ErrorDetails.class );
+        assertThat( bodyError.getDetails() ).contains( StockProductRemoveWithQuantityException.class.getName() );
+    }
+
+    @Test
+    public void shouldThrowCategoryNotFoundExceptionCategoryOfProductNotFound()
+    {
+        final Product[] productDB = given().contentType( ContentType.JSON ).when().get( "product/search/category/13" )
+            .as( Product[].class );
+        assertThat( productDB != null );
+
+    }
+
+    @Test
+    public void sholdThrowProductDuplicatedException()
+    {
+        final String json = "{\"code\":1,\"name\": \"Celular\",\"price\":10.50,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"id\":1,\"code\":1,\"name\":\"Eletrônicos\"}}";
+        given().contentType( ContentType.JSON ).body( json ).when()
+            .post( "product/save" ).then()
+            .assertThat().statusCode( HttpStatus.SC_BAD_REQUEST )
+            .and()
+            .body( "message", Matchers.equalTo( "Produto com código duplicado" ) );
+    }
+
+}

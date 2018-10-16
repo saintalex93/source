@@ -5,8 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import br.com.neolog.ecommerce.exceptions.CustomerInactiveException;
-import br.com.neolog.ecommerce.exceptions.CustomerNotFoundException;
+import br.com.neolog.ecommerce.authentication.AuthenticationUtils;
+import br.com.neolog.ecommerce.exceptions.CustomerDuplicatedEmailException;
 
 @Component
 public class CustomerService
@@ -28,23 +28,13 @@ public class CustomerService
     public Customer save(
         final Customer customer )
     {
+        final Customer recievedCustomer = repository.findByEmail( customer.getEmail() );
+
+        if( recievedCustomer != null && recievedCustomer.getInactive() == 0 ) {
+            throw new CustomerDuplicatedEmailException();
+        }
+        customer.setPassword( AuthenticationUtils.encryptPassword( customer.getPassword() ) );
         return repository.save( customer );
-    }
-
-    public Customer login(
-        final CustomerLogin customerLogin )
-    {
-
-        final Customer customer = repository.findByEmailAndPassword( customerLogin.getEmail(), customerLogin.getPassword() );
-
-        if( customer == null ) {
-            throw new CustomerNotFoundException();
-        }
-        if( customer.getInactive() == 1 ) {
-            throw new CustomerInactiveException();
-        }
-
-        return customer;
     }
 
 }

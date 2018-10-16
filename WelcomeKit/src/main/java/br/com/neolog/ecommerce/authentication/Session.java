@@ -1,5 +1,6 @@
 package br.com.neolog.ecommerce.authentication;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
@@ -12,6 +13,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
 
 import com.google.common.base.MoreObjects;
@@ -30,16 +32,33 @@ public class Session
     @NotBlank
     private String token;
     @NotNull
+    @Column( name = "expiration_date" )
+    @Type( type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime" )
     private DateTime expirationDate;
     @NotNull
+    @Column( name = "login_date" )
+    @Type( type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime" )
     private DateTime loginDate;
     @NotNull
     @OneToOne( fetch = FetchType.EAGER )
-    @JoinColumn( name = "user", foreignKey = @ForeignKey( name = "fk_session_user" ) )
-    private Customer user;
+    @JoinColumn( name = "customer", foreignKey = @ForeignKey( name = "fk_session_customer" ) )
+    private Customer customer;
 
     public Session()
     {
+    }
+
+    public Session(
+        final String token,
+        final DateTime expirationDate,
+        final DateTime loginDate,
+        final Customer user )
+    {
+        super();
+        this.token = token;
+        this.expirationDate = expirationDate;
+        this.loginDate = loginDate;
+        this.customer = user;
     }
 
     public int getId()
@@ -86,15 +105,15 @@ public class Session
         this.loginDate = loginDate;
     }
 
-    public Customer getUser()
+    public Customer getCustomer()
     {
-        return user;
+        return customer;
     }
 
-    public void setUser(
+    public void setCustomer(
         final Customer user )
     {
-        this.user = user;
+        this.customer = user;
     }
 
     @Override
@@ -129,7 +148,7 @@ public class Session
             .add( "Token", token )
             .add( "Expiration Date", expirationDate )
             .add( "Login Date", loginDate )
-            .add( "User", user ).toString();
+            .add( "User", customer ).toString();
     }
 
 }

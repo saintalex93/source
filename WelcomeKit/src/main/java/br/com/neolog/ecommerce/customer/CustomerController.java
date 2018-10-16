@@ -41,11 +41,4 @@ public class CustomerController
         return new ResponseEntity<Customer>( service.save( customer ), HttpStatus.OK );
     }
 
-    @RequestMapping( value = "login" )
-    public ResponseEntity<Customer> logging(
-        @RequestBody @Valid final CustomerLogin customer )
-    {
-        return new ResponseEntity<Customer>( service.login( customer ), HttpStatus.OK );
-    }
-
 }
