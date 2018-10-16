@@ -11,9 +11,9 @@
 				<constraints unique="true" />
 			</column>
 			<column name="name" type="varchar(100)" />
-			<column name="price" type="long" />
+			<column name="price" type="bigint" />
 			<column name="description" type="varchar(100)" />
-			<column name="weight" type="long" />
+			<column name="weight" type="bigint" />
 			<column name="category" type="int" />
 		</createTable>
 
@@ -32,9 +32,45 @@
 				<constraints primaryKey="true" />
 			</column>
 			<column name="quantity" type="int" />
-			<column name="product" type="int">
+			<column name="product" type="int" />
+		</createTable>
 
+		<createTable tableName="customer">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" />
 			</column>
+			<column name="email" type="varchar(150)" />
+			<column name="name" type="varchar(120)" />
+			<column name="password" type="varchar(50)" />
+			<column name="inactive" type="int" />
+		</createTable>
+
+		<createTable tableName="session">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="token" type="varchar(50)" />
+			<column name="expirationDate" type="timestamp" />
+			<column name="loginDate" type="timestamp" />
+			<column name="customer" type="int" />
+		</createTable>
+
+		<createTable tableName="cart">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="totalValue" type="bigint" />
+			<column name="customer" type="int" />
+			<column name="status" type="varchar(25)" />
+		</createTable>
+
+		<createTable tableName="cartItem">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="product" type="int" />
+			<column name="quantity" type="int" />
+			<column name="cart" type="int" />
 		</createTable>
 
 		<addUniqueConstraint columnNames="product"
@@ -42,15 +78,28 @@
 
 		<addForeignKeyConstraint baseColumnNames="product"
 			baseTableName="stock" constraintName="fk_stock_product"
-			referencedColumnNames="id" referencedTableName="product"/>
+			referencedColumnNames="id" referencedTableName="product" />
 
 		<addForeignKeyConstraint baseColumnNames="category"
 			baseTableName="product" constraintName="fk_product_category"
 			referencedColumnNames="id" referencedTableName="category" />
+
+		<addForeignKeyConstraint baseColumnNames="product"
+			baseTableName="cartItem" constraintName="fk_cartItem_product"
+			referencedColumnNames="id" referencedTableName="product" />
+
+		<addForeignKeyConstraint baseColumnNames="cart"
+			baseTableName="cartItem" constraintName="fk_cartItem_cart"
+			referencedColumnNames="id" referencedTableName="cart" />
+
+		<addForeignKeyConstraint baseColumnNames="customer"
+			baseTableName="cart" constraintName="fk_cart_customer"
+			referencedColumnNames="id" referencedTableName="customer" />
+
+		<addForeignKeyConstraint baseColumnNames="customer"
+			baseTableName="session" constraintName="fk_session_customer"
+			referencedColumnNames="id" referencedTableName="customer" />
 	</changeSet>
-	
-	
-	
 
 	<changeSet id="2" author="alex.santos" context="test">
 		<insert tableName="category">
@@ -97,32 +146,3 @@
 		</insert>
 	</changeSet>
 </databaseChangeLog>
-
-
-
-
-
-
-
-
-
-
-
-<!-- <changeSet author="liquibase-docs" id="addForeignKeyConstraint-example"> 
-	<addForeignKeyConstraint baseColumnNames="person_id" baseTableName="address" 
-	constraintName="fk_address_person" deferrable="true" initiallyDeferred="true" 
-	onDelete="CASCADE" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="person"/> 
-	</changeSet> -->
-
-<!-- <insert tableName=""> <column></column> </insert> -->
-
-
-
-
-
-
-
-
-
-
-

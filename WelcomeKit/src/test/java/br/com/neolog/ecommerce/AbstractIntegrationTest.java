@@ -13,38 +13,48 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.neolog.ecommerce.Application;
 import io.restassured.RestAssured;
 import io.restassured.config.ObjectMapperConfig;
 import io.restassured.config.RestAssuredConfig;
 import io.restassured.mapper.factory.Jackson2ObjectMapperFactory;
 
 /**
- * Classe Base para testes de integração. Abstrata pois não possui teste algum.
+ * Classe Base para testes de integraï¿½ï¿½o. Abstrata pois nï¿½o possui teste
+ * algum.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ActiveProfiles({ "test" })
-@SpringBootTest(classes = { Application.class }, webEnvironment = WebEnvironment.RANDOM_PORT)
-public abstract class AbstractIntegrationTest {
-	@Value("${local.server.port}")
-	private Integer realPort;
+@RunWith( SpringJUnit4ClassRunner.class )
+@ActiveProfiles( {
+    "test"
+} )
+@SpringBootTest( classes = {
+    Application.class
+}, webEnvironment = WebEnvironment.RANDOM_PORT )
+public abstract class AbstractIntegrationTest
+{
+    @Value( "${local.server.port}" )
+    private Integer realPort;
 
-	@Autowired
-	protected ObjectMapper objectMapper;
+    @Autowired
+    protected ObjectMapper objectMapper;
 
-	/**
-	 * Pode-se definir outros {@link Before} nas classes-filha sem problemas.
-	 */
-	@Before
-	public final void parentSetUp() {
-		RestAssured.port = realPort;
+    /**
+     * Pode-se definir outros {@link Before} nas classes-filha sem problemas.
+     */
+    @Before
+    public final void parentSetUp()
+    {
+        RestAssured.port = realPort;
 
-		RestAssured.config = RestAssuredConfig.config().objectMapperConfig(
-				ObjectMapperConfig.objectMapperConfig().jackson2ObjectMapperFactory(new Jackson2ObjectMapperFactory() {
+        RestAssured.config = RestAssuredConfig.config().objectMapperConfig(
+            ObjectMapperConfig.objectMapperConfig().jackson2ObjectMapperFactory( new Jackson2ObjectMapperFactory() {
 
-					public ObjectMapper create(final Type arg0, final String arg1) {
-						return objectMapper;
-					}
-				}));
-	}
+                public ObjectMapper create(
+                    final Type arg0,
+                    final String arg1 )
+                {
+                    return objectMapper;
+                }
+
+            } ) );
+    }
 }
