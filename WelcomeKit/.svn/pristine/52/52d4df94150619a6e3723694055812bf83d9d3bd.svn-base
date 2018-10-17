@@ -1,0 +1,20 @@
+package br.com.neolog.ecommerce.cart;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class CartService
+{
+
+    @Autowired
+    private CartRepository cartRepository;
+
+    public List<Cart> listAll()
+    {
+        return cartRepository.findAll();
+    }
+
+}

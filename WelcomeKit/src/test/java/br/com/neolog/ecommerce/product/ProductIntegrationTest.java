@@ -76,7 +76,7 @@ public class ProductIntegrationTest
     public void shouldAssertWhenSendOneProductViaPostAndRecieveSameProductInResponse()
     {
 
-        final String json = "{\"code\":911, \"name\": \"Celular\", \"price\":10.50, \"description\":\"teste\", \"weight\":1.00, \"category\":{	\"id\":1,	\"code\":1, \"name\":\"Eletrônicos\"}}";
+        final String json = "{\"code\":9111, \"name\": \"Celular\", \"price\":10.50, \"description\":\"teste\", \"weight\":1.00, \"category\":{	\"id\":3,	\"code\":3}}";
         final Product x = given().contentType( ContentType.JSON ).body( json ).when().post( "product/save" )
             .as( Product.class );
         final Product y = given().contentType( ContentType.JSON ).when().get( "product/search/id/" + x.getId() )

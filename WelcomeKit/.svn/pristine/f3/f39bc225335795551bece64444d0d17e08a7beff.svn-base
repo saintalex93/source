@@ -1,0 +1,58 @@
+package br.com.neolog.ecommerce.customer;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import br.com.neolog.ecommerce.authentication.AuthenticationUtils;
+import br.com.neolog.ecommerce.exceptions.CustomerDuplicatedEmailException;
+import br.com.neolog.ecommerce.exceptions.CustomerFillException;
+import br.com.neolog.ecommerce.exceptions.CustomerNotFoundException;
+
+@Component
+public class CustomerService
+{
+    @Autowired
+    private CustomerRepository repository;
+
+    public List<Customer> getAll()
+    {
+        return repository.findAll();
+    }
+
+    public Customer getById(
+        final int id )
+    {
+        return repository.findById( id );
+    }
+
+    public Customer save(
+        final Customer customer )
+    {
+        final Customer recievedCustomer = repository.findByEmail( customer.getEmail() );
+
+        if( recievedCustomer != null && recievedCustomer.getInactive() == 0 ) {
+            throw new CustomerDuplicatedEmailException();
+        }
+        customer.setPassword( AuthenticationUtils.encryptPassword( customer.getPassword() ) );
+        return repository.save( customer );
+    }
+
+    public Customer update(
+        final Customer customer )
+    {
+        if( customer.getId() == null ) {
+            throw new CustomerFillException( "O usuário está sem o ID" );
+        }
+        final int id = customer.getId();
+        final Customer recievedCustomer = repository.findById( id );
+
+        if( recievedCustomer == null || recievedCustomer.getInactive() == 1 ) {
+            throw new CustomerNotFoundException();
+        }
+        customer.setPassword( AuthenticationUtils.encryptPassword( customer.getPassword() ) );
+        return repository.save( customer );
+    }
+
+}

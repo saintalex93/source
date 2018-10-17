@@ -128,6 +128,56 @@ public class ExceptionsHandler
         return new ResponseEntity<ErrorDetails>( errorDetails, HttpStatus.BAD_REQUEST );
     }
 
+    @ExceptionHandler( CustomerNotFoundException.class )
+    public final ResponseEntity<ErrorDetails> handleCustomerNotFoundException(
+        final CustomerNotFoundException ex,
+        final WebRequest request )
+    {
+        final ErrorDetails errorDetails = new ErrorDetails( ex.getMessage(), request.getDescription( false ),
+            ex.getClass().getName(), HttpStatus.NOT_FOUND.name(), HttpStatus.NOT_FOUND.value() );
+        return new ResponseEntity<ErrorDetails>( errorDetails, HttpStatus.NOT_FOUND );
+    }
+
+    @ExceptionHandler( CustomerInactiveException.class )
+    public final ResponseEntity<ErrorDetails> handleCustomerInactiveException(
+        final CustomerInactiveException ex,
+        final WebRequest request )
+    {
+        final ErrorDetails errorDetails = new ErrorDetails( ex.getMessage(), request.getDescription( false ),
+            ex.getClass().getName(), HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value() );
+        return new ResponseEntity<ErrorDetails>( errorDetails, HttpStatus.BAD_REQUEST );
+    }
+
+    @ExceptionHandler( CustomerFillException.class )
+    public final ResponseEntity<ErrorDetails> handleCustomerFillException(
+        final CustomerFillException ex,
+        final WebRequest request )
+    {
+        final ErrorDetails errorDetails = new ErrorDetails( ex.getMessage(), request.getDescription( false ),
+            ex.getClass().getName(), HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value() );
+        return new ResponseEntity<ErrorDetails>( errorDetails, HttpStatus.BAD_REQUEST );
+    }
+
+    @ExceptionHandler( CustomerPasswordException.class )
+    public final ResponseEntity<ErrorDetails> handleCustomerPasswordException(
+        final CustomerPasswordException ex,
+        final WebRequest request )
+    {
+        final ErrorDetails errorDetails = new ErrorDetails( ex.getMessage(), request.getDescription( false ),
+            ex.getClass().getName(), HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value() );
+        return new ResponseEntity<ErrorDetails>( errorDetails, HttpStatus.BAD_REQUEST );
+    }
+
+    @ExceptionHandler( CustomerDuplicatedEmailException.class )
+    public final ResponseEntity<ErrorDetails> handleCustomerDuplicatedEmailException(
+        final CustomerDuplicatedEmailException ex,
+        final WebRequest request )
+    {
+        final ErrorDetails errorDetails = new ErrorDetails( ex.getMessage(), request.getDescription( false ),
+            ex.getClass().getName(), HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value() );
+        return new ResponseEntity<ErrorDetails>( errorDetails, HttpStatus.BAD_REQUEST );
+    }
+
     @ExceptionHandler( Exception.class )
     public final ResponseEntity<ErrorDetails> handleGeneralException(
         final Exception ex,

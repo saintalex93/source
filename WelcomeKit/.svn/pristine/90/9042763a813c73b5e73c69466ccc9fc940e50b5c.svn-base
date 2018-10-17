@@ -1,0 +1,142 @@
+package br.com.neolog.ecommerce.customer;
+
+import java.util.Objects;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
+import com.google.common.base.MoreObjects;
+
+@Entity
+@Table( name = "customer" )
+
+public class Customer
+{
+    @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
+    private Integer id;
+    @Email
+    @NotBlank
+    private String email;
+    @NotBlank
+    private String name;
+    @NotBlank
+    private String password;
+    @NotNull
+
+    private boolean inactive;
+
+    public Customer()
+    {
+
+    }
+
+    public Customer(
+        final int id,
+        final String email,
+        final String name,
+        final String password,
+        final boolean inactive )
+    {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.inactive = inactive;
+    }
+
+    public Integer getId()
+    {
+        return id;
+    }
+
+    public void setId(
+        final Integer id )
+    {
+        this.id = id;
+    }
+
+    public String getEmail()
+    {
+        return email;
+    }
+
+    public void setEmail(
+        final String email )
+    {
+        this.email = email;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(
+        final String name )
+    {
+        this.name = name;
+    }
+
+    public String getPassword()
+    {
+        return password;
+    }
+
+    public void setPassword(
+        final String password )
+    {
+        this.password = password;
+    }
+
+    public boolean getInactive()
+    {
+        return inactive;
+    }
+
+    public void setInactive(
+        final boolean inactive )
+    {
+        this.inactive = inactive;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return Objects.hash( getId() );
+    }
+
+    @Override
+    public boolean equals(
+        final Object obj )
+    {
+        if( this == obj ) {
+            return true;
+        }
+
+        if( obj instanceof Customer ) {
+            return true;
+        }
+        final Customer user = (Customer) obj;
+        return Objects.equals( this.getId(), user.getId() );
+
+    }
+
+    @Override
+    public String toString()
+    {
+        return MoreObjects.toStringHelper( this )
+            .add( "Id", id )
+            .add( "Email", email )
+            .add( "Name", name )
+            .add( "Password", password )
+            .add( "Active", inactive ).toString();
+    }
+
+}
