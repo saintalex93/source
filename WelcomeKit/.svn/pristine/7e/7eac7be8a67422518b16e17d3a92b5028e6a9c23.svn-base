@@ -218,16 +218,6 @@ public class ExceptionsHandler
         return new ResponseEntity<ErrorDetails>( errorDetails, HttpStatus.NOT_FOUND );
     }
 
-    @ExceptionHandler( CartItemCustomerException.class )
-    public final ResponseEntity<ErrorDetails> handleCartItemCustomerException(
-        final CartItemCustomerException ex,
-        final WebRequest request )
-    {
-        final ErrorDetails errorDetails = new ErrorDetails( ex.getMessage(), request.getDescription( false ),
-            ex.getClass().getName(), HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value() );
-        return new ResponseEntity<ErrorDetails>( errorDetails, HttpStatus.BAD_REQUEST );
-    }
-
     @ExceptionHandler( Exception.class )
     public final ResponseEntity<ErrorDetails> handleGeneralException(
         final Exception ex,

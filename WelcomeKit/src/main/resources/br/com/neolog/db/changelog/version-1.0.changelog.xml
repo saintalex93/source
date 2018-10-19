@@ -100,7 +100,7 @@
 			referencedColumnNames="id" referencedTableName="customer" />
 	</changeSet>
 
-	<changeSet id="1-pre" author="alex.santos" dbms="postgresql">
+	<changeSet id="1-pre" author="alex.santos" dbms="postgresql" runAlways="true">
 		<comment>NLG-20729 - Cria function para fazer boolean virar smallint</comment>
 		<sql splitStatements="false">
 			CREATE OR REPLACE FUNCTION booleanToSmallint(v boolean)

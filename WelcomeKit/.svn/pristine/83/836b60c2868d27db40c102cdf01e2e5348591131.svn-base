@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import br.com.neolog.ecommerce.CustomerThreadLocal;
 import br.com.neolog.ecommerce.customer.Customer;
 import br.com.neolog.ecommerce.customer.CustomerRepository;
-import br.com.neolog.ecommerce.exceptions.CartItemCustomerException;
 import br.com.neolog.ecommerce.exceptions.CartItemNotFoundException;
 import br.com.neolog.ecommerce.exceptions.CartItemRemoveException;
 import br.com.neolog.ecommerce.exceptions.CartItemStockException;
@@ -127,26 +126,6 @@ public class CartService
 
         return cart;
 
-    }
-
-    public Cart removeCartItem(
-        final int cartItemID )
-    {
-
-        final CartItem cartItem = cartItemRepository.findById( cartItemID );
-
-        if( cartItem == null ) {
-            throw new CartItemNotFoundException();
-        }
-        if( ! cartItem.getCart().getCustomer().equals( customerRepository.findById( CustomerThreadLocal.get() ) ) ) {
-            throw new CartItemCustomerException();
-        }
-        final Cart cart = cartRepository.findById( cartItem.getId() );
-        final Double totalValue = cartItem.getQuantity() * cartItem.getProduct().getPrice();
-        cart.setTotalValue( totalValue );
-        cartItemRepository.delete( cartItem );
-
-        return cartRepository.save( cart );
     }
 
     public Cart getActiveCustomerCart()

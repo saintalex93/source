@@ -77,11 +77,4 @@ public class CartController
         return new ResponseEntity<Cart>( cartService.removeProductQuantityFromCartItem( holderCartItem ), HttpStatus.OK );
     }
 
-    @PostMapping( "removeCartItem/{cartItemId}" )
-    public ResponseEntity<Cart> removeCartItem(
-        @PathVariable( "cartItemId" ) final int cartItemId )
-    {
-        return new ResponseEntity<Cart>( cartService.removeCartItem( cartItemId ), HttpStatus.OK );
-    }
-
 }

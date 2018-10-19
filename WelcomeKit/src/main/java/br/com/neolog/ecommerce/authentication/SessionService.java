@@ -42,13 +42,6 @@ public class SessionService
         return generateSession( customer );
     }
 
-    public Session verifyToken(
-        final String token )
-    {
-        return sessionRepository.findByToken( token );
-
-    }
-
     private String generateSession(
         final Customer customer )
     {
@@ -56,6 +49,13 @@ public class SessionService
         final Session session = new Session( generateToken(), dateTime.plusHours( 2 ), dateTime, customer );
         sessionRepository.save( session );
         return session.getToken();
+    }
+
+    public Session verifyToken(
+        final String token )
+    {
+        return sessionRepository.findByToken( token );
+
     }
 
 }

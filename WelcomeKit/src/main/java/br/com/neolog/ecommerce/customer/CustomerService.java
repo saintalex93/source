@@ -30,6 +30,10 @@ public class CustomerService
     public Customer save(
         final Customer customer )
     {
+        if( customer.getId() != null ) {
+            customer.setId( null );
+        }
+
         final Customer recievedCustomer = repository.findByEmail( customer.getEmail() );
 
         if( recievedCustomer != null && recievedCustomer.getInactive() == false ) {
