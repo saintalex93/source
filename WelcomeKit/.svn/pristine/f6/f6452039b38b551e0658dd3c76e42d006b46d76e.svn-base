@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -65,9 +66,11 @@ public class CartController
 
     @PostMapping( "addItemToCart" )
     public ResponseEntity<CartItem> addItemToCart(
-        @RequestBody final HolderCartItem holderCartItem )
+        @RequestHeader( name = "productId" ) final int productId,
+        @RequestHeader( name = "quantity" ) final int quantity,
+        @RequestBody final Customer customer )
     {
-        return new ResponseEntity<CartItem>( cartService.addItemToCart( holderCartItem ), HttpStatus.OK );
+        return new ResponseEntity<CartItem>( cartService.addItemToCart( productId, quantity, customer ), HttpStatus.OK );
     }
 
 }

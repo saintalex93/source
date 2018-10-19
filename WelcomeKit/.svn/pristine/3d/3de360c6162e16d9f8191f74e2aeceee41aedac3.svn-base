@@ -1,0 +1,69 @@
+package br.com.neolog.ecommerce.cart;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import br.com.neolog.ecommerce.customer.Customer;
+import br.com.neolog.ecommerce.exceptions.CartNotFoundException;
+import br.com.neolog.ecommerce.exceptions.CustomerFillException;
+import br.com.neolog.ecommerce.stock.StockService;
+
+@Component
+public class CartService
+{
+
+    @Autowired
+    private CartRepository cartRepository;
+
+    @Autowired
+    private CartItemRepository cartItemRepository;
+
+    @Autowired
+    private StockService stockService;
+
+    public List<Cart> listAll()
+    {
+        return cartRepository.findAll();
+    }
+
+    public Cart findById(
+        final int id )
+    {
+        return cartRepository.findById( id );
+    }
+
+    public Cart getActiveCustomerCart(
+        final Customer customer )
+    {
+        if( customer.getId() == null ) {
+            throw new CustomerFillException( "ID do usuário não encontrado" );
+        }
+
+        final Cart cart = cartRepository.findByCustomerAndStatus( customer, CartStatus.ACTIVE );
+
+        if( cart == null ) {
+            creatCart( customer );
+        }
+        return cart;
+    }
+
+    public Cart cancelActiveCart(
+        final Customer customer )
+    {
+        final Cart cart = cartRepository.findByCustomerAndStatus( customer, CartStatus.ACTIVE );
+        if( cart == null ) {
+            throw new CartNotFoundException();
+        }
+        cart.setStatus( CartStatus.CANCELLED );
+        return cartRepository.save( cart );
+    }
+
+    private Cart creatCart(
+        final Customer customer )
+    {
+        return cartRepository.save( new Cart( 0l, customer, CartStatus.ACTIVE ) );
+    }
+
+}

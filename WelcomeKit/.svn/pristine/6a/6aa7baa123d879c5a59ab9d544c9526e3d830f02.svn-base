@@ -55,19 +55,4 @@ public class CartController
 
     }
 
-    @PostMapping( "checkout" )
-    public ResponseEntity<Cart> checkoutCart(
-        @RequestBody @Valid final Customer customer )
-    {
-        return new ResponseEntity<Cart>( cartService.checkout( customer ), HttpStatus.OK );
-
-    }
-
-    @PostMapping( "addItemToCart" )
-    public ResponseEntity<CartItem> addItemToCart(
-        @RequestBody final HolderCartItem holderCartItem )
-    {
-        return new ResponseEntity<CartItem>( cartService.addItemToCart( holderCartItem ), HttpStatus.OK );
-    }
-
 }

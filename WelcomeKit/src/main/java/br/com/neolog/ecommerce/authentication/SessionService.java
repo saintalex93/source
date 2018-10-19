@@ -42,6 +42,13 @@ public class SessionService
         return generateSession( customer );
     }
 
+    public Session verifyToken(
+        final String token )
+    {
+        return sessionRepository.findByToken( token );
+
+    }
+
     private String generateSession(
         final Customer customer )
     {
