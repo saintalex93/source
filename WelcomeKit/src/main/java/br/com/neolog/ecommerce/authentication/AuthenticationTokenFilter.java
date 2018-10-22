@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import br.com.neolog.ecommerce.CustomerThreadLocal;
 import br.com.neolog.ecommerce.exceptions.CustomerInactiveException;
+import br.com.neolog.ecommerce.exceptions.ExpirationSessionException;
 import br.com.neolog.ecommerce.exceptions.InvalidTokenException;
 import br.com.neolog.ecommerce.exceptions.TokenNotFoundException;
 
@@ -59,12 +60,15 @@ public class AuthenticationTokenFilter
             throw new TokenNotFoundException();
         }
         final Session session = sessionService.verifyToken( httpRequest.getHeader( "token" ) );
-
         if( session == null ) {
             throw new InvalidTokenException();
         }
         if( session.getCustomer().getInactive() == true ) {
             throw new CustomerInactiveException();
+        }
+
+        if( session.getExpirationDate().isBeforeNow() ) {
+            throw new ExpirationSessionException();
         }
 
         final long tempoInicial = System.currentTimeMillis();

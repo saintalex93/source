@@ -198,6 +198,16 @@ public class ExceptionsHandler
         return new ResponseEntity<ErrorDetails>( errorDetails, HttpStatus.NOT_FOUND );
     }
 
+    @ExceptionHandler( CartItemCustomerException.class )
+    public final ResponseEntity<ErrorDetails> handleCartItemCustomerException(
+        final CartItemCustomerException ex,
+        final WebRequest request )
+    {
+        final ErrorDetails errorDetails = new ErrorDetails( ex.getMessage(), request.getDescription( false ),
+            ex.getClass().getName(), HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value() );
+        return new ResponseEntity<ErrorDetails>( errorDetails, HttpStatus.BAD_REQUEST );
+    }
+
     @ExceptionHandler( InvalidTokenException.class )
     public final ResponseEntity<ErrorDetails> handleInvalidTokenException(
         final InvalidTokenException ex,
@@ -218,9 +228,9 @@ public class ExceptionsHandler
         return new ResponseEntity<ErrorDetails>( errorDetails, HttpStatus.NOT_FOUND );
     }
 
-    @ExceptionHandler( CartItemCustomerException.class )
-    public final ResponseEntity<ErrorDetails> handleCartItemCustomerException(
-        final CartItemCustomerException ex,
+    @ExceptionHandler( ExpirationSessionException.class )
+    public final ResponseEntity<ErrorDetails> handleExpirationSessionException(
+        final ExpirationSessionException ex,
         final WebRequest request )
     {
         final ErrorDetails errorDetails = new ErrorDetails( ex.getMessage(), request.getDescription( false ),
