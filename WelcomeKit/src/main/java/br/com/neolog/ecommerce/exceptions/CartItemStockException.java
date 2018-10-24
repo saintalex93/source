@@ -10,8 +10,9 @@ public class CartItemStockException
 {
     private static final long serialVersionUID = 4609844768933644604L;
 
-    public CartItemStockException()
+    public CartItemStockException(
+        final String product )
     {
-        super( "Estoque insuficiente para compra" );
+        super( "Estoque do produto " + product + " insuficiente para compra" );
     }
 }

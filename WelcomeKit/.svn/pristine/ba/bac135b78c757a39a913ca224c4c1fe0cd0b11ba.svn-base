@@ -1,0 +1,241 @@
+package br.com.neolog.ecommerce.cart;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import br.com.neolog.ecommerce.CustomerThreadLocal;
+import br.com.neolog.ecommerce.customer.Customer;
+import br.com.neolog.ecommerce.customer.CustomerRepository;
+import br.com.neolog.ecommerce.exceptions.CartCustomerException;
+import br.com.neolog.ecommerce.exceptions.CartItemNotFoundException;
+import br.com.neolog.ecommerce.exceptions.CartItemRemoveException;
+import br.com.neolog.ecommerce.exceptions.CartItemStockException;
+import br.com.neolog.ecommerce.exceptions.CartNotFoundException;
+import br.com.neolog.ecommerce.exceptions.CustomerFillException;
+import br.com.neolog.ecommerce.exceptions.ProductNotFoundException;
+import br.com.neolog.ecommerce.exceptions.StockNotFoundException;
+import br.com.neolog.ecommerce.product.Product;
+import br.com.neolog.ecommerce.product.ProductRepository;
+import br.com.neolog.ecommerce.stock.Stock;
+import br.com.neolog.ecommerce.stock.StockItem;
+import br.com.neolog.ecommerce.stock.StockService;
+
+@Component
+public class CartService
+{
+
+    @Autowired
+    private CartRepository cartRepository;
+
+    @Autowired
+    private CartItemRepository cartItemRepository;
+
+    @Autowired
+    private StockService stockService;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private CustomerRepository customerRepository;
+
+    public List<Cart> listAll()
+    {
+        return cartRepository.findAll();
+    }
+
+    public Cart findById(
+        final int id )
+    {
+        return cartRepository.findById( id );
+    }
+
+    public CartItem addItemToCart(
+        final HolderCartItem holderCartItem )
+    {
+
+        final Product product = productRepository.findById( holderCartItem.getProductId() );
+        if( product == null ) {
+            throw new ProductNotFoundException();
+        }
+        final Stock productStock = stockService.getStockByProductId( holderCartItem.getProductId() );
+
+        if( productStock == null ) {
+            throw new StockNotFoundException();
+        }
+
+        final Cart cart = getActiveCustomerCart();
+        CartItem cartItem = cartItemRepository.findByCartAndProduct( cart, product );
+
+        if( ! cart.getCustomer().equals( customerRepository.findById( CustomerThreadLocal.get() ) ) ) {
+            throw new CartCustomerException();
+        }
+
+        if( cartItem == null ) {
+            cartItem = new CartItem();
+            cartItem.setCart( cart );
+            cartItem.setProduct( product );
+        }
+        final int quantity = cartItem.getQuantity() + holderCartItem.getQuantity();
+        if( productStock.getQuantity() < quantity ) {
+            throw new CartItemStockException( productStock.getProduct().getName() );
+        }
+        cartItem.setQuantity( quantity );
+        cart.setTotalValue( cart.getTotalValue() + holderCartItem.getQuantity() * product.getPrice() );
+
+        return cartItemRepository.save( cartItem );
+    }
+
+    public Cart removeProductQuantityFromCartItem(
+        final HolderCartItem holderCartItem )
+    {
+
+        final Product product = productRepository.findById( holderCartItem.getProductId() );
+        if( product == null ) {
+            throw new ProductNotFoundException();
+        }
+        final Stock productStock = stockService.getStockByProductId( holderCartItem.getProductId() );
+
+        if( productStock == null ) {
+            throw new StockNotFoundException();
+        }
+        final Cart cart = getActiveCustomerCart();
+        if( cart == null ) {
+            throw new CartNotFoundException();
+        }
+
+        if( ! cart.getCustomer().equals( customerRepository.findById( CustomerThreadLocal.get() ) ) ) {
+            throw new CartCustomerException();
+        }
+
+        final CartItem cartItem = cartItemRepository.findByCartAndProduct( cart, product );
+
+        if( cartItem == null ) {
+            throw new CartItemNotFoundException();
+        }
+        if( cartItem.getQuantity() < holderCartItem.getQuantity() ) {
+            throw new CartItemRemoveException( "Quantidade informada maior do que está no carrinho" );
+        }
+
+        final int quantity = cartItem.getQuantity() - holderCartItem.getQuantity();
+
+        cartItem.setQuantity( quantity );
+        cartItemRepository.save( cartItem );
+        if( quantity == 0 ) {
+            cartItemRepository.delete( cartItem );
+        }
+
+        final Double totalValue = cart.getTotalValue() - holderCartItem.getQuantity() * product.getPrice();
+
+        cart.setTotalValue( totalValue );
+
+        cartRepository.save( cart );
+
+        return cart;
+
+    }
+
+    public Cart removeCartItem(
+        final int cartItemID )
+    {
+
+        final CartItem cartItem = cartItemRepository.findById( cartItemID );
+
+        if( cartItem == null ) {
+            throw new CartItemNotFoundException();
+        }
+        if( ! cartItem.getCart().getCustomer().equals( customerRepository.findById( CustomerThreadLocal.get() ) ) ) {
+            throw new CartCustomerException();
+        }
+        final Cart cart = cartRepository.findById( cartItem.getId() );
+        final Double totalValue = cartItem.getQuantity() * cartItem.getProduct().getPrice();
+        cart.setTotalValue( totalValue );
+        cartItemRepository.delete( cartItem );
+
+        return cartRepository.save( cart );
+    }
+
+    public Cart getActiveCustomerCart()
+    {
+        final Customer customer = customerRepository.findById( CustomerThreadLocal.get() );
+
+        if( customer.getId() == null ) {
+            throw new CustomerFillException( "ID do usuário não encontrado" );
+        }
+
+        Cart cart = cartRepository.findByCustomerAndStatus( customer, CartStatus.ACTIVE );
+
+        if( cart == null ) {
+            cart = creatCart( customer );
+        }
+        return cart;
+    }
+
+    public Cart cancelActiveCart()
+    {
+        final Customer customer = customerRepository.findById( CustomerThreadLocal.get() );
+        final Cart cart = cartRepository.findByCustomerAndStatus( customer, CartStatus.ACTIVE );
+        if( cart == null ) {
+            throw new CartNotFoundException();
+        }
+
+        if( ! cart.getCustomer().equals( customerRepository.findById( CustomerThreadLocal.get() ) ) ) {
+            throw new CartCustomerException();
+        }
+
+        cart.setStatus( CartStatus.CANCELLED );
+        return cartRepository.save( cart );
+    }
+
+    @Transactional
+    public Cart checkout()
+    {
+        final Customer customer = customerRepository.findById( CustomerThreadLocal.get() );
+        final Cart cart = cartRepository.findByCustomerAndStatus( customer, CartStatus.ACTIVE );
+        if( cart == null ) {
+            throw new CartNotFoundException();
+        }
+
+        checkStockQuantity( cart );
+        removeFromStock( cart );
+        cart.setStatus( CartStatus.FINISHED );
+        return cartRepository.save( cart );
+    }
+
+    private void checkStockQuantity(
+        final Cart cart )
+    {
+        final List<CartItem> cartItens = cartItemRepository.findByCart( cart );
+        if( cartItens.isEmpty() ) {
+            throw new CartItemNotFoundException();
+        }
+        for( final CartItem cartItem : cartItens ) {
+            if( stockService.getStockByProduct( cartItem.getProduct() ).getQuantity() < cartItem.getQuantity() ) {
+                throw new CartItemStockException( cartItem.getProduct().getName() );
+            }
+        }
+    }
+
+    private void removeFromStock(
+        final Cart cart )
+    {
+        final List<CartItem> cartItens = cartItemRepository.findByCart( cart );
+        if( cartItens.isEmpty() ) {
+            throw new CartItemNotFoundException();
+        }
+        for( final CartItem cartItem : cartItens ) {
+            stockService.removeStock( new StockItem( cartItem.getProduct().getId(), cartItem.getQuantity() ) );
+        }
+    }
+
+    private Cart creatCart(
+        final Customer customer )
+    {
+        final Cart cart = cartRepository.save( new Cart( 0l, customer, CartStatus.ACTIVE ) );
+        return cart;
+    }
+
+}

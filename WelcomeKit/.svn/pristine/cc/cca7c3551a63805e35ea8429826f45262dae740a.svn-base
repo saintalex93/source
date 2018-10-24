@@ -4,15 +4,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus( value = HttpStatus.BAD_REQUEST )
-public class CartItemCustomerException
+public class CartItemStockException
     extends
         RuntimeException
 {
+    private static final long serialVersionUID = 4609844768933644604L;
 
-    private static final long serialVersionUID = - 5426866135870809631L;
-
-    public CartItemCustomerException()
+    public CartItemStockException(
+        final String product )
     {
-        super( "O item não faz parte do seu carrinho" );
+        super( "Estoque do produto " + product + " insuficiente para compra" );
     }
 }

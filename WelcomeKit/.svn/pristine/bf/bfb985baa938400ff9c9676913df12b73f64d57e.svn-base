@@ -1,0 +1,72 @@
+package br.com.neolog.ecommerce.customer;
+
+import static br.com.neolog.ecommerce.authentication.Encryptor.encryptPassword;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import br.com.neolog.ecommerce.CustomerThreadLocal;
+import br.com.neolog.ecommerce.exceptions.CustomerDuplicatedEmailException;
+import br.com.neolog.ecommerce.exceptions.CustomerFillException;
+import br.com.neolog.ecommerce.exceptions.CustomerNotFoundException;
+
+@Component
+public class CustomerService
+{
+    @Autowired
+    private CustomerRepository repository;
+
+    public List<Customer> getAll()
+    {
+        return repository.findAll();
+    }
+
+    public Customer getById(
+        final int id )
+    {
+        return repository.findById( id );
+    }
+
+    public void inactiveUser()
+    {
+        final Customer customer = repository.findById( CustomerThreadLocal.get() );
+        customer.setInactive( true );
+        repository.save( customer );
+    }
+
+    public Customer save(
+        final Customer customer )
+    {
+        if( customer.getId() != null ) {
+            customer.setId( null );
+        }
+
+        final Customer recievedCustomer = repository.findByEmailAndInactiveFalse( customer.getEmail() );
+
+        if( recievedCustomer != null ) {
+            throw new CustomerDuplicatedEmailException();
+        }
+        customer.setPassword( encryptPassword( customer.getPassword() ) );
+        return repository.save( customer );
+    }
+
+    public Customer update(
+        final Customer customer )
+    {
+        if( customer.getId() == null ) {
+            throw new CustomerFillException( "Informe o ID do usuário a ser alterado" );
+        }
+        final Customer customerToUpdate = repository.findByIdAndInactiveFalse( customer.getId() );
+        if( customerToUpdate == null ) {
+            throw new CustomerNotFoundException();
+        }
+        if( repository.existsByEmailAndIdNotAndInactiveFalse( customer.getEmail(), customer.getId() ) ) {
+            throw new CustomerDuplicatedEmailException();
+        }
+        customer.setPassword( encryptPassword( customer.getPassword() ) );
+        return repository.save( customer );
+    }
+
+}
