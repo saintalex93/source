@@ -15,15 +15,6 @@ public class HolderCartItem
     {
     }
 
-    public HolderCartItem(
-        final int idProduct,
-        final int quantity )
-    {
-        super();
-        this.productId = idProduct;
-        this.quantity = quantity;
-    }
-
     public int getProductId()
     {
         return productId;

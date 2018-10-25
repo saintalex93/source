@@ -419,7 +419,7 @@
 			<column name="login_date" value="now()" />
 			<column name="customer" value="7" />
 		</insert>
-
+		
 		<insert tableName="customer">
 			<column name="email" value="cartitem@santocodigo.com.br" />
 			<column name="name" value="Fuleco Santos" />
@@ -446,8 +446,8 @@
 			<column name="quantity" value="2" />
 			<column name="cart" value="6" />
 		</insert>
-
-
+		
+		
 		<insert tableName="customer">
 			<column name="email" value="finished@santocodigo.com.br" />
 			<column name="name" value="Fuleco Santos" />
@@ -468,28 +468,13 @@
 			<column name="customer" value="9" />
 			<column name="status" value="FINISHED" />
 		</insert>
-
+		
 		<insert tableName="customer">
 			<column name="email" value="session@santocodigo.com.br" />
 			<column name="name" value="ÀLEXJKMS Santos" />
 			<column name="password"
 				value="36e00cc4a8e01cae92a62a0fc3e7e2515631d5bf8fedf678829c357032d1691a5792bda50e29174b5db73071175eef4cd689f747694d74c432d757e828907d81" />
 			<column name="inactive" value="0" />
-		</insert>
-
-		<insert tableName="customer">
-			<column name="email" value="inactivate@santocodigo.com.br" />
-			<column name="name" value="sdfghweret Santos" />
-			<column name="password"
-				value="36e00cc4a8e01cae92a62a0fc3e7e2515631d5bf8fedf678829c357032d1691a5792bda50e29174b5db73071175eef4cd689f747694d74c432d757e828907d81" />
-			<column name="inactive" value="0" />
-		</insert>
-
-		<insert tableName="session">
-			<column name="token" value="customerInactive" />
-			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
-			<column name="login_date" value="now()" />
-			<column name="customer" value="11" />
 		</insert>
 
 	</changeSet>

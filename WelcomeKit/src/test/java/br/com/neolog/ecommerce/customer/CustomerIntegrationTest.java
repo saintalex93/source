@@ -26,6 +26,7 @@ public class CustomerIntegrationTest
             .as( Customer.class );
 
         assertThat( customer ).isNotNull();
+        assertThat( customer.getEmail() ).contains( "santocodigo" );
 
     }
 
@@ -48,6 +49,7 @@ public class CustomerIntegrationTest
             .post( "customer/save" ).as( Customer.class );
 
         assertThat( customer ).isNotNull();
+        assertThat( customer.getName() ).contains( "Ctchulu" );
     }
 
     @Test
@@ -90,12 +92,7 @@ public class CustomerIntegrationTest
     public void shouldAssertCustomerDuplicatedEmailExceptionWhenUpdateCustomerWithDuplicatedEmail()
     {
 
-        final String json = "{\"email\": \"testchulu@santocodigo.com.br\",\"name\": \"Teste Ctchulu\",\"password\": \"Neolog123\",\"inactive\":false}";
-        final Customer customer = given().header( "token", provideToken() ).contentType( ContentType.JSON ).when().body( json )
-            .post( "customer/save" ).as( Customer.class );
-
-        final String jsonCustomer = "{\"id\":" + customer.getId()
-            + ",\"email\": \"alex@santocodigo.com.br\",\"name\": \"Teste Ctchulu\",\"password\": \"Neolog123\",\"inactive\":false}";
+        final String jsonCustomer = "{\"id\":2,\"email\": \"alex@santocodigo.com.br\",\"name\": \"Teste Ctchulu\",\"password\": \"Neolog123\",\"inactive\":false}";
         final ErrorDetails bodyError = given().header( "token", provideToken() ).contentType( ContentType.JSON ).when().body( jsonCustomer )
             .post( "customer/update" ).then().extract().as( ErrorDetails.class );
 
@@ -106,31 +103,21 @@ public class CustomerIntegrationTest
     @Test
     public void shouldAssertUpdateCustomer()
     {
-        final String jsonCustomer = "{\"email\": \"teste@update.com.br\",\"name\": \"Alex Santos\",\"password\": \"Neolog123\",\"inactive\":false}";
-        final Customer customer = given().contentType( ContentType.JSON ).when().body( jsonCustomer )
-            .post( "customer/save" ).as( Customer.class );
+        final String jsonCustomer = "{\"id\":2,\"email\": \"teste@update.com.br\",\"name\": \"Alex Santos\",\"password\": \"Neolog123\",\"inactive\":false}";
 
-        final Customer updatedCustomer = given().header( "token", provideToken() ).contentType( ContentType.JSON ).when().body( customer )
+        final Customer updatedCustomer = given().header( "token", provideToken() ).contentType( ContentType.JSON ).when().body(
+            jsonCustomer )
             .post( "customer/update" ).as( Customer.class );
-        updatedCustomer.setEmail( "atualizando@update.com.br" );
 
-        assertThat( customer.getEmail() ).doesNotContain( updatedCustomer.getEmail() );
+        assertThat( updatedCustomer.getEmail() ).doesNotContain( "santocodigo" );
 
     }
 
     @Test
     public void shouldAssertInactiveCustomer()
     {
-        final String jsonCustomer = "{\"email\": \"teste@inactive.com.br\",\"name\": \"Alex Santos\",\"password\": \"Neolog123\",\"inactive\":false}";
 
-        given().contentType( ContentType.JSON ).when().body( jsonCustomer )
-            .when()
-            .post( "customer/save" ).as( Customer.class );
-
-        final String token = given().contentType( ContentType.JSON ).when()
-            .body( " {\"email\": \"teste@inactive.com.br\",\"password\":\"Neolog123\"}" ).when().post( "session/login" ).asString();
-
-        final Customer inactiveCustomer = given().header( "token", token ).contentType( ContentType.JSON )
+        final Customer inactiveCustomer = given().header( "token", "customerInactive" ).contentType( ContentType.JSON )
             .when()
             .post( "customer/inactive" ).as( Customer.class );
 
