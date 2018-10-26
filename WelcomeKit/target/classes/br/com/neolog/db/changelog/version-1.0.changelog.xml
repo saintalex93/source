@@ -2,7 +2,9 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
-	<changeSet id="1" author="alex.santos">
+	<changeSet id="100331" author="alex.santos">
+		<comment>Criação da base de dados</comment>
+
 		<createTable tableName="product">
 			<column name="id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" />
@@ -16,6 +18,7 @@
 			<column name="weight" type="bigint" />
 			<column name="category" type="int" />
 		</createTable>
+
 		<createTable tableName="category">
 			<column name="id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" />
@@ -30,9 +33,7 @@
 			<column name="id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" />
 			</column>
-			<column name="quantity" type="int">
-				<constraints unique="true" />
-			</column>
+			<column name="quantity" type="int" />
 			<column name="product" type="int" />
 		</createTable>
 
@@ -107,9 +108,9 @@
 			referencedColumnNames="id" referencedTableName="customer" />
 	</changeSet>
 
-	<changeSet id="2" author="alex.santos" dbms="postgresql"
+	<changeSet id="100985" author="alex.santos" dbms="postgresql"
 		runAlways="true">
-		<comment>NLG-20729 - Cria function para fazer boolean virar smallint</comment>
+		<comment>Cria function para fazer boolean virar smallint</comment>
 		<sql splitStatements="false">
 			CREATE OR REPLACE FUNCTION
 			booleanToSmallint(v boolean)
@@ -138,6 +139,7 @@
 	</changeSet>
 
 	<changeSet id="100974" author="alex.santos">
+		<comment>Criação de unique condicional de email e status</comment>
 		<sql dbms="postgresql">
 			CREATE UNIQUE INDEX cart_active ON cart (customer,
 			status) WHERE (status = 'ACTIVE');
@@ -148,233 +150,56 @@
 		</sql>
 	</changeSet>
 
-	<changeSet id="3" author="alex.santos" context="test">
+	<changeSet id="100331-inserts" author="alex.santos" context="test">
+		<comment>Inserções primeira iteração</comment>
 		<insert tableName="category">
-		<column name="id" valueSequenceNext="category_sequence"/>
+			<column name="id" valueSequenceNext="category_sequence" />
 			<column name="code" value="001" />
 			<column name="name" value="Eletrônicos" />
 		</insert>
 
 		<insert tableName="category">
-		<column name="id" valueSequenceNext="category_sequence"/>
+			<column name="id" valueSequenceNext="category_sequence" />
 			<column name="code" value="002" />
 			<column name="name" value="Tecnológicos" />
 		</insert>
 
 		<insert tableName="category">
-		<column name="id" valueSequenceNext="category_sequence"/>
+			<column name="id" valueSequenceNext="category_sequence" />
 			<column name="code" value="003" />
 			<column name="name" value="Teste" />
 		</insert>
 
 		<insert tableName="product">
-		<column name="id" valueSequenceNext="product_sequence"/>
+			<column name="id" valueSequenceNext="product_sequence" />
 			<column name="code" value="001" />
 			<column name="name" value="TV" />
 			<column name="price" value="250000" />
 			<column name="description" value="PlasmaTron" />
 			<column name="weight" value="1500" />
-			<column name="category" value="1" />
+			<column name="category" valueComputed="(select id from category where code = '001')" />
 		</insert>
 
 		<insert tableName="product">
-		<column name="id" valueSequenceNext="product_sequence"/>
+			<column name="id" valueSequenceNext="product_sequence" />
 			<column name="code" value="002" />
 			<column name="name" value="Windão Original" />
 			<column name="price" value="20000" />
 			<column name="description" value="S.O" />
 			<column name="weight" value="5000" />
-			<column name="category" value="2" />
+			<column name="category" valueComputed="(select id from category where code = '002')" />
 		</insert>
 
 		<insert tableName="stock">
-		<column name="id" valueSequenceNext="stock_sequence"/>
+			<column name="id" valueSequenceNext="stock_sequence" />
 			<column name="quantity" value="20" />
-			<column name="product" value="1" />
+			<column name="product" valueComputed="(select id from product where code = '001')" />
 		</insert>
-
 
 		<insert tableName="stock">
-		<column name="id" valueSequenceNext="stock_sequence"/>
+			<column name="id" valueSequenceNext="stock_sequence" />
 			<column name="quantity" value="500" />
-			<column name="product" value="2" />
-		</insert>
-
-		<insert tableName="customer">
-		<column name="id" valueSequenceNext="customer_sequence"/>
-			<column name="email" value="alex@santocodigo.com.br" />
-			<column name="name" value="Alex Santos" />
-			<column name="password"
-				value="36e00cc4a8e01cae92a62a0fc3e7e2515631d5bf8fedf678829c357032d1691a5792bda50e29174b5db73071175eef4cd689f747694d74c432d757e828907d81" />
-			<column name="inactive" value="0" />
-		</insert>
-
-		<insert tableName="session">
-		<column name="id" valueSequenceNext="session_sequence"/>
-			<column name="token" value="3221540315148525" />
-			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
-			<column name="login_date" value="now()" />
-			<column name="customer" value="1" />
-		</insert>
-
-		<insert tableName="cart">
-		<column name="id" valueSequenceNext="cart_sequence"/>
-					<column name="total_value" value="1500000" />
-			<column name="customer" value="1" />
-			<column name="status" value="FINISHED" />
-		</insert>
-
-		<insert tableName="cart_item">
-		<column name="id" valueSequenceNext="cart_item_sequence"/>		
-			<column name="product" value="1" />
-			<column name="quantity" value="1" />
-			<column name="cart" value="1" />
-		</insert>
-
-		<insert tableName="cart_item">
-		<column name="id" valueSequenceNext="cart_item_sequence"/>
-			<column name="product" value="2" />
-			<column name="quantity" value="1" />
-			<column name="cart" value="1" />
-		</insert>
-
-	</changeSet>
-
-	<changeSet id="101219" author="alex.santos" context="test">
-		<comment>Inserção para testes integrado de Cart</comment>
-		<insert tableName="customer">
-		<column name="id" valueSequenceNext="customer_sequence"/>
-			<column name="email" value="fuleco@santocodigo.com.br" />
-			<column name="name" value="Fuleco Santos" />
-			<column name="password"
-				value="36e00cc4a8e01cae92a62a0fc3e7e2515631d5bf8fedf678829c357032d1691a5792bda50e29174b5db73071175eef4cd689f747694d74c432d757e828907d81" />
-			<column name="inactive" value="0" />
-		</insert>
-
-		<insert tableName="session">
-		<column name="id" valueSequenceNext="session_sequence"/>
-			<column name="token" value="testeCheckout" />
-			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
-			<column name="login_date" value="now()" />
-			<column name="customer" value="2" />
-		</insert>
-
-		<insert tableName="cart">
-		<column name="id" valueSequenceNext="cart_sequence"/>
-			<column name="total_value" value="1500000" />
-			<column name="customer" value="2" />
-			<column name="status" value="ACTIVE" />
-		</insert>
-
-		<insert tableName="cart_item">
-		<column name="id" valueSequenceNext="cart_item_sequence"/>
-			<column name="product" value="1" />
-			<column name="quantity" value="1" />
-			<column name="cart" value="2" />
-		</insert>
-
-		<insert tableName="cart_item">
-		<column name="id" valueSequenceNext="cart_item_sequence"/>
-			<column name="product" value="2" />
-			<column name="quantity" value="10" />
-			<column name="cart" value="2" />
-		</insert>
-
-		<insert tableName="cart">
-		<column name="id" valueSequenceNext="cart_sequence"/>
-			<column name="total_value" value="1500000" />
-			<column name="customer" value="1" />
-			<column name="status" value="ACTIVE" />
-		</insert>
-
-		<insert tableName="cart_item">
-		<column name="id" valueSequenceNext="cart_item_sequence"/>
-			<column name="product" value="1" />
-			<column name="quantity" value="10" />
-			<column name="cart" value="3" />
-		</insert>
-
-		<insert tableName="cart_item">
-		<column name="id" valueSequenceNext="cart_item_sequence"/>
-			<column name="product" value="2" />
-			<column name="quantity" value="10" />
-			<column name="cart" value="2" />
-		</insert>
-
-		<insert tableName="customer">
-		<column name="id" valueSequenceNext="customer_sequence"/>
-			<column name="email" value="roberto@santocodigo.com.br" />
-			<column name="name" value="Fuleco Santos" />
-			<column name="password"
-				value="36e00cc4a8e01cae92a62a0fc3e7e2515631d5bf8fedf678829c357032d1691a5792bda50e29174b5db73071175eef4cd689f747694d74c432d757e828907d81" />
-			<column name="inactive" value="0" />
-		</insert>
-
-		<insert tableName="session">
-		<column name="id" valueSequenceNext="session_sequence"/>
-			<column name="token" value="testRemoveItem" />
-			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
-			<column name="login_date" value="now()" />
-			<column name="customer" value="3" />
-		</insert>
-
-		<insert tableName="cart">
-		<column name="id" valueSequenceNext="cart_sequence"/>
-			<column name="total_value" value="500000000" />
-			<column name="customer" value="3" />
-			<column name="status" value="ACTIVE" />
-		</insert>
-
-		<insert tableName="cart_item">
-		<column name="id" valueSequenceNext="cart_item_sequence"/>
-			<column name="product" value="1" />
-			<column name="quantity" value="10" />
-			<column name="cart" value="4" />
-		</insert>
-
-		<insert tableName="cart_item">
-		<column name="id" valueSequenceNext="cart_item_sequence"/>
-			<column name="product" value="2" />
-			<column name="quantity" value="10" />
-			<column name="cart" value="4" />
-		</insert>
-
-		<insert tableName="customer">
-		<column name="id" valueSequenceNext="customer_sequence"/>
-			<column name="email" value="juclecio@santocodigo.com.br" />
-			<column name="name" value="Fuleco Santos" />
-			<column name="password"
-				value="36e00cc4a8e01cae92a62a0fc3e7e2515631d5bf8fedf678829c357032d1691a5792bda50e29174b5db73071175eef4cd689f747694d74c432d757e828907d81" />
-			<column name="inactive" value="0" />
-		</insert>
-
-		<insert tableName="session">
-		<column name="id" valueSequenceNext="session_sequence"/>
-			<column name="token" value="testRemoveQuantity" />
-			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
-			<column name="login_date" value="now()" />
-			<column name="customer" value="4" />
-		</insert>
-
-		<insert tableName="cart">
-		<column name="id" valueSequenceNext="cart_sequence"/>
-			<column name="total_value" value="500000" />
-			<column name="customer" value="4" />
-			<column name="status" value="ACTIVE" />
-		</insert>
-
-		<insert tableName="cart_item">
-		<column name="id" valueSequenceNext="cart_item_sequence"/>
-			<column name="product" value="1" />
-			<column name="quantity" value="2" />
-			<column name="cart" value="5" />
-		</insert>
-
-		<insert tableName="cart_item">
-		<column name="id" valueSequenceNext="cart_item_sequence"/>
-			<column name="product" value="2" />
-			<column name="quantity" value="1" />
-			<column name="cart" value="5" />
+			<column name="product" valueComputed="(select id from product where code = '002')" />
 		</insert>
 
 		<insert tableName="product">
@@ -397,65 +222,98 @@
 			<column name="category" value="2" />
 		</insert>
 
+		<insert tableName="product">
+			<column name="id" valueSequenceNext="product_sequence" />
+			<column name="code" value="555664" />
+			<column name="name" value="Temaki Carlão" />
+			<column name="price" value="100" />
+			<column name="description" value="Pão" />
+			<column name="weight" value="100" />
+			<column name="category" value="2" />
+		</insert>
+
 		<insert tableName="stock">
-		<column name="id" valueSequenceNext="stock_sequence" />
+			<column name="id" valueSequenceNext="stock_sequence" />
 			<column name="quantity" value="2" />
 			<column name="product" value="4" />
 		</insert>
 
+		<insert tableName="stock">
+			<column name="id" valueSequenceNext="stock_sequence" />
+			<column name="quantity" value="0" />
+			<column name="product" valueComputed="(select id from product where code = '555664')" />
+		</insert>
+
+	</changeSet>
+
+	<changeSet id="100967-customer" author="alex.santos">
+	<comment>Inserção para testes integrados de customer</comment>
+
 		<insert tableName="customer">
-		<column name="id" valueSequenceNext="customer_sequence"/>
+			<column name="id" valueSequenceNext="customer_sequence" />
+			<column name="email" value="alex@santocodigo.com.br" />
+			<column name="name" value="Alex Santos" />
+			<column name="password"
+				value="36e00cc4a8e01cae92a62a0fc3e7e2515631d5bf8fedf678829c357032d1691a5792bda50e29174b5db73071175eef4cd689f747694d74c432d757e828907d81" />
+			<column name="inactive" value="0" />
+		</insert>
+
+		<insert tableName="customer">
+			<column name="id" valueSequenceNext="customer_sequence" />
+			<column name="email" value="fuleco@santocodigo.com.br" />
+			<column name="name" value="Fuleco Santos" />
+			<column name="password"
+				value="36e00cc4a8e01cae92a62a0fc3e7e2515631d5bf8fedf678829c357032d1691a5792bda50e29174b5db73071175eef4cd689f747694d74c432d757e828907d81" />
+			<column name="inactive" value="0" />
+		</insert>
+
+		<insert tableName="customer">
+			<column name="id" valueSequenceNext="customer_sequence" />
+			<column name="email" value="roberto@santocodigo.com.br" />
+			<column name="name" value="Fuleco Santos" />
+			<column name="password"
+				value="36e00cc4a8e01cae92a62a0fc3e7e2515631d5bf8fedf678829c357032d1691a5792bda50e29174b5db73071175eef4cd689f747694d74c432d757e828907d81" />
+			<column name="inactive" value="0" />
+		</insert>
+
+		<insert tableName="customer">
+			<column name="id" valueSequenceNext="customer_sequence" />
+			<column name="email" value="juclecio@santocodigo.com.br" />
+			<column name="name" value="Fuleco Santos" />
+			<column name="password"
+				value="36e00cc4a8e01cae92a62a0fc3e7e2515631d5bf8fedf678829c357032d1691a5792bda50e29174b5db73071175eef4cd689f747694d74c432d757e828907d81" />
+			<column name="inactive" value="0" />
+		</insert>
+
+		<insert tableName="customer">
+			<column name="id" valueSequenceNext="customer_sequence" />
 			<column name="email" value="robervaldo@santocodigo.com.br" />
-			<column name="name" value="Fuleco Santos" />
+			<column name="name" value="Robervaldo Maduro" />
 			<column name="password"
 				value="36e00cc4a8e01cae92a62a0fc3e7e2515631d5bf8fedf678829c357032d1691a5792bda50e29174b5db73071175eef4cd689f747694d74c432d757e828907d81" />
 			<column name="inactive" value="0" />
 		</insert>
 
-		<insert tableName="session">
-		<column name="id" valueSequenceNext="session_sequence"/>
-			<column name="token" value="testCreateCart" />
-			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
-			<column name="login_date" value="now()" />
-			<column name="customer" value="5" />
-		</insert>
-
 		<insert tableName="customer">
-		<column name="id" valueSequenceNext="customer_sequence"/>
+			<column name="id" valueSequenceNext="customer_sequence" />
 			<column name="email" value="errodecustomer@customer.com.br" />
-			<column name="name" value="Fuleco Santos" />
+			<column name="name" value="Fulequinho Santos" />
 			<column name="password"
 				value="36e00cc4a8e01cae92a62a0fc3e7e2515631d5bf8fedf678829c357032d1691a5792bda50e29174b5db73071175eef4cd689f747694d74c432d757e828907d81" />
 			<column name="inactive" value="0" />
 		</insert>
 
-		<insert tableName="session">
-		<column name="id" valueSequenceNext="session_sequence"/>
-			<column name="token" value="erroCustomer" />
-			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
-			<column name="login_date" value="now()" />
-			<column name="customer" value="6" />
-		</insert>
-
 		<insert tableName="customer">
-		<column name="id" valueSequenceNext="customer_sequence"/>
+			<column name="id" valueSequenceNext="customer_sequence" />
 			<column name="email" value="cartnotfound@customer.com.br" />
-			<column name="name" value="Fuleco Santos" />
+			<column name="name" value="Fuleco de Sá Santos" />
 			<column name="password"
 				value="36e00cc4a8e01cae92a62a0fc3e7e2515631d5bf8fedf678829c357032d1691a5792bda50e29174b5db73071175eef4cd689f747694d74c432d757e828907d81" />
 			<column name="inactive" value="0" />
 		</insert>
 
-		<insert tableName="session">
-		<column name="id" valueSequenceNext="session_sequence"/>
-			<column name="token" value="cartNotFound" />
-			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
-			<column name="login_date" value="now()" />
-			<column name="customer" value="7" />
-		</insert>
-
 		<insert tableName="customer">
-		<column name="id" valueSequenceNext="customer_sequence"/>
+			<column name="id" valueSequenceNext="customer_sequence" />
 			<column name="email" value="cartitem@santocodigo.com.br" />
 			<column name="name" value="Fuleco Santos" />
 			<column name="password"
@@ -463,31 +321,8 @@
 			<column name="inactive" value="0" />
 		</insert>
 
-		<insert tableName="session">
-		<column name="id" valueSequenceNext="session_sequence"/>
-			<column name="token" value="testRemoveItemExistsCartItem" />
-			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
-			<column name="login_date" value="now()" />
-			<column name="customer" value="8" />
-		</insert>
-
-		<insert tableName="cart">
-		<column name="id" valueSequenceNext="cart_sequence"/>
-			<column name="total_value" value="500000" />
-			<column name="customer" value="8" />
-			<column name="status" value="ACTIVE" />
-		</insert>
-
-		<insert tableName="cart_item">
-		<column name="id" valueSequenceNext="cart_item_sequence"/>
-			<column name="product" value="1" />
-			<column name="quantity" value="2" />
-			<column name="cart" value="6" />
-		</insert>
-
-
 		<insert tableName="customer">
-		<column name="id" valueSequenceNext="customer_sequence"/>
+			<column name="id" valueSequenceNext="customer_sequence" />
 			<column name="email" value="finished@santocodigo.com.br" />
 			<column name="name" value="Fuleco Santos" />
 			<column name="password"
@@ -495,24 +330,8 @@
 			<column name="inactive" value="0" />
 		</insert>
 
-		<insert tableName="session">
-		<column name="id" valueSequenceNext="session_sequence"/>
-			<column name="token" value="cartFinished" />
-			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
-			<column name="login_date" value="now()" />
-			<column name="customer" value="9" />
-		</insert>
-
-		<insert tableName="cart">
-		<column name="id" valueSequenceNext="cart_sequence"/>
-		<column name="id" valueSequenceNext="cart_sequence"/>
-			<column name="total_value" value="500000000" />
-			<column name="customer" value="9" />
-			<column name="status" value="FINISHED" />
-		</insert>
-
 		<insert tableName="customer">
-		<column name="id" valueSequenceNext="customer_sequence"/>
+			<column name="id" valueSequenceNext="customer_sequence" />
 			<column name="email" value="session@santocodigo.com.br" />
 			<column name="name" value="ÀLEXJKMS Santos" />
 			<column name="password"
@@ -521,7 +340,7 @@
 		</insert>
 
 		<insert tableName="customer">
-		<column name="id" valueSequenceNext="customer_sequence"/>
+			<column name="id" valueSequenceNext="customer_sequence" />
 			<column name="email" value="inactivate@santocodigo.com.br" />
 			<column name="name" value="sdfghweret Santos" />
 			<column name="password"
@@ -529,12 +348,275 @@
 			<column name="inactive" value="0" />
 		</insert>
 
+		<insert tableName="customer">
+			<column name="id" valueSequenceNext="customer_sequence" />
+			<column name="email" value="inactivate@customer.com.br" />
+			<column name="name" value="sdfghweret Silva" />
+			<column name="password"
+				value="36e00cc4a8e01cae92a62a0fc3e7e2515631d5bf8fedf678829c357032d1691a5792bda50e29174b5db73071175eef4cd689f747694d74c432d757e828907d81" />
+			<column name="inactive" value="1" />
+		</insert>
+
+		<insert tableName="customer">
+			<column name="id" valueSequenceNext="customer_sequence" />
+			<column name="email" value="inactivate@customer.com.br" />
+			<column name="name" value="sdfghweret sá" />
+			<column name="password"
+				value="36e00cc4a8e01cae92a62a0fc3e7e2515631d5bf8fedf678829c357032d1691a5792bda50e29174b5db73071175eef4cd689f747694d74c432d757e828907d81" />
+			<column name="inactive" value="0" />
+		</insert>
+
+	</changeSet>
+
+
+	<changeSet id="100967-session" author="alex.santos">
+	<comment>Inserção para testes integrados de session</comment>
+
 		<insert tableName="session">
-		<column name="id" valueSequenceNext="session_sequence"/>
-					<column name="token" value="customerInactive" />
+			<column name="id" valueSequenceNext="session_sequence" />
+			<column name="token" value="3221540315148525" />
 			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
 			<column name="login_date" value="now()" />
-			<column name="customer" value="11" />
+			<column name="customer"
+				valueComputed="(select id from customer where email = 'alex@santocodigo.com.br')" />
+		</insert>
+
+		<insert tableName="session">
+			<column name="id" valueSequenceNext="session_sequence" />
+			<column name="token" value="testeCheckout" />
+			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
+			<column name="login_date" value="now()" />
+			<column name="customer"
+				valueComputed="(select id from customer where email = 'fuleco@santocodigo.com.br')" />
+		</insert>
+
+		<insert tableName="session">
+			<column name="id" valueSequenceNext="session_sequence" />
+			<column name="token" value="testRemoveItem" />
+			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
+			<column name="login_date" value="now()" />
+			<column name="customer"
+				valueComputed="(select id from customer where email = 'roberto@santocodigo.com.br')" />
+		</insert>
+
+		<insert tableName="session">
+			<column name="id" valueSequenceNext="session_sequence" />
+			<column name="token" value="testRemoveQuantity" />
+			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
+			<column name="login_date" value="now()" />
+			<column name="customer"
+				valueComputed="(select id from customer where email = 'juclecio@santocodigo.com.br')" />
+		</insert>
+
+		<insert tableName="session">
+			<column name="id" valueSequenceNext="session_sequence" />
+			<column name="token" value="testCreateCart" />
+			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
+			<column name="login_date" value="now()" />
+			<column name="customer"
+				valueComputed="(select id from customer where name = 'Robervaldo Maduro')" />
+		</insert>
+
+		<insert tableName="session">
+			<column name="id" valueSequenceNext="session_sequence" />
+			<column name="token" value="erroCustomer" />
+			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
+			<column name="login_date" value="now()" />
+			<column name="customer"
+				valueComputed="(select id from customer where name = 'Fulequinho Santos')" />
+		</insert>
+
+		<insert tableName="session">
+			<column name="id" valueSequenceNext="session_sequence" />
+			<column name="token" value="cartNotFound" />
+			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
+			<column name="login_date" value="now()" />
+			<column name="customer"
+				valueComputed="(select id from customer where name = 'Fuleco de Sá Santos')" />
+		</insert>
+
+		<insert tableName="session">
+			<column name="id" valueSequenceNext="session_sequence" />
+			<column name="token" value="testRemoveItemExistsCartItem" />
+			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
+			<column name="login_date" value="now()" />
+			<column name="customer"
+				valueComputed="(select id from customer where email = 'cartitem@santocodigo.com.br')" />
+		</insert>
+
+		<insert tableName="session">
+			<column name="id" valueSequenceNext="session_sequence" />
+			<column name="token" value="cartFinished" />
+			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
+			<column name="login_date" value="now()" />
+			<column name="customer"
+				valueComputed="(select id from customer where email = 'finished@santocodigo.com.br')" />
+		</insert>
+
+		<insert tableName="session">
+			<column name="id" valueSequenceNext="session_sequence" />
+			<column name="token" value="customerInactive" />
+			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
+			<column name="login_date" value="now()" />
+			<column name="customer"
+				valueComputed="(select id from customer where name = 'sdfghweret Santos')" />
+		</insert>
+
+		<insert tableName="session">
+			<column name="id" valueSequenceNext="session_sequence" />
+			<column name="token" value="inactiveCustomer" />
+			<column name="expiration_date" value="2020-10-19 16:20:00.00" />
+			<column name="login_date" value="now()" />
+			<column name="customer"
+				valueComputed="(select id from customer where name = 'sdfghweret Silva')" />
+		</insert>
+
+		<insert tableName="session">
+			<column name="id" valueSequenceNext="session_sequence" />
+			<column name="token" value="expirationCustomer" />
+			<column name="expiration_date" value="2017-10-19 16:20:00.00" />
+			<column name="login_date" value="now()" />
+			<column name="customer"
+				valueComputed="(select id from customer where name = 'sdfghweret sá')" />
+		</insert>
+
+	</changeSet>
+
+	<changeSet id="100967-cart" author="alex.santos" context="test">
+		<comment>Inserção para testes integrados de Cart</comment>
+
+		<insert tableName="cart">
+			<column name="id" valueSequenceNext="cart_sequence" />
+			<column name="total_value" value="1500000" />
+			<column name="customer"
+				valueComputed="(select id from customer where email = 'alex@santocodigo.com.br')" />
+			<column name="status" value="FINISHED" />
+		</insert>
+
+		<insert tableName="cart_item">
+			<column name="id" valueSequenceNext="cart_item_sequence" />
+			<column name="product" value="1" />
+			<column name="quantity" value="1" />
+			<column name="cart" value="1" />
+		</insert>
+
+		<insert tableName="cart_item">
+			<column name="id" valueSequenceNext="cart_item_sequence" />
+			<column name="product" value="2" />
+			<column name="quantity" value="1" />
+			<column name="cart" value="1" />
+		</insert>
+
+		<insert tableName="cart">
+			<column name="id" valueSequenceNext="cart_sequence" />
+			<column name="total_value" value="1500000" />
+			<column name="customer"
+				valueComputed="(select id from customer where email = 'fuleco@santocodigo.com.br')" />
+			<column name="status" value="ACTIVE" />
+		</insert>
+
+		<insert tableName="cart_item">
+			<column name="id" valueSequenceNext="cart_item_sequence" />
+			<column name="product" value="1" />
+			<column name="quantity" value="1" />
+			<column name="cart" value="2" />
+		</insert>
+
+		<insert tableName="cart_item">
+			<column name="id" valueSequenceNext="cart_item_sequence" />
+			<column name="product" value="2" />
+			<column name="quantity" value="10" />
+			<column name="cart" value="2" />
+		</insert>
+
+		<insert tableName="cart">
+			<column name="id" valueSequenceNext="cart_sequence" />
+			<column name="total_value" value="1500000" />
+			<column name="customer"
+				valueComputed="(select id from customer where email = 'alex@santocodigo.com.br')" />
+			<column name="status" value="ACTIVE" />
+		</insert>
+
+		<insert tableName="cart_item">
+			<column name="id" valueSequenceNext="cart_item_sequence" />
+			<column name="product" value="1" />
+			<column name="quantity" value="10" />
+			<column name="cart" value="3" />
+		</insert>
+
+		<insert tableName="cart_item">
+			<column name="id" valueSequenceNext="cart_item_sequence" />
+			<column name="product" value="2" />
+			<column name="quantity" value="10" />
+			<column name="cart" value="2" />
+		</insert>
+
+		<insert tableName="cart">
+			<column name="id" valueSequenceNext="cart_sequence" />
+			<column name="total_value" value="500000000" />
+			<column name="customer"
+				valueComputed="(select id from customer where email = 'roberto@santocodigo.com.br')" />
+			<column name="status" value="ACTIVE" />
+		</insert>
+
+		<insert tableName="cart_item">
+			<column name="id" valueSequenceNext="cart_item_sequence" />
+			<column name="product" value="1" />
+			<column name="quantity" value="10" />
+			<column name="cart" value="4" />
+		</insert>
+
+		<insert tableName="cart_item">
+			<column name="id" valueSequenceNext="cart_item_sequence" />
+			<column name="product" value="2" />
+			<column name="quantity" value="10" />
+			<column name="cart" value="4" />
+		</insert>
+
+		<insert tableName="cart">
+			<column name="id" valueSequenceNext="cart_sequence" />
+			<column name="total_value" value="500000" />
+			<column name="customer"
+				valueComputed="(select id from customer where email = 'juclecio@santocodigo.com.br')" />
+			<column name="status" value="ACTIVE" />
+		</insert>
+
+		<insert tableName="cart_item">
+			<column name="id" valueSequenceNext="cart_item_sequence" />
+			<column name="product" value="1" />
+			<column name="quantity" value="2" />
+			<column name="cart" value="5" />
+		</insert>
+
+		<insert tableName="cart_item">
+			<column name="id" valueSequenceNext="cart_item_sequence" />
+			<column name="product" value="2" />
+			<column name="quantity" value="1" />
+			<column name="cart" value="5" />
+		</insert>
+		
+		<insert tableName="cart">
+			<column name="id" valueSequenceNext="cart_sequence" />
+			<column name="total_value" value="500000" />
+			<column name="customer"
+				valueComputed="(select id from customer where email = 'cartitem@santocodigo.com.br')" />
+			<column name="status" value="ACTIVE" />
+		</insert>
+
+		<insert tableName="cart_item">
+			<column name="id" valueSequenceNext="cart_item_sequence" />
+			<column name="product" value="1" />
+			<column name="quantity" value="2" />
+			<column name="cart" value="6" />
+		</insert>
+
+		<insert tableName="cart">
+			<column name="id" valueSequenceNext="cart_sequence" />
+			<column name="id" valueSequenceNext="cart_sequence" />
+			<column name="total_value" value="500000000" />
+			<column name="customer"
+				valueComputed="(select id from customer where email = 'finished@santocodigo.com.br')" />
+			<column name="status" value="FINISHED" />
 		</insert>
 
 	</changeSet>

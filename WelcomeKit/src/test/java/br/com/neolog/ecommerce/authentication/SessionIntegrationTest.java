@@ -93,4 +93,43 @@ public class SessionIntegrationTest
 
     }
 
+    @Test
+    public void shouldAssertTokenNotFound()
+    {
+        final ErrorDetails bodyError = given().contentType( ContentType.JSON ).when()
+            .get( "product/list" ).then().extract().body().as( ErrorDetails.class );
+
+        assertThat( bodyError.getMessage() ).contains( "Token não encontrado" );
+
+    }
+
+    @Test
+    public void shouldAssertInvalidToken()
+    {
+        final ErrorDetails bodyError = given().header( "token", "schrubles" ).contentType( ContentType.JSON ).when()
+            .get( "product/list" ).then().extract().body().as( ErrorDetails.class );
+
+        assertThat( bodyError.getMessage() ).contains( "Token Inválido" );
+
+    }
+
+    @Test
+    public void shouldAssertInactiveCustomer()
+    {
+        final ErrorDetails bodyError = given().header( "token", "inactiveCustomer" ).contentType( ContentType.JSON ).when()
+            .get( "product/list" ).then().extract().body().as( ErrorDetails.class );
+
+        assertThat( bodyError.getMessage() ).contains( "Cliente Inativo" );
+
+    }
+
+    @Test
+    public void shouldAssertExpirationToken()
+    {
+        final ErrorDetails bodyError = given().header( "token", "expirationCustomer" ).contentType( ContentType.JSON ).when()
+            .get( "product/list" ).then().extract().body().as( ErrorDetails.class );
+
+        assertThat( bodyError.getMessage() ).contains( "Tempo de sessão Esgotado. Refaça o login" );
+
+    }
 }

@@ -152,6 +152,17 @@ public class StockIntegrationTest
     }
 
     @Test
+    public void shouldAssertDeleteStock4()
+    {
+
+        final String result = given().header( "token", provideToken() ).contentType( ContentType.JSON ).when().post(
+            "stock/remove/4" ).then().assertThat()
+            .extract().asString();
+        assertThat( result ).contains( "true" );
+
+    }
+
+    @Test
     public void shouldThrowStockNotFoundException()
     {
         final String json = "{\"code\":24,\"name\": \"Celza\",\"price\":10.50,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"id\":1,\"code\":1,\"name\":\"Eletrônicos\"}}";

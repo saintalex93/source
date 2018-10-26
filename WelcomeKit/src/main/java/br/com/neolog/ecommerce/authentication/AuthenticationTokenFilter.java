@@ -61,13 +61,13 @@ public class AuthenticationTokenFilter
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         if( httpRequest.getHeader( "token" ) == null ) {
-            httpResponse.sendError( HttpServletResponse.SC_NOT_FOUND, "Token não encontrado" );
+            httpResponse.sendError( HttpServletResponse.SC_FORBIDDEN, "Token não encontrado" );
             return;
 
         }
         final Session session = sessionService.verifyToken( httpRequest.getHeader( "token" ) );
         if( session == null ) {
-            httpResponse.sendError( HttpServletResponse.SC_NOT_FOUND, "Token Inválido" );
+            httpResponse.sendError( HttpServletResponse.SC_FORBIDDEN, "Token Inválido" );
             return;
         }
         if( session.getCustomer().getInactive() == true ) {

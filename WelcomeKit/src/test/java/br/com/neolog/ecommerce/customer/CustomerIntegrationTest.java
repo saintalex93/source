@@ -80,7 +80,7 @@ public class CustomerIntegrationTest
     public void shouldAssertCustomerNotFoundExceptionWhenUpdateCustomerWithWrongId()
     {
 
-        final String jsonCustomer = "{\"id\":13,\"email\": \"alex@santocodigo.com.br\",\"name\": \"Teste Ctchulu\",\"password\": \"Neolog123\",\"inactive\":false}";
+        final String jsonCustomer = "{\"id\":66,\"email\": \"alex@santocodigo.com.br\",\"name\": \"Teste Ctchulu\",\"password\": \"Neolog123\",\"inactive\":false}";
         final ErrorDetails bodyError = given().header( "token", provideToken() ).contentType( ContentType.JSON ).when().body( jsonCustomer )
             .post( "customer/update" ).then().extract().as( ErrorDetails.class );
 

@@ -72,7 +72,11 @@
   <script>
     $.ajax({
       type: 'GET',
-      url: 'http://localhost:8080/product/list',                 
+      url: 'http://localhost:8080/product/list', 
+         headers: {
+        "token":"3221540315148525"
+    },
+                 
       success: function(data) {   
         console.log(data); 
 
@@ -83,7 +87,7 @@
 
      }
    });  
-
+/*
     $.ajax({
       type: 'GET',
       url: 'http://localhost:8080/category/search/all',                 
@@ -100,7 +104,9 @@
 
 
 
-    console.log(getSearchParams("city"));            
+    console.log(getSearchParams("city"));    
+
+    */        
   </script>
 
 </body>
