@@ -1,11 +1,11 @@
-package br.com.neolog.ecommerce.customer;
+package br.com.neolog.ecommerce.authentication;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import com.google.common.base.MoreObjects;
 
-public class CustomerLogin
+public class AuthenticationCredentials
 {
     @NotBlank
     @Email
@@ -13,8 +13,16 @@ public class CustomerLogin
     @NotBlank
     private String password;
 
-    public CustomerLogin()
+    public AuthenticationCredentials()
     {
+    }
+
+    public AuthenticationCredentials(
+        final String email,
+        final String password )
+    {
+        this.email = email;
+        this.password = password;
     }
 
     public String getEmail()

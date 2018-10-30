@@ -4,14 +4,14 @@ import javax.validation.constraints.Min;
 
 import com.google.common.base.MoreObjects;
 
-public class HolderCartItem
+public class CartItemHolder
 {
 
     private int productId;
     @Min( 1 )
     private int quantity;
 
-    public HolderCartItem()
+    public CartItemHolder()
     {
     }
 
