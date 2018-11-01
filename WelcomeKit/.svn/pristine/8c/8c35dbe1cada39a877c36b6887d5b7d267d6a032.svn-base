@@ -1,0 +1,82 @@
+package br.com.neolog.ecommerce.exceptions;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import com.google.common.base.MoreObjects;
+
+public class ErrorDetails
+{
+    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat( "dd/MM/yyyy HH:mm" );
+
+    private String date;
+    private String message;
+    private String details;
+    private String exception;
+    private String error;
+
+    private int httpCode;
+
+    public ErrorDetails(
+        final String message,
+        final String exception,
+        final String details,
+        final String error,
+        final int httpCode )
+    {
+        this.date = simpleDateFormat.format( new Date() );
+
+        this.message = message;
+        this.exception = exception;
+        this.details = details;
+        this.error = error;
+        this.httpCode = httpCode;
+    }
+
+    public ErrorDetails()
+    {
+    }
+
+    public String getDate()
+    {
+        return date;
+    }
+
+    public String getException()
+    {
+        return exception;
+    }
+
+    public String getMessage()
+    {
+        return message;
+    }
+
+    public String getDetails()
+    {
+        return details;
+    }
+
+    public String getError()
+    {
+        return error;
+    }
+
+    public int getHttpCode()
+    {
+        return httpCode;
+    }
+
+    @Override
+    public String toString()
+    {
+        return MoreObjects.toStringHelper( this )
+            .add( "date", date )
+            .add( "message", message )
+            .add( "details", details )
+            .add( "exception", exception )
+            .add( "error", error )
+            .add( "httpCode", httpCode )
+            .toString();
+    }
+}
