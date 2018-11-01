@@ -206,7 +206,7 @@
 			<column name="id" valueSequenceNext="product_sequence" />
 			<column name="code" value="5658" />
 			<column name="name" value="Batata" />
-			<column name="price" value="100" />
+			<column name="price" value="1000" />
 			<column name="description" value="Pão" />
 			<column name="weight" value="100" />
 			<column name="category" value="2" />
@@ -216,7 +216,7 @@
 			<column name="id" valueSequenceNext="product_sequence" />
 			<column name="code" value="44556" />
 			<column name="name" value="BatataPão" />
-			<column name="price" value="100" />
+			<column name="price" value="1000" />
 			<column name="description" value="Pão" />
 			<column name="weight" value="100" />
 			<column name="category" value="2" />

@@ -7,6 +7,8 @@ import com.google.common.base.MoreObjects;
 
 public class ErrorDetails
 {
+    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat( "dd/MM/yyyy HH:mm" );
+
     private String date;
     private String message;
     private String details;
@@ -22,7 +24,6 @@ public class ErrorDetails
         final String error,
         final int httpCode )
     {
-        final SimpleDateFormat simpleDateFormat = new SimpleDateFormat( "dd/MM/yyyy HH:mm" );
         this.date = simpleDateFormat.format( new Date() );
 
         this.message = message;

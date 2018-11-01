@@ -24,7 +24,8 @@ import br.com.neolog.ecommerce.CustomerThreadLocal;
     "/customer/update",
     "/customer/inactive",
     "/stock/*",
-    "/cart/*"
+    "/cart/*",
+    "/optimization/*"
 } )
 public class AuthenticationTokenFilter
     implements
@@ -32,6 +33,10 @@ public class AuthenticationTokenFilter
 {
 
     private static final Logger logger = Logger.getLogger( AuthenticationTokenFilter.class.getName() );
+    private static final String TOKEN_INVALIDO = "Token Inválido";
+    private static final String CLIENTE_INATIVO = "Cliente Inativo";
+    private static final String TIMEOUT = "Tempo de sessão Esgotado. Refaça o login";
+    private static final String OK = "Ok";
 
     @Autowired
     private AuthenticationService sessionService;
@@ -56,26 +61,19 @@ public class AuthenticationTokenFilter
         final HttpServletRequest httpRequest = (HttpServletRequest) request;
         final HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        if( httpRequest.getHeader( "token" ) == null ) {
+        final String token = httpRequest.getHeader( "token" );
+        if( token == null ) {
             httpResponse.sendError( HttpServletResponse.SC_FORBIDDEN, "Token não encontrado" );
             return;
-
-        }
-        final Session session = sessionService.getByToken( httpRequest.getHeader( "token" ) );
-        if( session == null ) {
-            httpResponse.sendError( HttpServletResponse.SC_FORBIDDEN, "Token Inválido" );
-            return;
-        }
-        if( session.getCustomer().getInactive() == true ) {
-            httpResponse.sendError( HttpServletResponse.SC_FORBIDDEN, "Cliente Inativo" );
-            return;
         }
 
-        if( session.getExpirationDate().isBeforeNow() ) {
-            httpResponse.sendError( HttpServletResponse.SC_FORBIDDEN, "Tempo de sessão Esgotado. Refaça o login" );
+        final Session session = sessionService.getByToken( token );
+
+        final String error = getError( session );
+        if( error != OK ) {
+            httpResponse.sendError( HttpServletResponse.SC_FORBIDDEN, error );
             return;
         }
-
         final long tempoInicial = System.currentTimeMillis();
         CustomerThreadLocal.set( session.getCustomer().getId() );
         try {
@@ -87,7 +85,6 @@ public class AuthenticationTokenFilter
         final long tempoFinal = System.currentTimeMillis();
         final String uri = ( (HttpServletRequest) request ).getRequestURI();
 
-        final Logger logger = Logger.getLogger( AuthenticationTokenFilter.class.getName() );
         logger.info( getFormmatedLog( tempoInicial, tempoFinal, uri ) );
 
     }
@@ -100,6 +97,22 @@ public class AuthenticationTokenFilter
 
         return "\n Tempo da requisicao de da URI " + uri
             + " Demorou " + ( tempoFinal - tempoInicial ) + " ms \n";
+    }
+
+    private String getError(
+        final Session session )
+    {
+        if( session == null ) {
+            return TOKEN_INVALIDO;
+        }
+        if( session.getCustomer().getInactive() == true ) {
+            return CLIENTE_INATIVO;
+        }
+
+        if( session.getExpirationDate().isBeforeNow() ) {
+            return TIMEOUT;
+        }
+        return OK;
     }
 
     @Override
