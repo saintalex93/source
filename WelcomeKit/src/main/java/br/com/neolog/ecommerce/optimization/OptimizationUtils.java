@@ -20,11 +20,4 @@ public class OptimizationUtils
         return totalValueList;
     }
 
-    // public long getTotalProblemItemValue(
-    // final ProblemItem problemItem )
-    // {
-    // final long totalValue = problemItem.getQuantity() *
-    // problemItem.getValue();
-    // return totalValue;
-    // }
 }

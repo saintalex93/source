@@ -1,5 +1,7 @@
 package br.com.neolog.ecommerce.optimization.problem;
 
+import com.google.common.base.MoreObjects;
+
 public class ProblemItem
 {
     private int productCode;
@@ -41,6 +43,18 @@ public class ProblemItem
         final long quantity )
     {
         this.quantity = quantity;
+    }
+
+    @Override
+    public String toString()
+    {
+
+        return MoreObjects.toStringHelper( this )
+            .add( "Product Code", productCode )
+            .add( "Value", value )
+            .add( "Quantity", quantity )
+            .toString();
+
     }
 
 }
