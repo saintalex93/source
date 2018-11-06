@@ -45,11 +45,11 @@ public class Exact
 
         // 30[3] 10[1] 20[2]
 
-        brute( problem.getProblemItems(), problem.getTarget() );
-
+        List <ProblemItem> list = brute( problem.getProblemItems(), problem.getTarget() );
+        
         final Solution solution = solve( problem );
 
-        System.out.println( "Tempo para solução." + ( start - System.currentTimeMillis() ) );
+        System.out.println( "Tempo para soluï¿½ï¿½o." + ( start - System.currentTimeMillis() ) );
         return solution;
 
         /*
@@ -75,10 +75,10 @@ public class Exact
 
     private final List<ProblemItem> betterSolution = Collections.emptyList();
     private long totalList = 0;
-
+    int quantidade = 0;
     public List<ProblemItem> brute(
         final List<ProblemItem> problemItemList,
-        final long newTarget )
+        long newTarget )
     {
 
         if( problemItemList.isEmpty() ) {
@@ -90,22 +90,43 @@ public class Exact
             return betterSolution;
         }
 
+        
+        
         for( int i = 0; i < problemItemList.size(); i++ ) {
+        	
+        	
 
             for( int j = 0; j < problemItemList.get( i ).getQuantity(); j++ ) {
 
-                final long value = problemItemList.get( i ).getQuantity() * problemItemList.get( i ).getValue();
+            	
+            	
+                final long value = quantidade * problemItemList.get( i ).getValue();
+                
+                
+                
+                if(value < newTarget) {
+                	
+                	newTarget -= value;
+                	ProblemItem problemItemSend =  new ProblemItem();
+                	problemItemSend = problemItemList.get( i );
+                	problemItemSend.setQuantity( quantidade );
+                	separetedItems.add( problemItemSend );
+                	totalList += problemItemSend.getValue();
+                	problemItemList.get(i).setQuantity(problemItemList.get(i).getQuantity() - 1);
+                	quantidade ++;
+                	brute( problemItemList, newTarget );
+                	
+                }
 
-                problemItemList.get( i ).setQuantity( j + 1 );
-                totalList += problemItemList.get( i ).getValue();
+                
 
-                separetedItems.add( problemItemList.get( i ) );
-                System.out.println( separetedItems );
             }
-
+            System.out.println( "\n" + separetedItems + "\n" );
+            problemItemList.remove(i);
+             quantidade = 0;
         }
-
-        brute( separetedItems, newTarget - totalList );
+        
+        
 
         return problemItemList;
 
