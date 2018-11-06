@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import br.com.neolog.ecommerce.optimization.problem.PreProblem;
 import br.com.neolog.ecommerce.optimization.problem.Problem;
 import br.com.neolog.ecommerce.optimization.problem.ProblemItem;
 import br.com.neolog.ecommerce.optimization.solution.Solution;
@@ -43,122 +44,57 @@ public class Exact
             }
         }
 
-        // 30[3] 10[1] 20[2]
+        final List<PreProblem> preProblemList = extract( problem );
 
-        List <ProblemItem> list = brute( problem.getProblemItems(), problem.getTarget() );
-        
-        final Solution solution = solve( problem );
+        brute( preProblemList );
 
-        System.out.println( "Tempo para solu��o." + ( start - System.currentTimeMillis() ) );
-        return solution;
+        System.out.println( preProblemList.toString() );
 
-        /*
-         * 100 20[4] 40[2] 50[3] 70[2] 30[5] for item for quant 100 - itm *
-         * quant 40[2] 50[3] 70[2] 30[5]
-         */
+        return null;
 
     }
 
-    // for( final ProblemItem problemItem : problemItemList ) {
-    // if( newTarget == problemItem.getQuantity() * problemItem.getValue() )
-    // {
-    //
-    // betterList = solutionFactory.getSolution( problemItem.getQuantity() *
-    // problemItem.getValue(), Collections.singletonList(
-    // problemItem ) );
-    //
-    // return Collections.singletonList(problemItem );
-    // }
-    // }
-
-    private final List<ProblemItem> separetedItems = new ArrayList<>();
-
-    private final List<ProblemItem> betterSolution = Collections.emptyList();
-    private long totalList = 0;
-    int quantidade = 0;
-    public List<ProblemItem> brute(
-        final List<ProblemItem> problemItemList,
-        long newTarget )
+    private List<PreProblem> brute(
+        final List<PreProblem> preProblemList )
     {
 
-        if( problemItemList.isEmpty() ) {
+        for( int i = 0; i < preProblemList.size(); i++ ) {
 
-            return Collections.emptyList();
-        }
+            if( preProblemList.get( i ).getPresent() == 1 ) {
+                preProblemList.get( i ).setPresent( 0 );
 
-        if( newTarget == 0 ) {
-            return betterSolution;
-        }
-
-        
-        
-        for( int i = 0; i < problemItemList.size(); i++ ) {
-        	
-        	
-
-            for( int j = 0; j < problemItemList.get( i ).getQuantity(); j++ ) {
-
-            	
-            	
-                final long value = quantidade * problemItemList.get( i ).getValue();
-                
-                
-                
-                if(value < newTarget) {
-                	
-                	newTarget -= value;
-                	ProblemItem problemItemSend =  new ProblemItem();
-                	problemItemSend = problemItemList.get( i );
-                	problemItemSend.setQuantity( quantidade );
-                	separetedItems.add( problemItemSend );
-                	totalList += problemItemSend.getValue();
-                	problemItemList.get(i).setQuantity(problemItemList.get(i).getQuantity() - 1);
-                	quantidade ++;
-                	brute( problemItemList, newTarget );
-                	
-                }
-
-                
+                return brute( preProblemList );
 
             }
-            System.out.println( "\n" + separetedItems + "\n" );
-            problemItemList.remove(i);
-             quantidade = 0;
+
+            preProblemList.get( i ).setPresent( 1 );
+            System.out.println( preProblemList.toString() );
+            return brute( preProblemList );
+
         }
-        
-        
 
-        return problemItemList;
+        return preProblemList;
 
     }
 
-    public void addQuantity()
-    {
-
-    }
-
-    public void removeQuantity()
-    {
-
-    }
-
-    public void removeItem()
-    {
-
-    }
-
-    public List<ProblemItem> getOriginalList(
-        final List<ProblemItem> problemItems )
-    {
-
-        return Collections.emptyList();
-    }
-
-    private Solution solve(
+    private List<PreProblem> extract(
         final Problem problem )
     {
+        final List<PreProblem> preProblemList = new ArrayList<>();
+        final List<ProblemItem> problemItemList = new ArrayList<>( problem.getProblemItems() );
 
-        return solutionFactory.emptySolution();
+        for( int i = 0; i < problemItemList.size(); i++ ) {
+
+            while( problemItemList.get( i ).getQuantity() > 0 ) {
+                preProblemList.add( new PreProblem( problemItemList.get( i ).getProductCode(), problemItemList.get( i ).getValue(),
+                    0 ) );
+
+                problemItemList.get( i ).setQuantity( problemItemList.get( i ).getQuantity() - 1 );
+            }
+
+        }
+
+        return preProblemList;
     }
 
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import br.com.neolog.ecommerce.optimization.problem.Problem;
 import br.com.neolog.ecommerce.optimization.problem.ProblemItem;
 import br.com.neolog.ecommerce.product.Product;
 import br.com.neolog.ecommerce.product.ProductService;
@@ -45,4 +46,16 @@ public class SolutionFactory
     {
         return new Solution( 0, Collections.emptyList() );
     }
+
+    public PreSolution getPreSolution(
+        final Problem problem )
+    {
+        final PreSolution preSolution = new PreSolution();
+        preSolution.setTotalValue( problem.getTarget() );
+        for( final ProblemItem problemItem : problem.getProblemItems() ) {
+            preSolution.addItem( problemItem );
+        }
+        return preSolution;
+    }
+
 }
