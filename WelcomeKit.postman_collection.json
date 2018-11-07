@@ -30,13 +30,64 @@
 					"response": []
 				},
 				{
+					"name": "Products filter by Code",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/product/search/code/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"search",
+								"code",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Products Contains Words",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/product/search/contains?word=TV",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"search",
+								"contains"
+							],
+							"query": [
+								{
+									"key": "word",
+									"value": "TV"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Products Lesser Price",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"body": {},
 						"url": {
-							"raw": "http://localhost:8080/product/list/price/lesser/2490",
+							"raw": "http://localhost:8080/product/list/price/lesser/2600",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -47,7 +98,7 @@
 								"list",
 								"price",
 								"lesser",
-								"2490"
+								"2600"
 							]
 						}
 					},
@@ -78,59 +129,7 @@
 					"response": []
 				},
 				{
-					"name": "Products in Stock",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"id\": 1,\n    \"cod\": 1,\n    \"name\": \"TVZINHo\",\n    \"price\": 2500,\n    \"description\": \"LOKOOO\",\n    \"weight\": 1.5,\n    \"category\": {\n        \"id\": 1,\n        \"cod\": 1,\n        \"name\": \"Eletrônicos\"\n    }\n}"
-						},
-						"url": {
-							"raw": "http://localhost:8080/product/list/inStock",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"product",
-								"list",
-								"inStock"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Products Out of Stock",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {},
-						"url": {
-							"raw": "http://localhost:8080/product/list/outStock",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"product",
-								"list",
-								"outStock"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Products filter by Category id",
+					"name": "Products filter by Category Code",
 					"request": {
 						"method": "GET",
 						"header": [],
@@ -147,29 +146,6 @@
 								"search",
 								"category",
 								"2"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Products filter by Cod",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {},
-						"url": {
-							"raw": "http://localhost:8080/product/search/cod/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"product",
-								"search",
-								"cod",
-								"1"
 							]
 						}
 					},
@@ -228,7 +204,8 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json"
+								"value": "application/json",
+								"disabled": false
 							}
 						],
 						"body": {
@@ -236,7 +213,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:8080/product/delete/1",
+							"raw": "http://localhost:8080/product/delete/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -245,7 +222,7 @@
 							"path": [
 								"product",
 								"delete",
-								"1"
+								"2"
 							]
 						}
 					},
@@ -259,11 +236,16 @@
 							{
 								"key": "Content-Type",
 								"value": "application/json"
+							},
+							{
+								"key": "token",
+								"value": "3221540315148525",
+								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n        \"cod\": 1231412,\n        \"name\": \"Celular\",\n        \"price\":1000,\n        \"description\":\"teste\",\n        \"weight\":1.00,\n        \"category\":{\n        \t\"id\":1,\n        \t\"cod\":1,\n        \t\"name\":\"Eletrônicos\"\n        }\n    }"
+							"raw": "{\n        \"code\":823123,\n        \"name\": \"Celular\",\n        \"price\":10.50,\n        \"description\":\"teste\",\n        \"weight\":1.00,\n        \"category\":{\n        \t\"id\":1,\n        \t\"code\":1,\n        \t\"name\":\"Eletrônicos\"\n        }\n    }"
 						},
 						"url": {
 							"raw": "http://localhost:8080/product/save",
@@ -282,7 +264,7 @@
 					"response": []
 				},
 				{
-					"name": "Product Update",
+					"name": "Product Update Exception",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -293,7 +275,37 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\t\t\"id\":2,\n        \"cod\": 1231412,\n        \"name\": \"Linux\",\n        \"price\":0,\n        \"description\":\"teste\",\n        \"weight\":1.00,\n        \"category\":{\n        \t\"id\":1,\n        \t\"cod\":1,\n        \t\"name\":\"Eletrônicos\"\n        }\n    }"
+							"raw": "{\t\t\"id\":2,\n        \"code\": 1412451,\n        \"name\": \"Linux\",\n        \"price\":0,\n        \"description\":\"teste\",\n        \"weight\":1.00,\n        \"category\":{\n        \t\"id\":5123,\n        \t\"code\":7978,\n        \t\"name\":\"Eletrônicos\"\n        }\n    }"
+						},
+						"url": {
+							"raw": "http://localhost:8080/product/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"product",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Product Update",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\t\t\n\t\t\"id\":2,\n        \"code\": 2104,\n        \"name\": \"Linux\",\n        \"price\":20.00,\n        \"description\":\"teste\",\n        \"weight\":1.00,\n        \"category\":{\n        \t\"id\":2,\n        \t\"code\":2\n        }\n    }"
 						},
 						"url": {
 							"raw": "http://localhost:8080/product/update",
@@ -459,7 +471,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "    {\n        \"id\": 1,\n        \"cod\": 1,\n        \"name\": \"Teste\"\n    }"
+							"raw": "    {\n        \"id\": 1,\n        \"code\": 1,\n        \"name\": \"Teste\"\n    }"
 						},
 						"url": {
 							"raw": "http://localhost:8080/category/update",
@@ -483,12 +495,13 @@
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json"
+								"value": "application/json",
+								"disabled": false
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "    {\n        \n        \"cod\": 123,\n        \"name\": \"Teste\"\n    }"
+							"raw": "    {\n        \n        \"code\": 123,\n        \"name\": \"TesteCateg\"\n    }"
 						},
 						"url": {
 							"raw": "http://localhost:8080/category/save",
@@ -504,6 +517,37 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Category Delete",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"disabled": false
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/category/delete/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"category",
+								"delete",
+								"3"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -514,7 +558,13 @@
 					"name": "Stock All",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "token",
+								"value": "3221540315148525",
+								"type": "text"
+							}
+						],
 						"body": {},
 						"url": {
 							"raw": "http://localhost:8080/stock/search/all",
@@ -527,6 +577,43 @@
 								"stock",
 								"search",
 								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Stock Page",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"type": "text",
+								"value": "3221540315148525"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/stock/search?size=2&page=0",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stock",
+								"search"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "2"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								}
 							]
 						}
 					},
@@ -577,6 +664,85 @@
 					"response": []
 				},
 				{
+					"name": "Stock by Id Product",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/stock/search/product/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stock",
+								"search",
+								"product",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Stock Inactive Stock",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "3221540315148525",
+								"type": "text"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/stock/search/inactive",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stock",
+								"search",
+								"inactive"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Stock Active Stock",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "3221540315148525",
+								"type": "text"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8080/stock/search/active",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stock",
+								"search",
+								"active"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Stock add quantity",
 					"request": {
 						"method": "POST",
@@ -588,10 +754,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": ""
+							"raw": "{\n\t\"idProduct\":2,\n\t\"quantity\":100\n}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/stock/addQuantity?quantity=1000&id=3",
+							"raw": "http://localhost:8080/stock/addQuantity",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -600,16 +766,6 @@
 							"path": [
 								"stock",
 								"addQuantity"
-							],
-							"query": [
-								{
-									"key": "quantity",
-									"value": "1000"
-								},
-								{
-									"key": "id",
-									"value": "3"
-								}
 							]
 						}
 					},
@@ -627,10 +783,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": ""
+							"raw": "{\n\t\"idProduct\":2,\n\t\"quantity\":100\n}"
 						},
 						"url": {
-							"raw": "http://localhost:8080/stock/removeQuantity?quantity=2&id=2",
+							"raw": "http://localhost:8080/stock/removeQuantity",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -639,23 +795,42 @@
 							"path": [
 								"stock",
 								"removeQuantity"
-							],
-							"query": [
-								{
-									"key": "quantity",
-									"value": "2"
-								},
-								{
-									"key": "id",
-									"value": "2"
-								}
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Stock add product and quantity",
+					"name": "Stock create stock with product and quantity",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"idProduct\":3,\n\t\"quantity\":1\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8080/stock/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"stock",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Stock delete Stock",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -669,7 +844,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "http://localhost:8080/stock/add?quantity=1000&id=3",
+							"raw": "http://localhost:8080/stock/remove/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -677,40 +852,455 @@
 							"port": "8080",
 							"path": [
 								"stock",
-								"add"
+								"remove",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customer",
+			"item": [
+				{
+					"name": "Search All",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "token",
+								"value": "çaskjdhlvqhwberkjfbqklj",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"code\":8,\n        \"name\": \"Celular\",\n        \"price\":10.50,\n        \"description\":\"teste\",\n        \"weight\":1.00,\n        \"category\":{\n        \t\"id\":1,\n        \t\"code\":123,\n        \t\"name\":\"Eletrônicos\"\n        }\n    }"
+						},
+						"url": {
+							"raw": "http://localhost:8080/customer/search",
+							"protocol": "http",
+							"host": [
+								"localhost"
 							],
-							"query": [
-								{
-									"key": "quantity",
-									"value": "1000"
-								},
-								{
-									"key": "id",
-									"value": "3"
-								}
+							"port": "8080",
+							"path": [
+								"customer",
+								"search"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Stock by Id Product",
+					"name": "Search By ID",
 					"request": {
 						"method": "GET",
-						"header": [],
-						"body": {},
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "token",
+								"value": "çaskjdhlvqhwberkjfbqklj",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"code\":8,\n        \"name\": \"Celular\",\n        \"price\":10.50,\n        \"description\":\"teste\",\n        \"weight\":1.00,\n        \"category\":{\n        \t\"id\":1,\n        \t\"code\":123,\n        \t\"name\":\"Eletrônicos\"\n        }\n    }"
+						},
 						"url": {
-							"raw": "http://localhost:8080/stock/search/product/1",
+							"raw": "http://localhost:8080/customer/search/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"stock",
+								"customer",
 								"search",
-								"product",
 								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Save",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "",
+								"value": "",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\n\n        \"email\": \"testessdsdsdew223r@santocodigo.com.br\",\n        \"name\": \"Alex Santos\",\n        \"password\": \"Neolog123\",\n        \"inactive\":false\n\n    }"
+						},
+						"url": {
+							"raw": "http://localhost:8080/customer/save",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"customer",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "token",
+								"value": "3221540315148525",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\n\n        \"email\": \"alex@santocodigo.com.br\",\n        \"password\": \"Neolog123\"\n\n    }"
+						},
+						"url": {
+							"raw": "http://localhost:8080/session/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"session",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "token",
+								"value": "çaskjdhlvqhwberkjfbqklj",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\n    \t\"id\":2,\n        \"email\": \"james@santocodigo.com.br\",\n        \"name\": \"Alex Santos\",\n        \"password\": \"Neolog123\"\n\n    }"
+						},
+						"url": {
+							"raw": "http://localhost:8080/customer/save",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"customer",
+								"save"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout by Header Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "token",
+								"value": "7481540307865921",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\n\n        \"email\": \"alex@santocodigo.com.br\",\n        \"password\": \"Neolog123\"\n\n    }"
+						},
+						"url": {
+							"raw": "http://localhost:8080/session/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"session",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cart",
+			"item": [
+				{
+					"name": "Add Item to Cart",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "token",
+								"value": "7481540307865921",
+								"type": "text"
+							},
+							{
+								"key": "quantity",
+								"value": "10",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"productId\":1,\n\t\"quantity\":10\n}\n"
+						},
+						"url": {
+							"raw": "http://localhost:8080/cart/addItemToCart",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cart",
+								"addItemToCart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Checkout",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "token",
+								"value": "7481540307865921",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\n        \"id\": 1,\n        \"email\": \"flavia@santocodigo.com.br\",\n        \"name\": \"Flávia Santos\",\n        \"password\": \"36e00cc4a8e01cae92a62a0fc3e7e2515631d5bf8fedf678829c357032d1691a5792bda50e29174b5db73071175eef4cd689f747694d74c432d757e828907d81\",\n        \"inactive\": false\n    }"
+						},
+						"url": {
+							"raw": "http://localhost:8080/cart/checkout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cart",
+								"checkout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Cart",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "token",
+								"value": "7481540307865921",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "    {\n        \"id\": 17,\n        \"email\": \"flavia@santocodigo.com.br\",\n        \"name\": \"Flávia Santos\",\n        \"password\": \"36e00cc4a8e01cae92a62a0fc3e7e2515631d5bf8fedf678829c357032d1691a5792bda50e29174b5db73071175eef4cd689f747694d74c432d757e828907d81\",\n        \"inactive\": false\n    }"
+						},
+						"url": {
+							"raw": "http://localhost:8080/cart/getCartItem/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cart",
+								"getCartItem",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Quantity",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "token",
+								"value": "7481540307865921",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\n\t\n\t\"productId\":1,\n\t\"quantity\":10\n\t\n}\n"
+						},
+						"url": {
+							"raw": "http://localhost:8080/cart/removeQuantity",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cart",
+								"removeQuantity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Cart Item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "token",
+								"value": "7481540307865921",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/cart/removeCartItem/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cart",
+								"removeCartItem",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Optimize",
+			"item": [
+				{
+					"name": "Optimize",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "token",
+								"value": "3221540315148525",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n        \"code\":823123,\n        \"name\": \"Celular\",\n        \"price\":10.50,\n        \"description\":\"teste\",\n        \"weight\":1.00,\n        \"category\":{\n        \t\"id\":1,\n        \t\"code\":1\n        }\n    }"
+						},
+						"url": {
+							"raw": "http://localhost:8080/optimization/1001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"optimization",
+								"1001"
 							]
 						}
 					},
