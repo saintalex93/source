@@ -60,17 +60,21 @@ public class Exact
 
         for( int i = 0; i < preProblemList.size(); i++ ) {
 
-            if( preProblemList.get( i ).getPresent() == 1 ) {
-                preProblemList.get( i ).setPresent( 0 );
+            for( final int j = 0; j < preProblemList.size(); i++ ) {
 
+                if( preProblemList.get( i ).getPresent() == 1 ) {
+                    preProblemList.get( i ).setPresent( 0 );
+
+                    return brute( preProblemList );
+
+                }
+
+                preProblemList.get( i ).setPresent( 1 );
+                System.out.println( preProblemList.toString() );
                 return brute( preProblemList );
 
             }
-
-            preProblemList.get( i ).setPresent( 1 );
-            System.out.println( preProblemList.toString() );
             return brute( preProblemList );
-
         }
 
         return preProblemList;
