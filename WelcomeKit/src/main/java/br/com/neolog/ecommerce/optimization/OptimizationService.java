@@ -8,6 +8,7 @@ import br.com.neolog.ecommerce.optimization.problem.Problem;
 import br.com.neolog.ecommerce.optimization.problem.ProblemFactory;
 import br.com.neolog.ecommerce.optimization.solution.Solution;
 import br.com.neolog.ecommerce.optimization.solution.SolutionFactory;
+import br.com.neolog.ecommerce.optimization.solver.Route;
 
 @Component
 public class OptimizationService

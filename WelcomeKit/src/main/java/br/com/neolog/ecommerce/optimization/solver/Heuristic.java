@@ -1,4 +1,4 @@
-package br.com.neolog.ecommerce.optimization;
+package br.com.neolog.ecommerce.optimization.solver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,13 +6,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import br.com.neolog.ecommerce.optimization.Optimization;
+import br.com.neolog.ecommerce.optimization.OptimizationUtils;
 import br.com.neolog.ecommerce.optimization.problem.Problem;
-import br.com.neolog.ecommerce.optimization.problem.ProblemItem;
+import br.com.neolog.ecommerce.optimization.problem.Item;
 import br.com.neolog.ecommerce.optimization.solution.Solution;
 import br.com.neolog.ecommerce.optimization.solution.SolutionFactory;
 
 @Component
-public class Heuristic
+public final class Heuristic
     implements
         Optimization
 {
@@ -41,9 +43,9 @@ public class Heuristic
     {
 
         long solvedValue = 0l;
-        final List<ProblemItem> solvedProblemItems = new ArrayList<ProblemItem>();
+        final List<Item> solvedProblemItems = new ArrayList<Item>();
 
-        for( final ProblemItem problemItem : problem.getProblemItems() ) {
+        for( final Item problemItem : problem.getProblemItems() ) {
 
             final long productValue = problemItem.getValue();
             final long quantity = ( problem.getTarget() - solvedValue ) / productValue;

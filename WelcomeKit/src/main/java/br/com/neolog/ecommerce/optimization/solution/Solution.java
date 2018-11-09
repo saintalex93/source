@@ -1,6 +1,7 @@
 package br.com.neolog.ecommerce.optimization.solution;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Solution
 {
@@ -17,12 +18,12 @@ public class Solution
         final List<SolutionItem> solutionItems )
     {
         this.result = result;
-        this.solutionItems = solutionItems;
+        this.solutionItems = Objects.requireNonNull( solutionItems );
     }
 
     public double getResult()
     {
-    	return result / 100.0;
+        return result / 100.0;
     }
 
     public List<SolutionItem> getSolutionItems()

@@ -1,24 +1,19 @@
 package br.com.neolog.ecommerce.optimization.problem;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Problem
 {
-    private long target;
-    private List<ProblemItem> problemItem;
-
-    public Problem()
-    {
-    }
+    private final long target;
+    private final List<Item> problemItem;
 
     public Problem(
         final long target,
-        final List<ProblemItem> problemItem )
+        final List<Item> problemItem )
     {
-
         this.target = target;
-        this.problemItem = problemItem;
-
+        this.problemItem = Objects.requireNonNull( problemItem );
     }
 
     public long getTarget()
@@ -26,7 +21,7 @@ public class Problem
         return target;
     }
 
-    public List<ProblemItem> getProblemItems()
+    public List<Item> getProblemItems()
     {
         return problemItem;
     }

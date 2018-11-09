@@ -33,14 +33,15 @@ public class AuthenticationTokenFilter
 {
 
     private static final Logger logger = Logger.getLogger( AuthenticationTokenFilter.class.getName() );
-    private static final String TOKEN_INVALIDO = "Token Invï¿½lido";
+    private static final String TOKEN_INVALIDO = "Token Inválido";
     private static final String CLIENTE_INATIVO = "Cliente Inativo";
-    private static final String TIMEOUT = "Tempo de sessï¿½o Esgotado. Refaï¿½a o login";
+    private static final String TIMEOUT = "Tempo de sessão Esgotado. Refaça o login";
     private static final String OK = "Ok";
 
     @Autowired
     private AuthenticationService sessionService;
 
+    @Override
     public void init(
         final FilterConfig filterConfig )
         throws ServletException
@@ -48,6 +49,7 @@ public class AuthenticationTokenFilter
         logger.info( "Filtro criado" );
     }
 
+    @Override
     public void doFilter(
         final ServletRequest request,
         final ServletResponse response,
@@ -61,7 +63,7 @@ public class AuthenticationTokenFilter
 
         final String token = httpRequest.getHeader( "token" );
         if( token == null ) {
-            httpResponse.sendError( HttpServletResponse.SC_FORBIDDEN, "Token nï¿½o encontrado" );
+            httpResponse.sendError( HttpServletResponse.SC_FORBIDDEN, "Token não encontrado" );
             return;
         }
 
@@ -113,6 +115,7 @@ public class AuthenticationTokenFilter
         return OK;
     }
 
+    @Override
     public void destroy()
     {
         logger.warning( "Filtro finalizado" );

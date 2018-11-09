@@ -25,7 +25,7 @@ public class ProblemFactory
         if( stockList.isEmpty() ) {
             return emptyProblem( target );
         }
-        final List<ProblemItem> problemItems = new ArrayList<>();
+        final List<Item> problemItems = new ArrayList<>();
         for( final Stock stock : stockList ) {
             if( stock.getQuantity() < 1 ) {
                 continue;
@@ -37,11 +37,11 @@ public class ProblemFactory
 
                 if( quantity <= stock.getQuantity() ) {
 
-                    problemItems.add( new ProblemItem( stock.getProduct().getCode(), price, quantity ) );
+                    problemItems.add( new Item( stock.getProduct().getCode(), price, quantity ) );
                     continue;
                 }
 
-                problemItems.add( new ProblemItem( stock.getProduct().getCode(), price, stock
+                problemItems.add( new Item( stock.getProduct().getCode(), price, stock
                     .getQuantity() ) );
 
             }
