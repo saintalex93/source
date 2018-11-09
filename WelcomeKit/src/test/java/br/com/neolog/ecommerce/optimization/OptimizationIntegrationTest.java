@@ -45,17 +45,17 @@ public class OptimizationIntegrationTest
             .when().post( "optimization/1500.00/" ).then()
             .statusCode( HttpStatus.SC_OK )
             .extract().body().as( Solution.class );
-        assertThat( solution.getResult() ).isEqualByComparingTo( 142000l );
+        assertThat( solution.getResult() * 100 ).isEqualByComparingTo(  1495d );
     }
 
     @Test
-    public void shouldReturnExactValueWhenTargetIs1420()
+    public void shouldReturnExactValueWhenTargetIs1415()
     {
         final Solution solution = RestAssured.given().contentType(
             ContentType.JSON ).header( "token", ProvideToken.provideToken() )
             .when().post( "optimization/1420.00/" ).then()
             .statusCode( HttpStatus.SC_OK )
             .extract().body().as( Solution.class );
-        assertThat( solution.getResult() ).isEqualByComparingTo( 142000l );
+        assertThat( solution.getResult() * 100 ).isEqualByComparingTo( 1415d );
     }
 }

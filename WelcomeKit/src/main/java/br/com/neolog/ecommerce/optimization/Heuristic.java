@@ -30,7 +30,7 @@ public class Heuristic
 
         final long totalValue = utils.getTotalProblemValue( problem );
         if( totalValue <= problem.getTarget() ) {
-            return solutionFactory.getSolution( totalValue, problem.getProblemItems() );
+            return solutionFactory.getSolution( problem.getProblemItems() );
         }
 
         return solve( problem );
@@ -65,7 +65,7 @@ public class Heuristic
 
         }
 
-        return solutionFactory.getSolution( solvedValue, solvedProblemItems );
+        return solutionFactory.getSolution( solvedProblemItems );
 
     }
 

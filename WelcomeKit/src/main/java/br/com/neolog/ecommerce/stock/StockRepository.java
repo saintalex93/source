@@ -37,6 +37,6 @@ public interface StockRepository
     Stock findById(
         int id );
 
-    List<Stock> findByProductPriceLessThanEqualOrderByProductPriceDesc(
+    List<Stock> findByProductPriceLessThanEqualOrderByProductPriceAsc(
         long value );
 }

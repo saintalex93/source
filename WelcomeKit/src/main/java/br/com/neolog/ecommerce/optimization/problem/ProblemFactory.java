@@ -20,7 +20,7 @@ public class ProblemFactory
     public Problem generateProblem(
         final long target )
     {
-        final List<Stock> stockList = stockRepository.findByProductPriceLessThanEqualOrderByProductPriceDesc( target );
+        final List<Stock> stockList = stockRepository.findByProductPriceLessThanEqualOrderByProductPriceAsc( target );
 
         if( stockList.isEmpty() ) {
             return emptyProblem( target );

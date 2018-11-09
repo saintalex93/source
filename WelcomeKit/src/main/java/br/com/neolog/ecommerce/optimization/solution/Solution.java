@@ -20,9 +20,9 @@ public class Solution
         this.solutionItems = solutionItems;
     }
 
-    public long getResult()
+    public double getResult()
     {
-        return result;
+    	return result / 100.0;
     }
 
     public List<SolutionItem> getSolutionItems()

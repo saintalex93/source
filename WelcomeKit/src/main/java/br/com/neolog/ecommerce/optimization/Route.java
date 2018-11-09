@@ -18,6 +18,7 @@ public class Route
 
     @Autowired
     private Exact exact;
+//    private Exemplo exemplo;
 
     @Override
     public Solution optimize(
@@ -28,7 +29,7 @@ public class Route
             quantity += problemItem.getQuantity();
         }
 
-        if( quantity > 10 ) {
+        if( quantity > 100 ) {
             return heuristic.optimize( problem );
         }
 

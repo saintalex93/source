@@ -13,49 +13,46 @@ import br.com.neolog.ecommerce.product.Product;
 import br.com.neolog.ecommerce.product.ProductService;
 
 @Component
-public class SolutionFactory
-{
-    @Autowired
-    private ProductService productService;
+public class SolutionFactory {
+	@Autowired
+	private ProductService productService;
 
-    public Solution getSolution(
-        final long result,
-        final List<ProblemItem> problemItems )
-    {
-        final List<SolutionItem> solutionList = new ArrayList<>();
+	public Solution getSolution(
 
-        for( final ProblemItem problemItem : problemItems ) {
+			final List<ProblemItem> problemItems) {
+		final List<SolutionItem> solutionList = new ArrayList<>();
+		long result = 0;
+		for (final ProblemItem problemItem : problemItems) {
 
-            final int productCode = problemItem.getProductCode();
-            final Product product = productService.getProductByCode( productCode );
+			final int productCode = problemItem.getProductCode();
+			final Product product = productService.getProductByCode(productCode);
 
-            final String name = product.getName();
+			final String name = product.getName();
 
-            final SolutionItem solutionItem = new SolutionItem(
-                problemItem.getProductCode(), name, problemItem.getQuantity(),
-                problemItem.getValue() );
+			final SolutionItem solutionItem = new SolutionItem(problemItem.getProductCode(), name,
+					problemItem.getQuantity(), problemItem.getValue());
+			result += (problemItem.getValue() * problemItem.getQuantity());
 
-            solutionList.add( solutionItem );
+			if (problemItem.getQuantity() > 0) {
+				solutionList.add(solutionItem);
+			}
 
-        }
+		}
 
-        return new Solution( result, solutionList );
-    }
+		return new Solution(result, solutionList);
+	}
 
-    public Solution emptySolution()
-    {
-        return new Solution( 0, Collections.emptyList() );
-    }
+	public Solution emptySolution() {
+		return new Solution(0, Collections.emptyList());
+	}
 
-    public PreSolution getPreSolution(
-        final Problem problem )
-    {
-        final PreSolution preSolution = new PreSolution();
-        preSolution.setTotalValue( problem.getTarget() );
-        for( final ProblemItem problemItem : problem.getProblemItems() ) {
-            preSolution.addItem( problemItem );
-        }
-        return preSolution;
-    }
+	public PreSolution getPreSolution(final Problem problem) {
+		final PreSolution preSolution = new PreSolution();
+		preSolution.setTotalValue(problem.getTarget());
+		for (final ProblemItem problemItem : problem.getProblemItems()) {
+			preSolution.addItem(problemItem);
+		}
+		return preSolution;
+	}
 
 }

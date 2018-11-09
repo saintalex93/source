@@ -66,7 +66,7 @@ public class StockIntegrationTest
     public void shouldAssertWhenSendAStockViaPostAndRecieveSameStockInResponse()
     {
 
-        final String json = "{\"code\":785,\"name\": \"Celular\",\"price\":10.50,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"id\":1,\"code\":1,\"name\":\"Eletrônicos\"}}";
+        final String json = "{\"code\":785,\"name\": \"Celular\",\"price\":10.50,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"id\":1,\"code\":1,\"name\":\"Eletrï¿½nicos\"}}";
         final Product product = given().header( "token", provideToken() ).contentType( ContentType.JSON ).body( json ).when().post(
             "product/save" ).as( Product.class );
 
@@ -82,7 +82,7 @@ public class StockIntegrationTest
     @Test
     public void shouldThrowStockNotFoundExceptionWhenProductCodeAreInvalid()
     {
-        final String json = "{\"code\":88,\"name\": \"Celular\",\"price\":10.50,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"id\":1,\"code\":1,\"name\":\"Eletrônicos\"}}";
+        final String json = "{\"code\":88,\"name\": \"Celular\",\"price\":10.50,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"id\":1,\"code\":1,\"name\":\"Eletrï¿½nicos\"}}";
         given().header( "token", provideToken() ).contentType( ContentType.JSON ).body( json ).when().post( "product/save" ).as(
             Product.class );
 
@@ -101,7 +101,7 @@ public class StockIntegrationTest
         final String json = "{\"productId\":1,\"quantity\":100}";
         final Stock productWithQuantityAdded = given().header( "token", provideToken() ).contentType( ContentType.JSON ).body( json ).when()
             .post(
-                "stock/addQuantity" )
+                "stock/add-quantity" )
             .as( Stock.class );
 
         assertThat( product.getQuantity() ).isLessThan( productWithQuantityAdded.getQuantity() );
@@ -112,7 +112,7 @@ public class StockIntegrationTest
     {
         final ErrorDetails bodyError = given().header( "token", provideToken() ).contentType( ContentType.JSON ).body(
             "{\"productId\":3,\"quantity\":0}" ).when().post(
-                "stock/addQuantity" ).then().assertThat()
+                "stock/add-quantity" ).then().assertThat()
             .extract().as( ErrorDetails.class );
         assertThat( bodyError.getDetails() ).isEqualTo( StockFillException.class.getName() );
     }
@@ -120,7 +120,7 @@ public class StockIntegrationTest
     @Test
     public void shouldDeleteStockWhenQuantityIsZero()
     {
-        final String json = "{\"code\":18,\"name\": \"Celular\",\"price\":10.50,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"id\":1,\"code\":1,\"name\":\"Eletrônicos\"}}";
+        final String json = "{\"code\":18,\"name\": \"Celular\",\"price\":10.50,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"id\":1,\"code\":1,\"name\":\"Eletrï¿½nicos\"}}";
         final Product product = given().header( "token", provideToken() ).contentType( ContentType.JSON ).body( json ).when().post(
             "product/save" ).as( Product.class );
 
@@ -132,7 +132,7 @@ public class StockIntegrationTest
 
         given().header( "token", provideToken() ).contentType( ContentType.JSON ).body( "{\"productId\":" + product.getId()
             + ",\"quantity\":100}" ).when().post(
-                "stock/removeQuantity" )
+                "stock/remove-quantity" )
             .as( Stock.class );
 
         final boolean bool = given().header( "token", provideToken() ).contentType( ContentType.JSON ).when().post(
@@ -166,7 +166,7 @@ public class StockIntegrationTest
     @Test
     public void shouldThrowStockNotFoundException()
     {
-        final String json = "{\"code\":24,\"name\": \"Celza\",\"price\":10.50,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"id\":1,\"code\":1,\"name\":\"Eletrônicos\"}}";
+        final String json = "{\"code\":24,\"name\": \"Celza\",\"price\":10.50,\"description\":\"teste\",\"weight\":1.00,\"category\":{\"id\":1,\"code\":1,\"name\":\"Eletrï¿½nicos\"}}";
         final Product product = given().header( "token", provideToken() ).contentType( ContentType.JSON ).body( json ).when().post(
             "product/save" ).as( Product.class );
 
@@ -174,7 +174,7 @@ public class StockIntegrationTest
             + product.getId()
             + ",\"quantity\":5}" )
             .when().post(
-                "stock/addQuantity" ).then().assertThat().extract().as( ErrorDetails.class );
+                "stock/add-quantity" ).then().assertThat().extract().as( ErrorDetails.class );
         assertThat( bodyError.getDetails() ).isEqualTo( StockNotFoundException.class.getName() );
     }
 
@@ -205,7 +205,7 @@ public class StockIntegrationTest
             "{\"productId\":1,\"quantity\":" + Integer.MAX_VALUE
                 + "}" )
             .when().post(
-                "stock/addQuantity" ).then().assertThat().extract().as( ErrorDetails.class );
+                "stock/add-quantity" ).then().assertThat().extract().as( ErrorDetails.class );
         assertThat( bodyError.getDetails() ).isEqualTo( StockFillException.class.getName() );
 
     }
@@ -220,12 +220,12 @@ public class StockIntegrationTest
     }
 
     @Test
-    public void shouldThrowStockFillExceptionWhenTryRemoveQuantityOverStock()
+    public void shouldThrowStockFillExceptionWhenTryremoveQuantityOverStock()
     {
         final ErrorDetails bodyError = given().header( "token", provideToken() ).contentType( ContentType.JSON ).body(
             "{\"productId\":1,\"quantity\":10000}" )
             .when().post(
-                "stock/removeQuantity" ).then().assertThat().extract()
+                "stock/remove-quantity" ).then().assertThat().extract()
             .as( ErrorDetails.class );
 
         assertThat( bodyError.getDetails() ).isEqualTo( StockFillException.class.getName() );

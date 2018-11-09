@@ -34,21 +34,21 @@ public class CartController
         return new ResponseEntity<Cart>( cartService.findById( id ), HttpStatus.OK );
     }
 
-    @GetMapping( "getCartItem/{id}" )
+    @GetMapping( "get-cart-item/{id}" )
     public ResponseEntity<List<CartItem>> getCartItensByCart(
         @PathVariable( "id" ) final int id )
     {
         return new ResponseEntity<List<CartItem>>( cartService.getCartItensByCartId( id ), HttpStatus.OK );
     }
 
-    @GetMapping( "customerCart" )
+    @GetMapping( "customer-cart" )
     public ResponseEntity<Cart> activeCustomerCart()
     {
         return new ResponseEntity<Cart>( cartService.getActiveCustomerCart(), HttpStatus.OK );
 
     }
 
-    @PostMapping( "cancelCart" )
+    @PostMapping( "cancel-cart" )
     public ResponseEntity<Cart> cancelCustomerCart()
     {
         return new ResponseEntity<Cart>( cartService.cancelCart(), HttpStatus.OK );
@@ -62,21 +62,21 @@ public class CartController
 
     }
 
-    @PostMapping( "addItemToCart" )
+    @PostMapping( "add-item-to-cart" )
     public ResponseEntity<Cart> addItemToCart(
         @RequestBody final CartItemHolder holderCartItem )
     {
         return new ResponseEntity<Cart>( cartService.addItemToCart( holderCartItem ), HttpStatus.OK );
     }
 
-    @PostMapping( "removeQuantity" )
+    @PostMapping( "remove-quantity" )
     public ResponseEntity<Cart> removeQuantity(
         @RequestBody final CartItemHolder holderCartItem )
     {
         return new ResponseEntity<Cart>( cartService.removeProductQuantityFromCartItem( holderCartItem ), HttpStatus.OK );
     }
 
-    @PostMapping( "removeCartItem/{cartItemId}" )
+    @PostMapping( "remove-cart-item/{cartItemId}" )
     public ResponseEntity<Cart> removeCartItem(
         @PathVariable( "cartItemId" ) final int cartItemId )
     {

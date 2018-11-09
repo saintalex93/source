@@ -24,9 +24,9 @@ public class CategoryIntegrationTest
     public void shouldAssertWhenFindCategoryByName()
     {
         final Category categoryDB = given().header( "token", provideToken() ).contentType( ContentType.JSON ).when().get(
-            "category/search?name=Eletrônicos" )
+            "category/search?name=EletrÃ´nicos" )
             .as( Category.class );
-        final Category category = new Category( 1, 1, "Eletrônicos" );
+        final Category category = new Category( 1, 1, "EletrÃ´nicos" );
         assertThat( category ).isEqualTo( categoryDB );
     }
 
@@ -45,7 +45,7 @@ public class CategoryIntegrationTest
         final Category categoryDB = given().header( "token", provideToken() ).contentType( ContentType.JSON ).when().get(
             "category/search/1" )
             .as( Category.class );
-        final Category category = new Category( 1, 1, "Eletrônicos" );
+        final Category category = new Category( 1, 1, "EletrÃ´nicos" );
         assertThat( category ).isEqualTo( categoryDB );
     }
 

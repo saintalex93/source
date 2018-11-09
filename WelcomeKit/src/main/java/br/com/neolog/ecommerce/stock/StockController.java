@@ -76,14 +76,14 @@ public class StockController
         return new ResponseEntity<Stock>( service.createStock( stockItem ), HttpStatus.OK );
     }
 
-    @PostMapping( value = "addQuantity" )
+    @PostMapping( value = "add-quantity" )
     public ResponseEntity<Stock> setQuantityAdd(
         @Valid @RequestBody final StockItem stockItem )
     {
         return new ResponseEntity<Stock>( service.addStock( stockItem ), HttpStatus.OK );
     }
 
-    @PostMapping( value = "removeQuantity" )
+    @PostMapping( value = "remove-quantity" )
     public ResponseEntity<Stock> setQuantityRemove(
         @Valid @RequestBody final StockItem stockItem )
     {

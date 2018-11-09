@@ -80,7 +80,7 @@ public class CartIntegrationTest
     {
         final String jsonCartItem = "{\"productId\":1,\"quantity\":10}";
         final Cart cart = given().contentType( ContentType.JSON ).header( "token", provideToken() ).when().body( jsonCartItem )
-            .post( "cart/addItemToCart" ).then().assertThat().statusCode( HttpServletResponse.SC_OK ).extract().body().as( Cart.class );
+            .post( "cart/add-item-to-cart" ).then().assertThat().statusCode( HttpServletResponse.SC_OK ).extract().body().as( Cart.class );
 
         assertThat( cart ).isNotNull();
     }
@@ -90,7 +90,7 @@ public class CartIntegrationTest
     {
         final String jsonCartItem = "{\"productId\":1,\"quantity\":1}";
         final Cart cart = given().contentType( ContentType.JSON ).header( "token", provideToken() ).when().body( jsonCartItem )
-            .post( "cart/addItemToCart" ).then().assertThat().statusCode( HttpServletResponse.SC_OK ).extract().body().as( Cart.class );
+            .post( "cart/add-item-to-cart" ).then().assertThat().statusCode( HttpServletResponse.SC_OK ).extract().body().as( Cart.class );
 
         assertThat( cart ).isNotNull();
     }
@@ -101,7 +101,7 @@ public class CartIntegrationTest
         final String jsonCartItem = "{\"productId\":123,\"quantity\":10}";
 
         final ErrorDetails bodyError = given().contentType( ContentType.JSON ).header( "token", provideToken() ).when().body( jsonCartItem )
-            .post( "cart/addItemToCart" ).then().assertThat().statusCode( HttpServletResponse.SC_NOT_FOUND ).extract().body().as(
+            .post( "cart/add-item-to-cart" ).then().assertThat().statusCode( HttpServletResponse.SC_NOT_FOUND ).extract().body().as(
                 ErrorDetails.class );
 
         assertThat( bodyError.getDetails() ).contains( ProductNotFoundException.class.getName() );
@@ -114,7 +114,7 @@ public class CartIntegrationTest
         final String jsonCartItem = "{\"productId\":3,\"quantity\":1000}";
 
         final ErrorDetails bodyError = given().contentType( ContentType.JSON ).header( "token", provideToken() ).when().body( jsonCartItem )
-            .post( "cart/addItemToCart" ).then().assertThat().statusCode( HttpServletResponse.SC_NOT_FOUND ).extract().body().as(
+            .post( "cart/add-item-to-cart" ).then().assertThat().statusCode( HttpServletResponse.SC_NOT_FOUND ).extract().body().as(
                 ErrorDetails.class );
 
         assertThat( bodyError.getDetails() ).contains( StockNotFoundException.class.getName() );
@@ -154,7 +154,7 @@ public class CartIntegrationTest
 
         final ErrorDetails bodyError = given().contentType( ContentType.JSON ).header( "token", "testRemoveQuantity" ).when().body(
             jsonCartItem )
-            .post( "cart/removeQuantity" ).then().assertThat().statusCode( HttpServletResponse.SC_NOT_FOUND ).extract().body().as(
+            .post( "cart/remove-quantity" ).then().assertThat().statusCode( HttpServletResponse.SC_NOT_FOUND ).extract().body().as(
                 ErrorDetails.class );
 
         assertThat( bodyError.getDetails() ).contains( CartItemNotFoundException.class.getName() );
@@ -193,7 +193,7 @@ public class CartIntegrationTest
     public void shouldAssertRemoveCartItem()
     {
         final Cart cart = given().contentType( ContentType.JSON ).header( "token", "testRemoveItem" ).when()
-            .post( "cart/removeCartItem/7" ).then().assertThat().statusCode( HttpServletResponse.SC_OK ).extract().body().as( Cart.class );
+            .post( "cart/remove-cart-item/7" ).then().assertThat().statusCode( HttpServletResponse.SC_OK ).extract().body().as( Cart.class );
 
         assertThat( cart.getTotalValue() ).isLessThanOrEqualTo( 25000 );
     }
@@ -203,7 +203,7 @@ public class CartIntegrationTest
     {
 
         final ErrorDetails bodyError = given().contentType( ContentType.JSON ).header( "token", "testRemoveItem" ).when()
-            .post( "cart/removeCartItem/22" ).then().assertThat().statusCode( HttpServletResponse.SC_NOT_FOUND ).extract().body().as(
+            .post( "cart/remove-cart-item/22" ).then().assertThat().statusCode( HttpServletResponse.SC_NOT_FOUND ).extract().body().as(
                 ErrorDetails.class );
 
         assertThat( bodyError.getDetails() ).contains( CartItemNotFoundException.class.getName() );
@@ -215,7 +215,7 @@ public class CartIntegrationTest
     {
 
         final ErrorDetails bodyError = given().contentType( ContentType.JSON ).header( "token", "testRemoveItem" ).when()
-            .post( "cart/removeCartItem/1" ).then().assertThat().statusCode( HttpServletResponse.SC_BAD_REQUEST ).extract().body().as(
+            .post( "cart/remove-cart-item/1" ).then().assertThat().statusCode( HttpServletResponse.SC_BAD_REQUEST ).extract().body().as(
                 ErrorDetails.class );
 
         assertThat( bodyError.getDetails() ).contains( CartCustomerException.class.getName() );
@@ -251,7 +251,7 @@ public class CartIntegrationTest
     public void shouldAssertGetActiveCustomerCart()
     {
         final Cart cart = given().contentType( ContentType.JSON ).header( "token", provideToken() ).when()
-            .get( "cart/customerCart" ).then().assertThat().statusCode( HttpServletResponse.SC_OK ).extract().body().as( Cart.class );
+            .get( "cart/customer-cart" ).then().assertThat().statusCode( HttpServletResponse.SC_OK ).extract().body().as( Cart.class );
 
         assertThat( cart ).isNotNull();
     }
@@ -299,7 +299,7 @@ public class CartIntegrationTest
     {
         final String jsonCartItem = "{\"productId\":1,\"quantity\":104545}";
         final ErrorDetails bodyError = given().contentType( ContentType.JSON ).header( "token", provideToken() ).when().body( jsonCartItem )
-            .post( "cart/addItemToCart" ).then().assertThat().statusCode( HttpServletResponse.SC_BAD_REQUEST ).extract().body().as(
+            .post( "cart/add-item-to-cart" ).then().assertThat().statusCode( HttpServletResponse.SC_BAD_REQUEST ).extract().body().as(
                 ErrorDetails.class );
 
         assertThat( bodyError.getDetails() ).contains( CartItemStockException.class.getName() );
@@ -309,7 +309,7 @@ public class CartIntegrationTest
     public void shouldAssertReturnCartItemsOfCart1()
     {
         final CartItem[] cartItems = given().contentType( ContentType.JSON ).header( "token", provideToken() ).when()
-            .get( "cart/getCartItem/1" ).then().assertThat().statusCode( HttpServletResponse.SC_OK ).extract().body().as(
+            .get( "cart/get-cart-item/1" ).then().assertThat().statusCode( HttpServletResponse.SC_OK ).extract().body().as(
                 CartItem[].class );
         assertThat( cartItems ).isNotNull();
     }
@@ -318,7 +318,7 @@ public class CartIntegrationTest
     public void shouldAssertCancelActiveCart()
     {
         final Cart cart = given().contentType( ContentType.JSON ).header( "token", provideToken() ).when()
-            .post( "cart/cancelCart" ).then().assertThat().statusCode( HttpServletResponse.SC_OK ).extract().body().as( Cart.class );
+            .post( "cart/cancel-cart" ).then().assertThat().statusCode( HttpServletResponse.SC_OK ).extract().body().as( Cart.class );
 
         assertThat( cart.getStatus() ).isEqualTo( CartStatus.CANCELLED );
     }
@@ -327,7 +327,7 @@ public class CartIntegrationTest
     public void shouldAssertCartNotFoundExceptionWhenCancelActiveCart()
     {
         final ErrorDetails bodyError = given().contentType( ContentType.JSON ).header( "token", "cartNotFound" ).when()
-            .post( "cart/cancelCart" ).then().assertThat().statusCode( HttpServletResponse.SC_NOT_FOUND ).extract().body().as(
+            .post( "cart/cancel-cart" ).then().assertThat().statusCode( HttpServletResponse.SC_NOT_FOUND ).extract().body().as(
                 ErrorDetails.class );
         assertThat( bodyError.getDetails() ).contains( CartNotFoundException.class.getName() );
     }
@@ -345,7 +345,7 @@ public class CartIntegrationTest
     public void shouldAssertCartItemNotFoundExceptionWhenSearchCartItemsOfCartNotFound()
     {
         final List<CartItem> cartItems = given().contentType( ContentType.JSON ).header( "token", provideToken() ).when()
-            .get( "cart/getCartItem/17666" ).then().assertThat().statusCode( HttpServletResponse.SC_OK ).extract().jsonPath().getList( "" );
+            .get( "cart/get-cart-item/17666" ).then().assertThat().statusCode( HttpServletResponse.SC_OK ).extract().jsonPath().getList( "" );
 
         assertThat( cartItems ).isEmpty();
 
