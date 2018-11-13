@@ -1,0 +1,67 @@
+package br.com.neolog.ecommerce.optimization.solver;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Component;
+
+import br.com.neolog.ecommerce.exceptions.ProblemNullException;
+import br.com.neolog.ecommerce.optimization.Optimization;
+import br.com.neolog.ecommerce.optimization.problem.Item;
+import br.com.neolog.ecommerce.optimization.problem.Problem;
+import br.com.neolog.ecommerce.optimization.solution.Solution;
+
+@Component
+public final class Heuristic
+    implements
+        Optimization
+{
+
+    @Override
+    public Solution optimize(
+        final Problem problem )
+    {
+        if( problem == null ) {
+            throw new ProblemNullException();
+        }
+        final long totalValue = getTotalProblemValue( problem );
+        if( totalValue <= problem.getTarget() ) {
+            return Solution.create( totalValue, problem.getProblemItems() );
+        }
+        return solve( problem );
+    }
+
+    private Solution solve(
+        final Problem problem )
+    {
+        long solvedValue = 0l;
+        final List<Item> solvedProblemItems = new ArrayList<Item>();
+        for( final Item problemItem : problem.getProblemItems() ) {
+            final long productValue = problemItem.getValue();
+            final long quantity = ( problem.getTarget() - solvedValue ) / productValue;
+            if( quantity < 1 ) {
+                continue;
+            }
+            if( quantity <= problemItem.getQuantity() ) {
+                problemItem.setQuantity( quantity );
+            }
+            solvedProblemItems.add( problemItem );
+            solvedValue += problemItem.getQuantity() * productValue;
+            if( solvedValue == problem.getTarget() ) {
+                break;
+            }
+        }
+        return Solution.create( solvedValue, solvedProblemItems );
+    }
+
+    private long getTotalProblemValue(
+        final Problem problem )
+    {
+        final List<Item> problemItems = problem.getProblemItems();
+        final long totalValueList = problemItems.stream()
+            .mapToLong( problemItem -> ( problemItem.getValue() * problemItem.getQuantity() ) )
+            .sum();
+        return totalValueList;
+    }
+
+}
