@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import br.com.neolog.ecommerce.exceptions.ProblemNullException;
 import br.com.neolog.ecommerce.optimization.Optimization;
 import br.com.neolog.ecommerce.optimization.problem.Item;
 import br.com.neolog.ecommerce.optimization.problem.Problem;
@@ -21,10 +20,6 @@ public class Exact
     public Solution optimize(
         final Problem problem )
     {
-        if( problem == null ) {
-            throw new ProblemNullException();
-        }
-
         final List<Item> preSolution = recursiveCombination( problem.getTarget(), problem.getProblemItems() );
         preSolution.removeIf( item -> item.getQuantity() == 0 );
         return Solution.create( getTotalValue( preSolution ), preSolution );

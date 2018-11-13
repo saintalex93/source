@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import br.com.neolog.ecommerce.exceptions.ProblemNullException;
 import br.com.neolog.ecommerce.optimization.Optimization;
 import br.com.neolog.ecommerce.optimization.problem.Item;
 import br.com.neolog.ecommerce.optimization.problem.Problem;
@@ -21,12 +20,9 @@ public final class Heuristic
     public Solution optimize(
         final Problem problem )
     {
-        if( problem == null ) {
-            throw new ProblemNullException();
-        }
         final long totalValue = getTotalProblemValue( problem );
         if( totalValue <= problem.getTarget() ) {
-            return Solution.create( totalValue, problem.getProblemItems() );
+            return Solution.create( problem.getTarget(), problem.getProblemItems() );
         }
         return solve( problem );
     }

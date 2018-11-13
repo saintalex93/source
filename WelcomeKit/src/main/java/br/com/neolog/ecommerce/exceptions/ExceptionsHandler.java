@@ -243,4 +243,14 @@ public class ExceptionsHandler
         return new ResponseEntity<>( errorDetails, HttpStatus.BAD_REQUEST );
     }
 
+    @ExceptionHandler( ProblemNullException.class )
+    public ResponseEntity<ErrorDetails> handleProblemNullException(
+        final ProblemNullException exception,
+        final WebRequest request )
+    {
+        final ErrorDetails errorDetails = new ErrorDetails( exception.getMessage(), request.getDescription( false ),
+            exception.getClass().getName(), HttpStatus.BAD_REQUEST.name(), HttpStatus.BAD_REQUEST.value() );
+        return new ResponseEntity<>( errorDetails, HttpStatus.BAD_REQUEST );
+    }
+
 }

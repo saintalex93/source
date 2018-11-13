@@ -1,0 +1,112 @@
+package br.com.neolog.ecommerce.optimization.solution;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import br.com.neolog.ecommerce.exceptions.ProblemNullException;
+import br.com.neolog.ecommerce.optimization.problem.Item;
+import br.com.neolog.ecommerce.optimization.problem.Problem;
+import br.com.neolog.ecommerce.optimization.solver.Exact;
+
+@RunWith( SpringJUnit4ClassRunner.class )
+@SpringBootTest
+public class ExactTest
+{
+
+    @Autowired
+    private Exact exact;
+
+    @Test( expected = ProblemNullException.class )
+    public void shouldAssertProblemNullException()
+    {
+        exact.optimize( null );
+
+    }
+
+    @Test
+    public void shouldAssertReturnEmptySolution()
+    {
+        final Problem problem = Problem.create( 0, Collections.emptyList() );
+        final Solution optmization = exact.optimize( problem );
+
+        assertThat( optmization.getSolutionItems() ).isEmpty();
+        assertThat( optmization.getResult() ).isZero();
+    }
+
+    @Test
+    public void shouldAssertReturnFullStock()
+    {
+
+        final Item batata = Item.create( 44556, 10_00, 2 );
+        final Item windao = Item.create( 2, 200_00, 500 );
+        final Item tv = Item.create( 1, 2500_00, 20 );
+
+        final List<Item> problemItem = new LinkedList<>();
+        problemItem.add( batata );
+        problemItem.add( windao );
+        problemItem.add( tv );
+        final Problem problem = Problem.create( 150021_00, problemItem );
+
+        final Solution solution = exact.optimize( problem );
+
+        for( final Item item : problemItem ) {
+            assertThat( solution.getSolutionItems().contains( item ) ).isTrue();
+
+        }
+        assertThat( solution.getResult() ).isEqualTo( 150020d );
+    }
+
+    @Test
+    public void shouldAssertReturnExactValueWhentargetIs1420()
+    {
+
+        final Item batata = Item.create( 44556, 10_00, 2 );
+        final Item windao = Item.create( 2, 200_00, 7 );
+
+        final List<Item> problemItem = new LinkedList<>();
+        problemItem.add( batata );
+        problemItem.add( windao );
+        final Problem problem = Problem.create( 1420_00, problemItem );
+
+        final Solution solution = exact.optimize( problem );
+
+        for( final Item item : problemItem ) {
+            assertThat( solution.getSolutionItems().contains( item ) ).isTrue();
+
+        }
+        assertThat( solution.getResult() ).isEqualTo( problem.getTarget() / 100 );
+
+    }
+
+    @Test
+    public void shouldAssertReturn1200OfSolutionValueWhentargetIs1300()
+    {
+
+        final Item batata = Item.create( 44556, 10_00, 2 );
+        final Item windao = Item.create( 2, 200_00, 6 );
+
+        final List<Item> problemItem = new LinkedList<>();
+        problemItem.add( batata );
+        problemItem.add( windao );
+        final Problem problem = Problem.create( 1300_00, problemItem );
+
+        final Solution solution = exact.optimize( problem );
+
+        for( final Item item : problemItem ) {
+            assertThat( solution.getSolutionItems().contains( item ) ).isTrue();
+
+        }
+        assertThat( solution.getResult() ).isEqualTo( 1220d );
+
+    }
+
+}
