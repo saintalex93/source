@@ -7,6 +7,8 @@ import br.com.neolog.ecommerce.exceptions.OptimizationInvalidValueException;
 import br.com.neolog.ecommerce.optimization.problem.Problem;
 import br.com.neolog.ecommerce.optimization.problem.ProblemFactory;
 import br.com.neolog.ecommerce.optimization.solution.Solution;
+import br.com.neolog.ecommerce.optimization.suggestion.Suggestion;
+import br.com.neolog.ecommerce.optimization.suggestion.SuggestionConverter;
 
 @Component
 public class OptimizationService

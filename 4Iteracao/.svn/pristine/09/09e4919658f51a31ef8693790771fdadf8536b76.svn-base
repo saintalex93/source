@@ -1,0 +1,62 @@
+package br.com.neolog.controllers;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import br.com.neolog.exceptions.CategoryAlreadyExistsException;
+import br.com.neolog.exceptions.CategoryNotFoundException;
+import br.com.neolog.pojo.Category;
+import br.com.neolog.services.CategoryService;
+
+@RestController
+public class CategoryController {
+	private CategoryService categoryService;
+
+	@Autowired
+	public CategoryController(CategoryService categoryService) {
+		this.categoryService = categoryService;
+	}
+
+	@RequestMapping(value = "/category/add", method = RequestMethod.POST)
+	public String addCategory(@RequestBody Category category)
+			throws CategoryAlreadyExistsException {
+		categoryService.add(category);
+		return "Categoria adicionada com sucesso!";
+	}
+
+	@RequestMapping(value = "/category/remove", method = RequestMethod.DELETE)
+	public String removeCategory(@RequestBody String code)
+			throws CategoryNotFoundException {
+		categoryService.remove(code);
+		return "Categoria removida com sucesso!";
+	}
+
+	@RequestMapping(value = "/category/update", method = RequestMethod.POST)
+	public String updateCategory(@RequestBody Category category)
+			throws CategoryNotFoundException {
+		categoryService.update(category);
+		return "Categoria atualizada com sucesso!";
+	}
+
+	@RequestMapping(value = "/category/find", method = RequestMethod.POST)
+	public String updateCategory(@RequestBody String code)
+			throws CategoryNotFoundException {
+		Category category = categoryService.find(code);
+		return "CATEGORIA ENCONTRADA" + "\n" + "CODE: " + category.getCode()
+				+ " | NAME: " + category.getName();
+	}
+
+	@RequestMapping(value = "category/all", method = RequestMethod.GET)
+	public String findAll() {
+		String result = "CATEGORIAS CADASTRADAS" + "\n" + "\n";
+		for (Category c : categoryService.findAll()) {
+			result = result.concat("CODE: " + c.getCode() + " | NAME: "
+					+ c.getName() + "\n");
+		}
+		return result;
+	}
+
+}

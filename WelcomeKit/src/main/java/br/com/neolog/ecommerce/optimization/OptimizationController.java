@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.neolog.ecommerce.optimization.suggestion.Suggestion;
+
 @RestController
 @RequestMapping( "suggest-cart" )
 public class OptimizationController

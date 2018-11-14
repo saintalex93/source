@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import br.com.neolog.ecommerce.AbstractIntegrationTest;
 import br.com.neolog.ecommerce.ProvideToken;
+import br.com.neolog.ecommerce.optimization.suggestion.Suggestion;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 
