@@ -1,15 +1,15 @@
 package br.com.neolog.currentuser;
 
-import br.com.neolog.pojo.User;
+import br.com.neolog.pojo.Customer;
 
 public class CurrentUserHolder {
-	private static ThreadLocal<User> threadLocalUser = new ThreadLocal<>();
+	private static ThreadLocal<Customer> threadLocalUser = new ThreadLocal<>();
 
-	public static User getUser() {
+	public static Customer getUser() {
 		return threadLocalUser.get();
 	}
 
-	public static void setUser(User user) {
+	public static void setUser(Customer user) {
 		if (user == null) {
 			threadLocalUser.remove();
 		}

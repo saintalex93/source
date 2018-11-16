@@ -4,12 +4,17 @@ import java.io.Serializable;
 
 import org.springframework.data.repository.CrudRepository;
 
-import br.com.neolog.pojo.User;
+import br.com.neolog.pojo.Customer;
 
-public interface UserRepository extends CrudRepository<User, Serializable> {
+public interface UserRepository
+    extends
+        CrudRepository<Customer,Serializable>
+{
 
-	public User findByName(String name);
+    public Customer findByName(
+        String name );
 
-	public User findByEmail(String email);
+    public Customer findByEmail(
+        String email );
 
 }

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.neolog.exceptions.EmailAlreadyInUseException;
 import br.com.neolog.exceptions.UserNotFoundException;
-import br.com.neolog.pojo.User;
+import br.com.neolog.pojo.Customer;
 import br.com.neolog.services.AuthenticationService;
 
 @RestController
@@ -22,7 +22,7 @@ public class SessionController {
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String login(@RequestBody User user) throws UserNotFoundException,
+	public String login(@RequestBody Customer user) throws UserNotFoundException,
 			EmailAlreadyInUseException {
 
 		return authenticationService.login(user.getEmail(), user.getPassword());

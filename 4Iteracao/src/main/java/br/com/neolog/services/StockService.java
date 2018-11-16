@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.neolog.exceptions.InvalidQuantityException;
 import br.com.neolog.exceptions.ProductNotFoundException;
 import br.com.neolog.pojo.Product;
-import br.com.neolog.pojo.ProductQuantity;
+import br.com.neolog.pojo.Stock;
 import br.com.neolog.repository.CategoryRepository;
 import br.com.neolog.repository.ProductRepository;
 import br.com.neolog.repository.StockRepository;
@@ -54,11 +54,11 @@ public class StockService {
 			throw new ProductNotFoundException("Produto não encontrado!!!");
 
 		}
-		ProductQuantity productQuantity = stockRepository
+		Stock productQuantity = stockRepository
 				.findByProductCode(productCode);
 
 		if (productQuantity == null) {
-			productQuantity = new ProductQuantity();
+			productQuantity = new Stock();
 			productQuantity.setProduct(product);
 			productQuantity.setQuantity(quantity);
 			stockRepository.save(productQuantity);
@@ -95,7 +95,7 @@ public class StockService {
 					"Quantidade deve ser um número positivo!!!");
 		}
 
-		ProductQuantity h = stockRepository.findByProductCode(code);
+		Stock h = stockRepository.findByProductCode(code);
 		if (h == null) {
 			return "Produto não existe na base de dados!!!";
 		}
@@ -114,7 +114,7 @@ public class StockService {
 	 * 
 	 * @param code
 	 *            do {@link Product} a ser removido do estoque (
-	 *            {@link ProductQuantity}).
+	 *            {@link Stock}).
 	 * @throws ProductNotFoundException
 	 *             lançada quando nenhum produto é encontrado com o código
 	 *             recebido.
@@ -122,7 +122,7 @@ public class StockService {
 	 */
 	public String removeFromStock(String code) throws ProductNotFoundException {
 
-		ProductQuantity result = stockRepository.findByProductCode(code);
+		Stock result = stockRepository.findByProductCode(code);
 
 		if (result == null) {
 			throw new ProductNotFoundException("Produto n�o encontrado!!!");
@@ -161,7 +161,7 @@ public class StockService {
 	public String showStock() {
 		String result = "";
 
-		for (ProductQuantity p : stockRepository.findAll())
+		for (Stock p : stockRepository.findAll())
 			result = result.concat("COD: " + p.getProduct().getCode()
 					+ " | Produto: " + p.getProduct().getName()
 					+ " | Quantidade: " + p.getQuantity() + "\n\n");

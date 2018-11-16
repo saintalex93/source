@@ -13,7 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import br.com.neolog.pojo.Problem;
 import br.com.neolog.pojo.Product;
-import br.com.neolog.pojo.ProductQuantity;
+import br.com.neolog.pojo.Stock;
 import br.com.neolog.repository.StockRepository;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -25,11 +25,11 @@ public class ProblemConverterTest {
 
 	@Test
 	public void shouldReturnAProblem() {
-		Set<ProductQuantity> set = new HashSet<ProductQuantity>();
+		Set<Stock> set = new HashSet<Stock>();
 		Product product1 = new Product();
 		product1.setCode("PS4");
 		product1.setPrice(4);
-		ProductQuantity productQuantity = new ProductQuantity();
+		Stock productQuantity = new Stock();
 		productQuantity.setProduct(product1);
 		productQuantity.setQuantity(2);
 		set.add(productQuantity);

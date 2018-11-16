@@ -11,7 +11,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import br.com.neolog.currentuser.CurrentUserHolder;
 import br.com.neolog.pojo.Cart;
 import br.com.neolog.pojo.Cart.Status;
-import br.com.neolog.pojo.User;
+import br.com.neolog.pojo.Customer;
 import br.com.neolog.repository.CartRepository;
 import br.com.neolog.repository.CategoryRepository;
 import br.com.neolog.repository.OrderItemRepository;
@@ -49,7 +49,7 @@ public class CartServiceTest {
 	public void MustReturnACartWithStatusNotcompletedIfCartRepositoryReturnIsNull() {
 		Cart cart = new Cart();
 		cart.setStatus(Status.NOTCOMPLETED);
-		User user = CurrentUserHolder.getUser();
+		Customer user = CurrentUserHolder.getUser();
 		cart.setUser(user);
 
 		Mockito.when(cartRepository.findByUserAndStatus(user, "NOTCOMPLETED"))
@@ -64,7 +64,7 @@ public class CartServiceTest {
 	public void MustReturnACartWithStatusNotcompletedIfCartRepositoryReturnIsNotNull() {
 		Cart cart = new Cart();
 		cart.setStatus(Status.NOTCOMPLETED);
-		User user = CurrentUserHolder.getUser();
+		Customer user = CurrentUserHolder.getUser();
 		cart.setUser(user);
 
 		Mockito.when(cartRepository.findByUserAndStatus(user, "NOTCOMPLETED"))

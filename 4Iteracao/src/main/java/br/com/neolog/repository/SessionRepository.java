@@ -6,11 +6,15 @@ import org.springframework.data.repository.CrudRepository;
 
 import br.com.neolog.pojo.Session;
 
-public interface SessionRepository extends
-		CrudRepository<Session, Serializable> {
+public interface SessionRepository
+    extends
+        CrudRepository<Session,Serializable>
+{
 
-	public Session findByUserEmail(String email);
+    public Session findByCustomerEmail(
+        String email );
 
-	public Session findByToken(String token);
+    public Session findByToken(
+        String token );
 
 }

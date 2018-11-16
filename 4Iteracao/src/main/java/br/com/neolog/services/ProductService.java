@@ -10,7 +10,7 @@ import br.com.neolog.exceptions.ProductInStockException;
 import br.com.neolog.exceptions.ProductNotFoundException;
 import br.com.neolog.pojo.Category;
 import br.com.neolog.pojo.Product;
-import br.com.neolog.pojo.ProductQuantity;
+import br.com.neolog.pojo.Stock;
 import br.com.neolog.repository.CategoryRepository;
 import br.com.neolog.repository.ProductRepository;
 import br.com.neolog.repository.StockRepository;
@@ -48,7 +48,7 @@ public class ProductService {
 	public void remove(String code) throws ProductNotFoundException,
 			ProductInStockException {
 		Product product = productRepository.findByCode(code);
-		ProductQuantity stock = stockRepository.findByProductCode(code);
+		Stock stock = stockRepository.findByProductCode(code);
 		if (product == null) {
 			throw new ProductNotFoundException("Produto não existe!!!");
 		}

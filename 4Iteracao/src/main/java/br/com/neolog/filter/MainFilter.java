@@ -19,53 +19,61 @@ import br.com.neolog.repository.SessionRepository;
 import br.com.neolog.services.TokenService;
 
 /**
- * Classe responsável por filtrar as requisições, verificar a validade do token
- * e setar o usuário corrente com o auxílio da classe {@link CurrentUserHolder}.
- * 
+ * Classe responsÃ¡vel por filtrar as requisiÃ§Ãµes, verificar a validade do
+ * token e setar o usuÃ¡rio corrente com o auxÃ­lio da classe
+ * {@link CurrentUserHolder}.
+ *
  * @author igor.kurman
- * 
  */
 @Component
 @WebFilter
-public class MainFilter extends GenericFilterBean {
+public class MainFilter
+    extends
+        GenericFilterBean
+{
 
-	@Autowired
-	private TokenService tokenService;
+    @Autowired
+    private TokenService tokenService;
 
-	@Autowired
-	private SessionRepository sessionRepository;
+    @Autowired
+    private SessionRepository sessionRepository;
 
-	/**
-	 * 
-	 */
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response,
-			FilterChain chain) throws IOException, ServletException {
+    /**
+     *
+     */
+    @Override
+    public void doFilter(
+        final ServletRequest request,
+        final ServletResponse response,
+        final FilterChain chain )
+        throws IOException,
+            ServletException
+    {
 
-		HttpServletRequest req = (HttpServletRequest) request;
-		HttpServletResponse res = (HttpServletResponse) response;
+        final HttpServletRequest req = (HttpServletRequest) request;
+        final HttpServletResponse res = (HttpServletResponse) response;
 
-		String token = req.getParameter("token");
+        final String token = req.getParameter( "token" );
 
-		if (token == null) {
-			res.setStatus(HttpServletResponse.SC_FORBIDDEN);
-		} else {
+        if( token == null ) {
+            res.setStatus( HttpServletResponse.SC_FORBIDDEN );
+        } else {
 
-			if (tokenService.validateToken(token) == true) {
-				try {
-					CurrentUserHolder.setUser(sessionRepository.findByToken(
-							token).getUser());
-					System.err.println("USUÁRIO ATUAL: "
-							+ CurrentUserHolder.getUser().getName());
-					chain.doFilter(req, response);
-				} finally {
-					CurrentUserHolder.remove();
-				}
+            if( tokenService.validateToken( token ) == true ) {
+                try {
+                    CurrentUserHolder.setUser( sessionRepository.findByToken(
+                        token ).getCustomer() );
+                    System.err.println( "USUÃ�RIO ATUAL: "
+                        + CurrentUserHolder.getUser().getName() );
+                    chain.doFilter( req, response );
+                } finally {
+                    CurrentUserHolder.remove();
+                }
 
-			} else {
-				res.setStatus(HttpServletResponse.SC_FORBIDDEN);
-			}
+            } else {
+                res.setStatus( HttpServletResponse.SC_FORBIDDEN );
+            }
 
-		}
-	}
+        }
+    }
 }

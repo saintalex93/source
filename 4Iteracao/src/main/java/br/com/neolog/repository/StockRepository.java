@@ -4,14 +4,14 @@ import java.io.Serializable;
 
 import org.springframework.data.repository.CrudRepository;
 
-import br.com.neolog.pojo.ProductQuantity;
+import br.com.neolog.pojo.Stock;
 
 public interface StockRepository extends
-		CrudRepository<ProductQuantity, Serializable> {
+		CrudRepository<Stock, Serializable> {
 
-	public ProductQuantity findByProductCode(String code);
+	public Stock findByProductCode(String code);
 
-	public Iterable<ProductQuantity> findByProductPriceLessThanEqual(
+	public Iterable<Stock> findByProductPriceLessThanEqual(
 			double price);
 
 	public void deleteByProductCode(String code);

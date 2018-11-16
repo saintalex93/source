@@ -14,8 +14,8 @@ import br.com.neolog.pojo.Cart;
 import br.com.neolog.pojo.Cart.Status;
 import br.com.neolog.pojo.OrderItem;
 import br.com.neolog.pojo.Product;
-import br.com.neolog.pojo.ProductQuantity;
-import br.com.neolog.pojo.User;
+import br.com.neolog.pojo.Stock;
+import br.com.neolog.pojo.Customer;
 import br.com.neolog.repository.CartRepository;
 import br.com.neolog.repository.CategoryRepository;
 import br.com.neolog.repository.OrderItemRepository;
@@ -54,7 +54,7 @@ public class CartService {
 	 *         existir deverá retornar um {@link Cart} novo.
 	 */
 	public Cart getCart() {
-		User user = CurrentUserHolder.getUser();
+		Customer user = CurrentUserHolder.getUser();
 		Cart cart = cartRepository.findByUserAndStatus(user, "NOTCOMPLETED");
 		if (cart != null) {
 			return cart;
@@ -91,7 +91,7 @@ public class CartService {
 	throws ProductQuantityInsufficientException, InvalidQuantityException,
 			ProductNotFoundException {
 
-		ProductQuantity productQuantity = stockRepository
+		Stock productQuantity = stockRepository
 				.findByProductCode(code);
 
 		if (productQuantity == null) {
@@ -228,7 +228,7 @@ public class CartService {
 	}
 
 	/**
-	 * Cancela o {@link Cart} do {@link User} atual.
+	 * Cancela o {@link Cart} do {@link Customer} atual.
 	 * 
 	 * @return ainda não definido
 	 */
@@ -285,7 +285,7 @@ public class CartService {
 					.concat("PRODUTO | PREÇO | QUANTIDADE | TOTAL(R$) \n\n");
 
 			for (OrderItem o : cart.getOrderItens()) {
-				ProductQuantity p = stockRepository.findByProductCode(o
+				Stock p = stockRepository.findByProductCode(o
 						.getProduct().getCode());
 				p.setQuantity(p.getQuantity() - o.getQuantity());
 				stockRepository.save(p);

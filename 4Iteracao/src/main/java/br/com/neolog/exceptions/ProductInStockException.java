@@ -1,11 +1,11 @@
 package br.com.neolog.exceptions;
 
 import br.com.neolog.pojo.Product;
-import br.com.neolog.pojo.ProductQuantity;
+import br.com.neolog.pojo.Stock;
 
 /**
  * Lançada para informar que o {@link Product} existe em estoque (
- * {@link ProductQuantity}) e não pode ser excluído.
+ * {@link Stock}) e não pode ser excluído.
  */
 
 public class ProductInStockException extends Exception {

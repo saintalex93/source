@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import br.com.neolog.pojo.HolderCodePrice;
 import br.com.neolog.pojo.Problem;
-import br.com.neolog.pojo.ProductQuantity;
+import br.com.neolog.pojo.Stock;
 import br.com.neolog.repository.StockRepository;
 
 /**
@@ -35,7 +35,7 @@ public class ProblemConverter {
 	 */
 	public Problem convert(double target) {
 
-		Iterable<ProductQuantity> products = stockRepository
+		Iterable<Stock> products = stockRepository
 				.findByProductPriceLessThanEqual(target);
 
 		Problem problem = new Problem();
@@ -44,7 +44,7 @@ public class ProblemConverter {
 
 		double currentValue = 0;
 
-		for (ProductQuantity p : products) {
+		for (Stock p : products) {
 			int quantity = p.getQuantity();
 			while (p.getProduct().getPrice() + currentValue <= target
 					&& quantity > 0) {

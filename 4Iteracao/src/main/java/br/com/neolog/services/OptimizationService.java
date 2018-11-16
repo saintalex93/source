@@ -32,10 +32,10 @@ public class OptimizationService {
 
 	/**
 	 * Método que otimiza as opções de compra com base no valor que o
-	 * {@link User} tem disponível.
+	 * {@link Customer} tem disponível.
 	 * 
 	 * @param valueToSpend
-	 *            valor que o {@link User} dispõe.
+	 *            valor que o {@link Customer} dispõe.
 	 * @return um {@link Map} com {@link Product} e {@code quantity} com as
 	 *         melhores opções de compra.
 	 */

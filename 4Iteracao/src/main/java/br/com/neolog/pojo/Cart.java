@@ -13,57 +13,77 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 
 @Entity
-@Table(name = "cart")
-public class Cart {
-	public enum Status {
-		COMPLETED, NOTCOMPLETED, CANCELED
-	}
+@Table( name = "cart" )
+public class Cart
+{
+    public enum Status
+    {
+        COMPLETED,
+        NOTCOMPLETED,
+        CANCELED
+    }
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+    @Id
+    @GeneratedValue( strategy = GenerationType.IDENTITY )
+    private Integer id;
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name = "cart_id")
-	private Set<OrderItem> orderItens = new HashSet<OrderItem>();
-	private String status;
+    @Min( 0 )
+    private long totalValue;
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", referencedColumnName = "id")
-	private User user;
+    @OneToMany( cascade = CascadeType.ALL, orphanRemoval = true )
+    @JoinColumn( name = "cart_id" )
+    private Set<OrderItem> orderItens = new HashSet<OrderItem>();
+    private String status;
 
-	public Integer getId() {
-		return this.id;
-	}
+    @OneToOne( fetch = FetchType.LAZY )
+    @JoinColumn( name = "user_id", referencedColumnName = "id" )
+    private Customer user;
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
+    public Integer getId()
+    {
+        return this.id;
+    }
 
-	public Set<OrderItem> getOrderItens() {
-		return this.orderItens;
-	}
+    public void setId(
+        final Integer id )
+    {
+        this.id = id;
+    }
 
-	public void setOrderItens(Set<OrderItem> newOrderItens) {
-		this.orderItens = newOrderItens;
-	}
+    public Set<OrderItem> getOrderItens()
+    {
+        return this.orderItens;
+    }
 
-	public User getUser() {
-		return user;
-	}
+    public void setOrderItens(
+        final Set<OrderItem> newOrderItens )
+    {
+        this.orderItens = newOrderItens;
+    }
 
-	public void setUser(User user) {
-		this.user = user;
-	}
+    public Customer getUser()
+    {
+        return user;
+    }
 
-	public String getStatus() {
-		return this.status;
-	}
+    public void setUser(
+        final Customer user )
+    {
+        this.user = user;
+    }
 
-	public void setStatus(Status status) {
-		this.status = status.toString();
-	}
+    public String getStatus()
+    {
+        return this.status;
+    }
+
+    public void setStatus(
+        final Status status )
+    {
+        this.status = status.toString();
+    }
 
 }

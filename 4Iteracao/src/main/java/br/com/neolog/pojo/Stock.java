@@ -12,8 +12,8 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "productquantity")
-public class ProductQuantity {
+@Table(name = "stock")
+public class Stock {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
@@ -26,7 +26,7 @@ public class ProductQuantity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	Integer id;
 
-	public ProductQuantity() {
+	public Stock() {
 	}
 
 	public Product getProduct() {
