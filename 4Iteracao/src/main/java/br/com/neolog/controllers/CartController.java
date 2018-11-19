@@ -11,7 +11,7 @@ import br.com.neolog.exceptions.InvalidQuantityException;
 import br.com.neolog.exceptions.ProductNotFoundException;
 import br.com.neolog.exceptions.ProductNotInCartException;
 import br.com.neolog.exceptions.ProductQuantityInsufficientException;
-import br.com.neolog.pojo.HolderCodeQuantity;
+import br.com.neolog.pojo.CartItemHolder;
 import br.com.neolog.services.CartService;
 
 @RestController
@@ -24,7 +24,7 @@ public class CartController {
 	}
 
 	@RequestMapping(value = "/cart/addtocart", method = RequestMethod.POST)
-	public boolean addToCart(@RequestBody HolderCodeQuantity holderCodeQuantity)
+	public boolean addToCart(@RequestBody CartItemHolder holderCodeQuantity)
 			throws ProductNotFoundException, InvalidQuantityException,
 			ProductQuantityInsufficientException {
 		return cartService.addToCart(holderCodeQuantity.getCode(),
@@ -33,7 +33,7 @@ public class CartController {
 
 	@RequestMapping(value = "/cart/removequantity", method = RequestMethod.POST)
 	public String removeFromCart(
-			@RequestBody HolderCodeQuantity holderCodeQuantity)
+			@RequestBody CartItemHolder holderCodeQuantity)
 			throws ProductNotInCartException, InvalidQuantityException {
 		return cartService.removeFromCart(holderCodeQuantity.getCode(),
 				holderCodeQuantity.getQuantity());

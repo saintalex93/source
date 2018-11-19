@@ -32,6 +32,7 @@ public class Application
 
         registrationBean.addUrlPatterns( "/cart/*" );
         registrationBean.addUrlPatterns( "/stock/*" );
+        registrationBean.addUrlPatterns( "/session/logout" );
         registrationBean.addUrlPatterns( "/user/*" );
         // registrationBean.addUrlPatterns("/category/*");
 

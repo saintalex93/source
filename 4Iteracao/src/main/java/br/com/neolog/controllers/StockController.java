@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.neolog.exceptions.InvalidQuantityException;
 import br.com.neolog.exceptions.ProductNotFoundException;
 import br.com.neolog.exceptions.ProductQuantityInsufficientException;
-import br.com.neolog.pojo.HolderCodeQuantity;
+import br.com.neolog.pojo.CartItemHolder;
 import br.com.neolog.services.StockService;
 
 @RestController
@@ -22,7 +22,7 @@ public class StockController {
 	}
 
 	@RequestMapping(value = "stock/add", method = RequestMethod.POST)
-	public String addToStock(@RequestBody HolderCodeQuantity holderCodeQuantity)
+	public String addToStock(@RequestBody CartItemHolder holderCodeQuantity)
 			throws ProductNotFoundException, InvalidQuantityException,
 			ProductQuantityInsufficientException {
 		stockService.addToStock(holderCodeQuantity.getCode(),
@@ -34,7 +34,7 @@ public class StockController {
 
 	@RequestMapping(value = "stock/quantity", method = RequestMethod.DELETE)
 	public String removeFromStock(
-			@RequestBody HolderCodeQuantity holderCodeQuantity)
+			@RequestBody CartItemHolder holderCodeQuantity)
 			throws ProductNotFoundException, InvalidQuantityException,
 			ProductQuantityInsufficientException {
 		return stockService.removeFromStock(holderCodeQuantity.getCode(),

@@ -1,6 +1,6 @@
 package br.com.neolog.pojo;
 
-public class HolderCodeQuantity {
+public class CartItemHolder {
 
 	String code;
 	Integer quantity;
