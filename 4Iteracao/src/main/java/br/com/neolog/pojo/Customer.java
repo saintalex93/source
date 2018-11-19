@@ -5,21 +5,22 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotBlank;
 
 @Entity
 @Table( name = "customer" )
 public class Customer
 {
     @Id
-    @GeneratedValue( strategy = GenerationType.AUTO )
+    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "customer_sequence" )
+    @SequenceGenerator( name = "customer_sequence", sequenceName = "customer_sequence", initialValue = 1, allocationSize = 1 )
     private Integer id;
 
-    @NotBlank
     @Size( min = 3, max = 50, message = "O nome deve ter entre 5 e 50 caracteres!!!" )
+    @NotBlank
     private String name;
 
     @NotBlank

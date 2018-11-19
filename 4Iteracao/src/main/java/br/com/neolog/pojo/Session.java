@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Type;
@@ -20,7 +21,8 @@ public class Session
 {
 
     @Id
-    @GeneratedValue( strategy = GenerationType.AUTO )
+    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "session_sequence" )
+    @SequenceGenerator( name = "session_sequence", sequenceName = "session_sequence", initialValue = 1, allocationSize = 1 )
     private Integer id;
 
     private String token;

@@ -7,47 +7,61 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "stock")
-public class Stock {
+@Table( name = "stock" )
+public class Stock
+{
 
-	@OneToOne(fetch = FetchType.LAZY)
-	@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-	@JoinColumn(name = "product_id", referencedColumnName = "id")
-	Product product;
+    @OneToOne( fetch = FetchType.LAZY )
+    @JsonIgnoreProperties( {
+        "hibernateLazyInitializer",
+        "handler"
+    } )
+    @JoinColumn( name = "product", referencedColumnName = "id" )
+    Product product;
 
-	Integer quantity;
+    Integer quantity;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	Integer id;
+    @Id
+    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "stock_sequence" )
+    @SequenceGenerator( name = "stock_sequence", sequenceName = "stock_sequence", initialValue = 1, allocationSize = 1 )
+    Integer id;
 
-	public Stock() {
-	}
+    public Stock()
+    {
+    }
 
-	public Product getProduct() {
-		return product;
-	}
+    public Product getProduct()
+    {
+        return product;
+    }
 
-	public void setProduct(Product product) {
-		this.product = product;
-	}
+    public void setProduct(
+        final Product product )
+    {
+        this.product = product;
+    }
 
-	public Integer getQuantity() {
-		return quantity;
-	}
+    public Integer getQuantity()
+    {
+        return quantity;
+    }
 
-	public void setQuantity(Integer quantity) {
-		this.quantity = quantity;
-	}
+    public void setQuantity(
+        final Integer quantity )
+    {
+        this.quantity = quantity;
+    }
 
-	@Override
-	public String toString() {
-		return this.product.getName() + "Quantidade: ";
-	}
+    @Override
+    public String toString()
+    {
+        return this.product.getName() + "Quantidade: ";
+    }
 
 }

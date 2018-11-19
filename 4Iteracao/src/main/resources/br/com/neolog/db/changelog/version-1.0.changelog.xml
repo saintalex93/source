@@ -178,6 +178,7 @@
 			<column name="price" value="250000" />
 			<column name="description" value="PlasmaTron" />
 			<column name="weight" value="1500" />
+			<column name="volume" value="2000" />
 			<column name="category" valueComputed="(select id from category where code = '001')" />
 		</insert>
 
@@ -188,6 +189,7 @@
 			<column name="price" value="20000" />
 			<column name="description" value="S.O" />
 			<column name="weight" value="5000" />
+			<column name="volume" value="10000" />
 			<column name="category" valueComputed="(select id from category where code = '002')" />
 		</insert>
 
@@ -210,6 +212,7 @@
 			<column name="price" value="1000" />
 			<column name="description" value="Pão" />
 			<column name="weight" value="100" />
+			<column name="volume" value="200" />
 			<column name="category" value="2" />
 		</insert>
 
@@ -220,6 +223,7 @@
 			<column name="price" value="1000" />
 			<column name="description" value="Pão" />
 			<column name="weight" value="100" />
+			<column name="volume" value="200" />
 			<column name="category" value="2" />
 		</insert>
 
@@ -230,6 +234,7 @@
 			<column name="price" value="100" />
 			<column name="description" value="Pão" />
 			<column name="weight" value="100" />
+			<column name="volume" value="200" />
 			<column name="category" value="2" />
 		</insert>
 
