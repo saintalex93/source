@@ -151,7 +151,7 @@
 		</sql>
 	</changeSet>
 
-	<changeSet id="100331-inserts" author="alex.santos" context="test">
+	<changeSet id="100331-inserts" author="alex.santos" context="null">
 		<comment>Inserções primeira iteração</comment>
 		<insert tableName="category">
 			<column name="id" valueSequenceNext="category_sequence" />
@@ -518,7 +518,7 @@
 
 	</changeSet>
 
-	<changeSet id="100967-cart" author="alex.santos" context="test">
+	<changeSet id="100967-cart" author="alex.santos" context="null">
 		<comment>Inserção para testes integrados de Cart</comment>
 
 		<insert tableName="cart">
