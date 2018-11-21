@@ -1,14 +1,12 @@
 package br.com.neolog.repository;
 
-import java.io.Serializable;
-
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import br.com.neolog.pojo.Session;
 
 public interface SessionRepository
     extends
-        CrudRepository<Session,Serializable>
+        JpaRepository<Session,Integer>
 {
 
     public Session findByCustomerEmail(

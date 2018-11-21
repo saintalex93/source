@@ -1,6 +1,7 @@
 package br.com.neolog.filter;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -27,7 +28,7 @@ import br.com.neolog.services.TokenService;
  */
 @Component
 @WebFilter
-public class MainFilter
+public class ApplicationFilter
     extends
         GenericFilterBean
 {
@@ -37,6 +38,8 @@ public class MainFilter
 
     @Autowired
     private SessionRepository sessionRepository;
+
+    Logger logger = Logger.getLogger( ApplicationFilter.class.getName() );
 
     /**
      *
@@ -53,27 +56,23 @@ public class MainFilter
         final HttpServletRequest req = (HttpServletRequest) request;
         final HttpServletResponse res = (HttpServletResponse) response;
 
-        final String token = req.getParameter( "token" );
+        final String token = req.getHeader( "token" );
 
         if( token == null ) {
-            res.setStatus( HttpServletResponse.SC_FORBIDDEN );
-        } else {
-
-            if( tokenService.validateToken( token ) == true ) {
-                try {
-                    CurrentUserHolder.setUser( sessionRepository.findByToken(
-                        token ).getCustomer() );
-                    System.err.println( "USUÃ�RIO ATUAL: "
-                        + CurrentUserHolder.getUser().getName() );
-                    chain.doFilter( req, response );
-                } finally {
-                    CurrentUserHolder.remove();
-                }
-
-            } else {
-                res.setStatus( HttpServletResponse.SC_FORBIDDEN );
-            }
-
+            res.sendError( HttpServletResponse.SC_NOT_FOUND, "Token não inserido" );
+            return;
         }
+
+        if( tokenService.validateToken( token ) == true ) {
+            CurrentUserHolder.setUser( sessionRepository.findByToken(
+                token ).getCustomer() );
+            logger.info( "USUÁRIO ATUAL: "
+                + CurrentUserHolder.getUser().getName() );
+            chain.doFilter( req, response );
+
+        } else {
+            res.sendError( HttpServletResponse.SC_FORBIDDEN, "Token Inválido" );
+        }
+
     }
 }
