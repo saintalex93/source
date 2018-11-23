@@ -5,65 +5,61 @@ import java.util.TreeSet;
 
 import org.springframework.stereotype.Component;
 
-import br.com.neolog.pojo.HolderCodePrice;
-import br.com.neolog.pojo.Problem;
-import br.com.neolog.pojo.Solution;
+import br.com.neolog.models.HolderCodeValue;
+import br.com.neolog.models.Problem;
+import br.com.neolog.models.Solution;
 
 @Component
-public class AproximatedSubsetSumSolver implements SubsetSumSolver {
+public class AproximatedSubsetSumSolver
+    implements
+        SubsetSumSolver
+{
+    @Override
+    public Solution getClosestSubsetSum(
+        final Problem problem )
+    {
+        if( problem.getProducts().isEmpty() ) {
+            return Solution.emptySolution();
+        }
+        final TreeSet<HolderCodeValue> ordenedHolderCodePriceSet = new TreeSet<HolderCodeValue>(
+            new ValueComparator() );
 
-	@Override
-	public Solution getClosestSubsetSum(Problem problem) {
-		System.err.println("CAIU NO APROXIMATED");
-		TreeSet<HolderCodePrice> ordenedHolderCodePriceSet = new TreeSet<HolderCodePrice>(
-				new Ordenate());
+        ordenedHolderCodePriceSet.addAll( problem.getProducts() );
 
-		for (HolderCodePrice h : problem.getProducts()) {
-			ordenedHolderCodePriceSet.add(h);
-		}
+        final TreeSet<HolderCodeValue> separatedItems = new TreeSet<HolderCodeValue>(
+            new ValueComparator() );
 
-		double currentSum = 0;
+        double currentValue = 0;
+        for( final HolderCodeValue holderItem : ordenedHolderCodePriceSet ) {
 
-		TreeSet<HolderCodePrice> set = new TreeSet<HolderCodePrice>(
-				new Ordenate());
+            if( currentValue == problem.getTarget() ) {
+                break;
+            }
 
-		String code = ordenedHolderCodePriceSet.first().getCode();
-		int quantity = 0;
+            if( currentValue + holderItem.getValue() <= problem.getTarget() ) {
+                currentValue = currentValue + holderItem.getValue();
+                separatedItems.add( holderItem );
+            }
 
-		for (HolderCodePrice h : ordenedHolderCodePriceSet) {
+        }
+        return Solution.create( separatedItems );
+    }
 
-			if (currentSum + h.getPrice() <= problem.getTarget()) {
+    private class ValueComparator
+        implements
+            Comparator<HolderCodeValue>
+    {
+        @Override
+        public int compare(
+            final HolderCodeValue holder1,
+            final HolderCodeValue holder2 )
+        {
+            if( holder1.getValue() > holder2.getValue() ) {
+                return - 1;
+            }
+            return 1;
+        }
 
-				if (code.equals(h.getCode())) {
-					if (quantity < 1000) {
-						quantity++;
-						currentSum = currentSum + h.getPrice();
-						set.add(h);
-					}
-
-				} else {
-					code = h.getCode();
-					quantity = 1;
-					currentSum = currentSum + h.getPrice();
-					set.add(h);
-				}
-			}
-		}
-		Solution solution = new Solution();
-		solution.setProducts(set);
-
-		return solution;
-	}
-
-	private class Ordenate implements Comparator<HolderCodePrice> {
-		@Override
-		public int compare(HolderCodePrice o1, HolderCodePrice o2) {
-			if (o1.getPrice() > o2.getPrice()) {
-				return -1;
-			}
-			return 1;
-		}
-
-	}
+    }
 
 }

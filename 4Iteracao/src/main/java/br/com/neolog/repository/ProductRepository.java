@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import br.com.neolog.pojo.Product;
+import br.com.neolog.models.Product;
 
 public interface ProductRepository
     extends
@@ -15,7 +15,7 @@ public interface ProductRepository
     Product findByCode(
         String code );
 
-    Iterable<Product> findByCodeIn(
+    List<Product> findByCodeIn(
         Collection<String> codes );
 
     @Override

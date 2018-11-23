@@ -16,8 +16,8 @@ import br.com.neolog.exceptions.InvalidQuantityException;
 import br.com.neolog.exceptions.ProductNotFoundException;
 import br.com.neolog.exceptions.ProductNotInCartException;
 import br.com.neolog.exceptions.ProductQuantityInsufficientException;
-import br.com.neolog.pojo.CartItem;
-import br.com.neolog.pojo.CartItemHolder;
+import br.com.neolog.models.CartItem;
+import br.com.neolog.models.CartItemHolder;
 import br.com.neolog.services.CartService;
 
 @RequestMapping( "cart" )

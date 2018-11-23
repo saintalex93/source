@@ -15,7 +15,7 @@ import br.com.neolog.exceptions.CategoryNotFoundException;
 import br.com.neolog.exceptions.ProductAlreadyExistsException;
 import br.com.neolog.exceptions.ProductInStockException;
 import br.com.neolog.exceptions.ProductNotFoundException;
-import br.com.neolog.pojo.Product;
+import br.com.neolog.models.Product;
 import br.com.neolog.services.ProductService;
 
 @RestController

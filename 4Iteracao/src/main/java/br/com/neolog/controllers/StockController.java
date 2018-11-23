@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.neolog.exceptions.InvalidQuantityException;
 import br.com.neolog.exceptions.ProductNotFoundException;
 import br.com.neolog.exceptions.ProductQuantityInsufficientException;
-import br.com.neolog.pojo.CartItemHolder;
+import br.com.neolog.models.CartItemHolder;
 import br.com.neolog.services.StockService;
 
 @RestController

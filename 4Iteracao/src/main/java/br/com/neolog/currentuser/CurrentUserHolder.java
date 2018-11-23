@@ -1,6 +1,6 @@
 package br.com.neolog.currentuser;
 
-import br.com.neolog.pojo.Customer;
+import br.com.neolog.models.Customer;
 
 public class CurrentUserHolder {
 	private static ThreadLocal<Customer> threadLocalUser = new ThreadLocal<>();

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import br.com.neolog.pojo.Category;
+import br.com.neolog.models.Category;
 
 public interface CategoryRepository
     extends

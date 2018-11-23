@@ -2,7 +2,7 @@ package br.com.neolog.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import br.com.neolog.pojo.Customer;
+import br.com.neolog.models.Customer;
 
 public interface UserRepository
     extends

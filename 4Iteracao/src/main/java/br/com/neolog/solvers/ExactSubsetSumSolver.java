@@ -5,95 +5,103 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.jboss.logging.Logger;
 import org.springframework.stereotype.Component;
 
-import br.com.neolog.pojo.HolderCodePrice;
-import br.com.neolog.pojo.Problem;
-import br.com.neolog.pojo.Solution;
+import br.com.neolog.models.HolderCodeValue;
+import br.com.neolog.models.Problem;
+import br.com.neolog.models.Solution;
 
 /**
- * 
  * @author igor.kurman
- * 
  */
 @Component
-public class ExactSubsetSumSolver implements SubsetSumSolver {
+public class ExactSubsetSumSolver
+    implements
+        SubsetSumSolver
+{
 
-	@Override
-	public Solution getClosestSubsetSum(Problem problem) {
-		System.err.println("CAIU NO EXACT");
-		if (problem.getProducts().isEmpty()) {
+    Logger logger = Logger.getLogger( this.getClass().getName() );
 
-			return new Solution();
-		}
+    @Override
+    public Solution getClosestSubsetSum(
+        final Problem problem )
+    {
+        logger.info( "EXACT" );
+        if( problem.getProducts().isEmpty() ) {
+            return Solution.emptySolution();
+        }
 
-		Resolver resolver = new Resolver();
-		resolver.resolve(problem);
+        final Resolver resolver = new Resolver();
+        resolver.resolve( problem );
 
-		Solution solution = new Solution();
-		solution.setProducts(resolver.getBestCombination());
-		return solution;
-	}
+        return Solution.create( resolver.getBestCombination() );
+    }
 
-	private class Resolver {
+    private class Resolver
+    {
+        Set<HolderCodeValue> bestCombination;
+        long bestSum;
 
-		Set<HolderCodePrice> bestCombination;
-		double bestSum;
+        public Set<HolderCodeValue> getBestCombination()
+        {
+            return bestCombination;
+        }
 
-		public Set<HolderCodePrice> getBestCombination() {
-			return bestCombination;
-		}
+        private long sum(
+            final Set<HolderCodeValue> newSet )
+        {
+            long total = 0;
+            for( final HolderCodeValue h : newSet ) {
+                total = total + h.getValue();
+            }
 
-		private double sum(Set<HolderCodePrice> newSet) {
-			double total = 0;
-			for (HolderCodePrice h : newSet) {
-				total = total + h.getPrice();
-			}
+            return total;
+        }
 
-			return total;
-		}
+        public Set<Set<HolderCodeValue>> resolve(
+            final Problem problem )
+        {
 
-		public Set<Set<HolderCodePrice>> resolve(Problem problem) {
+            final Set<Set<HolderCodeValue>> returnSet = new HashSet<Set<HolderCodeValue>>();
 
-			Set<Set<HolderCodePrice>> returnSet = new HashSet<Set<HolderCodePrice>>();
+            if( problem.getProducts().isEmpty() ) {
+                returnSet.add( new HashSet<HolderCodeValue>() );
+                return returnSet;
+            }
 
-			if (problem.getProducts().isEmpty()) {
-				returnSet.add(new HashSet<HolderCodePrice>());
-				return returnSet;
-			}
+            final List<HolderCodeValue> list = new ArrayList<HolderCodeValue>(
+                problem.getProducts() );
 
-			List<HolderCodePrice> list = new ArrayList<HolderCodePrice>(
-					problem.getProducts());
+            final HolderCodeValue head = list.get( 0 );
 
-			HolderCodePrice head = list.get(0);
+            final Set<HolderCodeValue> rest = new HashSet<HolderCodeValue>(
+                list.subList( 1, list.size() ) );
 
-			Set<HolderCodePrice> rest = new HashSet<HolderCodePrice>(
-					list.subList(1, list.size()));
+            problem.setProducts( rest );
 
-			problem.setProducts(rest);
+            for( final Set<HolderCodeValue> aCombination : resolve( problem ) ) {
 
-			for (Set<HolderCodePrice> aCombination : resolve(problem)) {
+                final Set<HolderCodeValue> newSet = new HashSet<HolderCodeValue>();
+                newSet.add( head );
+                newSet.addAll( aCombination );
+                returnSet.add( newSet );
+                returnSet.add( aCombination );
 
-				Set<HolderCodePrice> newSet = new HashSet<HolderCodePrice>();
-				newSet.add(head);
-				newSet.addAll(aCombination);
-				returnSet.add(newSet);
-				returnSet.add(aCombination);
+                final long combinationSum = sum( newSet );
 
-				double combinationSum = sum(newSet);
+                if( combinationSum > bestSum
+                    && combinationSum <= problem.getTarget() ) {
+                    bestCombination = newSet;
+                    bestSum = combinationSum;
+                }
 
-				if (combinationSum > bestSum
-						&& combinationSum <= problem.getTarget()) {
-					bestCombination = newSet;
-					bestSum = combinationSum;
-				}
+            }
 
-			}
+            return returnSet;
 
-			return returnSet;
+        }
 
-		}
-
-	}
+    }
 
 }

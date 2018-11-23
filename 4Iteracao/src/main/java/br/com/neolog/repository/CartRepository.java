@@ -2,8 +2,8 @@ package br.com.neolog.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import br.com.neolog.pojo.Cart;
-import br.com.neolog.pojo.Customer;
+import br.com.neolog.models.Cart;
+import br.com.neolog.models.Customer;
 
 public interface CartRepository
     extends

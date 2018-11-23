@@ -1,0 +1,81 @@
+package br.com.neolog.models;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import javax.validation.constraints.Min;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity
+@Table( name = "cart" )
+public class Cart
+{
+    public enum Status
+    {
+        FINISHED,
+        ACTIVE,
+        CANCELED
+    }
+
+    @Id
+    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "cart_sequence" )
+    @SequenceGenerator( name = "cart_sequence", sequenceName = "cart_sequence", initialValue = 1, allocationSize = 1 )
+    private Integer id;
+
+    @Min( 0 )
+    private long totalValue;
+
+    private String status;
+
+    @OneToOne( fetch = FetchType.EAGER )
+    @JoinColumn( name = "customer", referencedColumnName = "id" )
+    private Customer customer;
+
+    public Integer getId()
+    {
+        return this.id;
+    }
+
+    public void setId(
+        final Integer id )
+    {
+        this.id = id;
+    }
+
+    @JsonIgnore
+    public Customer getCustomer()
+    {
+        return customer;
+    }
+
+    public void setCustomer(
+        final Customer user )
+    {
+        this.customer = user;
+    }
+
+    public String getStatus()
+    {
+        return this.status;
+    }
+
+    public void setStatus(
+        final Status status )
+    {
+        this.status = status.toString();
+    }
+
+    public void setTotalValue(
+        final Double total )
+    {
+        this.totalValue = (long) ( total / 100l );
+    }
+
+}

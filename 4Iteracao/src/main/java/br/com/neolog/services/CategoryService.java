@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import br.com.neolog.exceptions.CategoryAlreadyExistsException;
 import br.com.neolog.exceptions.CategoryNotFoundException;
-import br.com.neolog.pojo.Category;
+import br.com.neolog.models.Category;
 import br.com.neolog.repository.CategoryRepository;
 
 @Component

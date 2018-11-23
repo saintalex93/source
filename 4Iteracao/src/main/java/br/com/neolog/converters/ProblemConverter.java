@@ -1,67 +1,90 @@
 package br.com.neolog.converters;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import br.com.neolog.pojo.HolderCodePrice;
-import br.com.neolog.pojo.Problem;
-import br.com.neolog.pojo.Stock;
+import br.com.neolog.models.HolderCodeValue;
+import br.com.neolog.models.OptimizationHolder;
+import br.com.neolog.models.Problem;
+import br.com.neolog.models.ProblemType;
+import br.com.neolog.models.Stock;
 import br.com.neolog.repository.StockRepository;
 
 /**
- * Essa classe √© respons√°vel por receber um valor (target) e criar um
- * {@link Problem} a partir desse valor.
- * 
+ * Esta classe È respons·vel por receber um objeto que contÈm o tipo de extraÁ„o
+ * do problema (Por peso, valor ou volume) e devolver um {@link Problem} a
+ * partir desse valor.
+ *
  * @author igor.kurman
- * 
+ * @author alex.santos
  */
 @Component
-public class ProblemConverter {
+public class ProblemConverter
+{
 
-	@Autowired
-	private StockRepository stockRepository;
+    @Autowired
+    private StockRepository stockRepository;
 
-	/**
-	 * 
-	 * @param target
-	 *            valor base para a cria√ß√£o do {@link Problem}.
-	 * @return o Problem criado com base no target recebido como par√¢metro, o
-	 *         {@link Problem} conta com um Set interno de
-	 *         {@link HolderCodePrice} contendo somente produtos com valor
-	 *         abaixo do target informado.
-	 */
-	public Problem convert(double target) {
+    /**
+     * @param HolderCodeValue objeto contendo o valor e o tipo do problema
+     * @return o Problem criado com base no objeto recebido {@link Problem}
+     *         conta com um Set interno de {@link HolderCodeValue} contendo
+     *         somente produtos com valor abaixo do target informado.
+     */
+    public Problem convert(
+        final OptimizationHolder optmizationHolder )
+    {
 
-		Iterable<Stock> products = stockRepository
-				.findByProductPriceLessThanEqual(target);
+        final long target = optmizationHolder.getTarget();
+        final ProblemType type = optmizationHolder.getType();
 
-		Problem problem = new Problem();
+        final List<Stock> stock = extractProducts( target, type );
 
-		Set<HolderCodePrice> set = new HashSet<>();
+        final Set<HolderCodeValue> separatedHolderItems = new HashSet<>();
+        for( final Stock stockItem : stock ) {
+            final int quantity = getMaxPossibleQuantities( target, type, stockItem );
 
-		double currentValue = 0;
+            for( int i = 0; i < quantity; i++ ) {
+                final HolderCodeValue holderCodeValue = HolderCodeValue.create( stockItem.getProduct().getCode(), type.getValue( stockItem
+                    .getProduct() ) );
+                separatedHolderItems.add( holderCodeValue );
+            }
+        }
 
-		for (Stock p : products) {
-			int quantity = p.getQuantity();
-			while (p.getProduct().getPrice() + currentValue <= target
-					&& quantity > 0) {
-				currentValue = currentValue + p.getProduct().getPrice();
-				HolderCodePrice holderCodePrice = new HolderCodePrice();
-				holderCodePrice.setCode(p.getProduct().getCode());
-				holderCodePrice.setPrice(p.getProduct().getPrice());
-				set.add(holderCodePrice);
-				quantity--;
-			}
+        return Problem.create( separatedHolderItems, target );
+    }
 
-			currentValue = 0;
-		}
+    private int getMaxPossibleQuantities(
+        final double target,
+        final ProblemType type,
+        final Stock stock )
+    {
+        final int maxQuantity = Double.valueOf( target / type.getValue( stock.getProduct() ) ).intValue();
+        final int quantityInStock = stock.getQuantity();
+        return Integer.min( maxQuantity, quantityInStock );
+    }
 
-		problem.setProducts(set);
-		problem.setTarget(target);
+    private List<Stock> extractProducts(
+        final long target,
+        final ProblemType type )
+    {
 
-		return problem;
-	}
+        if( type == ProblemType.VALUE ) {
+            return stockRepository.findByProductPriceLessThanEqual( target );
+        }
+        if( type == ProblemType.WEIGHT ) {
+            return stockRepository.findByProductWeightLessThanEqual( target );
+        }
+        if( type == ProblemType.VOLUME ) {
+            return stockRepository.findByProductVolumeLessThanEqual( target );
+        }
+
+        throw new IllegalArgumentException( "Invalid Type" );
+
+    }
+
 }

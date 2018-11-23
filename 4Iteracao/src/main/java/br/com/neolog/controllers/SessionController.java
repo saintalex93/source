@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.neolog.exceptions.EmailAlreadyInUseException;
 import br.com.neolog.exceptions.UserNotFoundException;
-import br.com.neolog.pojo.Customer;
+import br.com.neolog.models.Customer;
 import br.com.neolog.services.AuthenticationService;
 
 @RestController

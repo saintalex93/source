@@ -6,9 +6,9 @@ import java.util.HashSet;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
-import br.com.neolog.pojo.HolderCodePrice;
-import br.com.neolog.pojo.Problem;
-import br.com.neolog.pojo.Solution;
+import br.com.neolog.models.HolderCodeValue;
+import br.com.neolog.models.Problem;
+import br.com.neolog.models.Solution;
 
 public class AproximatedSubsetSumSolverTest {
 
@@ -18,16 +18,16 @@ public class AproximatedSubsetSumSolverTest {
 	public void shouldEnterInIfConditionInInnerClassOrdenateCompareMethod() {
 
 		Problem problem = new Problem();
-		problem.setProducts(new HashSet<HolderCodePrice>());
+		problem.setProducts(new HashSet<HolderCodeValue>());
 		problem.setTarget(1);
 
-		HolderCodePrice holder1 = new HolderCodePrice();
+		HolderCodeValue holder1 = new HolderCodeValue();
 		holder1.setCode("PS4");
-		holder1.setPrice(1);
+		holder1.setValue(1);
 
-		HolderCodePrice holder2 = new HolderCodePrice();
+		HolderCodeValue holder2 = new HolderCodeValue();
 		holder2.setCode("XBOX");
-		holder2.setPrice(5);
+		holder2.setValue(5);
 
 		problem.getProducts().add(holder1);
 		problem.getProducts().add(holder2);
@@ -35,11 +35,11 @@ public class AproximatedSubsetSumSolverTest {
 
 		Solution solution = aproximatedSubsetSumSolver
 				.getClosestSubsetSum(problem);
-		ArrayList<HolderCodePrice> holderCodePrice = new ArrayList<HolderCodePrice>(
+		ArrayList<HolderCodeValue> holderCodePrice = new ArrayList<HolderCodeValue>(
 				solution.getProducts());
-		HolderCodePrice result = holderCodePrice.get(0);
-		System.err.println(result.getPrice());
-		Assertions.assertThat(result.getPrice()).isEqualTo(5);
+		HolderCodeValue result = holderCodePrice.get(0);
+		System.err.println(result.getValue());
+		Assertions.assertThat(result.getValue()).isEqualTo(5);
 
 	}
 
@@ -47,16 +47,16 @@ public class AproximatedSubsetSumSolverTest {
 	public void shouldEnterInElseConditionInInnerClassOrdenateCompareMethod() {
 
 		Problem problem = new Problem();
-		problem.setProducts(new HashSet<HolderCodePrice>());
+		problem.setProducts(new HashSet<HolderCodeValue>());
 		problem.setTarget(1);
 
-		HolderCodePrice holder1 = new HolderCodePrice();
+		HolderCodeValue holder1 = new HolderCodeValue();
 		holder1.setCode("PS4");
-		holder1.setPrice(5);
+		holder1.setValue(5);
 
-		HolderCodePrice holder2 = new HolderCodePrice();
+		HolderCodeValue holder2 = new HolderCodeValue();
 		holder2.setCode("XBOX");
-		holder2.setPrice(1);
+		holder2.setValue(1);
 
 		problem.getProducts().add(holder1);
 		problem.getProducts().add(holder2);
@@ -64,11 +64,11 @@ public class AproximatedSubsetSumSolverTest {
 
 		Solution solution = aproximatedSubsetSumSolver
 				.getClosestSubsetSum(problem);
-		ArrayList<HolderCodePrice> holderCodePrice = new ArrayList<HolderCodePrice>(
+		ArrayList<HolderCodeValue> holderCodePrice = new ArrayList<HolderCodeValue>(
 				solution.getProducts());
-		HolderCodePrice result = holderCodePrice.get(0);
-		System.err.println(result.getPrice());
-		Assertions.assertThat(result.getPrice()).isEqualTo(5);
+		HolderCodeValue result = holderCodePrice.get(0);
+		System.err.println(result.getValue());
+		Assertions.assertThat(result.getValue()).isEqualTo(5);
 
 	}
 
@@ -76,16 +76,16 @@ public class AproximatedSubsetSumSolverTest {
 	public void ExpectedSolutionHasANumberOfProductsLimitedByTheProblemsTarget() {
 
 		Problem problem = new Problem();
-		problem.setProducts(new HashSet<HolderCodePrice>());
+		problem.setProducts(new HashSet<HolderCodeValue>());
 
-		HolderCodePrice holder1 = new HolderCodePrice();
-		HolderCodePrice holder2 = new HolderCodePrice();
+		HolderCodeValue holder1 = new HolderCodeValue();
+		HolderCodeValue holder2 = new HolderCodeValue();
 
 		holder1.setCode("XBOX");
-		holder1.setPrice(10);
+		holder1.setValue(10);
 
 		holder2.setCode("PS4");
-		holder2.setPrice(20);
+		holder2.setValue(20);
 
 		problem.getProducts().add(holder1);
 		problem.getProducts().add(holder2);
@@ -101,12 +101,12 @@ public class AproximatedSubsetSumSolverTest {
 	public void ShoulLimitTheNumberOfRepeatedProductsToOneThousand() {
 
 		Problem problem = new Problem();
-		problem.setProducts(new HashSet<HolderCodePrice>());
+		problem.setProducts(new HashSet<HolderCodeValue>());
 
 		for (int i = 0; i < 1500; i++) {
-			HolderCodePrice holder = new HolderCodePrice();
+			HolderCodeValue holder = new HolderCodeValue();
 			holder.setCode("PS4");
-			holder.setPrice(1);
+			holder.setValue(1);
 			problem.getProducts().add(holder);
 		}
 

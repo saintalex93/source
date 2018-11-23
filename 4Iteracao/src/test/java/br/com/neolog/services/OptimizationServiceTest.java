@@ -1,51 +1,59 @@
 package br.com.neolog.services;
 
+import java.util.Collections;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import br.com.neolog.converters.ProblemConverter;
 import br.com.neolog.converters.SolutionConverter;
-import br.com.neolog.pojo.PresentationClass;
-import br.com.neolog.pojo.Problem;
-import br.com.neolog.pojo.Solution;
+import br.com.neolog.models.OptimizationHolder;
+import br.com.neolog.models.PresentationSolution;
+import br.com.neolog.models.Problem;
+import br.com.neolog.models.ProblemType;
+import br.com.neolog.models.Solution;
 import br.com.neolog.solvers.RouterSubsetSumSolver;
 
-@RunWith(MockitoJUnitRunner.class)
-public class OptimizationServiceTest {
-	@Mock
-	private ProblemConverter problemConverter;
+@RunWith( MockitoJUnitRunner.class )
+public class OptimizationServiceTest
+{
+    @Mock
+    private ProblemConverter problemConverter;
 
-	@Mock
-	private RouterSubsetSumSolver routerSubsetSumSolver;
+    @Mock
+    private RouterSubsetSumSolver routerSubsetSumSolver;
 
-	@Mock
-	private SolutionConverter solutionConverter;
+    @Mock
+    private SolutionConverter solutionConverter;
 
-	@InjectMocks
-	private OptimizationService optimizationService;
+    @InjectMocks
+    private OptimizationService optimizationService;
 
-	@Test
-	public void problemConverterShouldReturnAProblem() {
-		Problem problem = new Problem();
+    @Test
+    public void problemConverterShouldReturnAProblem()
+    {
+        final Problem problem = new Problem();
 
-		Mockito.when(problemConverter.convert(15)).thenReturn(problem);
+        final OptimizationHolder optmizationHolder = OptimizationHolder.newInstance( 15, ProblemType.VALUE );
 
-		Problem problemResult = problemConverter.convert(15);
+        Mockito.when( problemConverter.convert( optmizationHolder ) ).thenReturn( problem );
 
-		Solution solution = routerSubsetSumSolver
-				.getClosestSubsetSum(problemResult);
+        final Problem problemResult = problemConverter.convert( optmizationHolder );
 
-		PresentationClass map = new PresentationClass();
+        final Solution solution = routerSubsetSumSolver
+            .getClosestSubsetSum( problemResult );
 
-		Mockito.when(solutionConverter.convert(solution)).thenReturn(map);
+        final PresentationSolution map = PresentationSolution.of( Collections.emptyList(), 0 );
 
-		PresentationClass mapRes = optimizationService.optimizeShopList(15);
-		Assert.assertNotNull(mapRes);
+        Mockito.when( solutionConverter.convert( solution ) ).thenReturn( map );
 
-	}
+        final PresentationSolution mapRes = optimizationService.optimizeShopList( optmizationHolder );
+        Assert.assertNotNull( mapRes );
+
+    }
 }

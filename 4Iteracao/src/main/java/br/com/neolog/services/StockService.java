@@ -6,8 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import br.com.neolog.exceptions.InvalidQuantityException;
 import br.com.neolog.exceptions.ProductNotFoundException;
-import br.com.neolog.pojo.Product;
-import br.com.neolog.pojo.Stock;
+import br.com.neolog.models.Product;
+import br.com.neolog.models.Stock;
 import br.com.neolog.repository.CategoryRepository;
 import br.com.neolog.repository.ProductRepository;
 import br.com.neolog.repository.StockRepository;

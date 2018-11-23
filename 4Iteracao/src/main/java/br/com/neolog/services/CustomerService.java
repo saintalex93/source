@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 import br.com.neolog.exceptions.EmailAlreadyInUseException;
 import br.com.neolog.exceptions.UserNotFoundException;
-import br.com.neolog.pojo.Customer;
+import br.com.neolog.models.Customer;
 import br.com.neolog.repository.SessionRepository;
 import br.com.neolog.repository.UserRepository;
 

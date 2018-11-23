@@ -2,7 +2,7 @@ package br.com.neolog.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import br.com.neolog.pojo.Session;
+import br.com.neolog.models.Session;
 
 public interface SessionRepository
     extends

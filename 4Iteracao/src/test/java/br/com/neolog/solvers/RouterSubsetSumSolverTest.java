@@ -10,69 +10,72 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import br.com.neolog.pojo.HolderCodePrice;
-import br.com.neolog.pojo.Problem;
-import br.com.neolog.pojo.Solution;
+import br.com.neolog.models.HolderCodeValue;
+import br.com.neolog.models.Problem;
+import br.com.neolog.models.Solution;
 
-@RunWith(MockitoJUnitRunner.class)
-public class RouterSubsetSumSolverTest {
-	@Mock
-	private AproximatedSubsetSumSolver aproximatedSubsetSumSolver;
+@RunWith( MockitoJUnitRunner.class )
+public class RouterSubsetSumSolverTest
+{
+    @Mock
+    private AproximatedSubsetSumSolver aproximatedSubsetSumSolver;
 
-	@Mock
-	private ExactSubsetSumSolver exactSubsetSumSolver;
+    @Mock
+    private ExactSubsetSumSolver exactSubsetSumSolver;
 
-	@InjectMocks
-	private RouterSubsetSumSolver routerSubsetSumSolver;
+    @InjectMocks
+    private RouterSubsetSumSolver routerSubsetSumSolver;
 
-	@Test
-	public void mustReturnASolutionFromAproximatedSubSetSumSolver() {
-		Solution solution = new Solution();
+    @Test
+    public void mustReturnASolutionFromAproximatedSubSetSumSolver()
+    {
+        final Solution solution = Solution.emptySolution();
 
-		Problem problem = new Problem();
-		HashSet<HolderCodePrice> set = new HashSet<HolderCodePrice>();
+        final Problem problem = new Problem();
+        final HashSet<HolderCodeValue> set = new HashSet<HolderCodeValue>();
 
-		for (int i = 0; i < 18; i++) {
-			set.add(new HolderCodePrice());
-		}
+        for( int i = 0; i < 18; i++ ) {
+            set.add( new HolderCodeValue() );
+        }
 
-		set.size();
-		problem.setProducts(set);
+        set.size();
+        problem.setProducts( set );
 
-		Mockito.when(aproximatedSubsetSumSolver.getClosestSubsetSum(problem))
-				.thenReturn(solution);
+        Mockito.when( aproximatedSubsetSumSolver.getClosestSubsetSum( problem ) )
+            .thenReturn( solution );
 
-		Mockito.when(exactSubsetSumSolver.getClosestSubsetSum(problem))
-				.thenReturn(solution);
+        Mockito.when( exactSubsetSumSolver.getClosestSubsetSum( problem ) )
+            .thenReturn( solution );
 
-		Solution solutionResult = routerSubsetSumSolver
-				.getClosestSubsetSum(problem);
-		Assert.assertNotNull(solutionResult);
-	}
+        final Solution solutionResult = routerSubsetSumSolver
+            .getClosestSubsetSum( problem );
+        Assert.assertNotNull( solutionResult );
+    }
 
-	@Test
-	public void mustReturnASolutionFromExactSubSetSumSolver() {
-		Solution solution = new Solution();
+    @Test
+    public void mustReturnASolutionFromExactSubSetSumSolver()
+    {
+        final Solution solution = Solution.emptySolution();
 
-		Problem problem = new Problem();
-		HashSet<HolderCodePrice> set = new HashSet<HolderCodePrice>();
+        final Problem problem = new Problem();
+        final HashSet<HolderCodeValue> set = new HashSet<HolderCodeValue>();
 
-		for (int i = 0; i < 5; i++) {
-			set.add(new HolderCodePrice());
-		}
+        for( int i = 0; i < 5; i++ ) {
+            set.add( new HolderCodeValue() );
+        }
 
-		set.size();
-		problem.setProducts(set);
+        set.size();
+        problem.setProducts( set );
 
-		Mockito.when(aproximatedSubsetSumSolver.getClosestSubsetSum(problem))
-				.thenReturn(solution);
+        Mockito.when( aproximatedSubsetSumSolver.getClosestSubsetSum( problem ) )
+            .thenReturn( solution );
 
-		Mockito.when(exactSubsetSumSolver.getClosestSubsetSum(problem))
-				.thenReturn(solution);
+        Mockito.when( exactSubsetSumSolver.getClosestSubsetSum( problem ) )
+            .thenReturn( solution );
 
-		Solution solutionResult = routerSubsetSumSolver
-				.getClosestSubsetSum(problem);
-		Assert.assertNotNull(solutionResult);
-	}
+        final Solution solutionResult = routerSubsetSumSolver
+            .getClosestSubsetSum( problem );
+        Assert.assertNotNull( solutionResult );
+    }
 
 }

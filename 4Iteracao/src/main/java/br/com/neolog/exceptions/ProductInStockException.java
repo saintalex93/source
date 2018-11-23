@@ -1,7 +1,7 @@
 package br.com.neolog.exceptions;
 
-import br.com.neolog.pojo.Product;
-import br.com.neolog.pojo.Stock;
+import br.com.neolog.models.Product;
+import br.com.neolog.models.Stock;
 
 /**
  * Lançada para informar que o {@link Product} existe em estoque (

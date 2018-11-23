@@ -1,82 +1,87 @@
 package br.com.neolog.converters;
 
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import br.com.neolog.pojo.HolderCodePrice;
-import br.com.neolog.pojo.PresentationClass;
-import br.com.neolog.pojo.Product;
-import br.com.neolog.pojo.Solution;
+import com.google.common.base.Equivalence;
+import com.google.common.base.Equivalence.Wrapper;
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
+import com.google.common.collect.Multiset.Entry;
+
+import br.com.neolog.models.HolderCodeValue;
+import br.com.neolog.models.PresentationSolution;
+import br.com.neolog.models.Product;
+import br.com.neolog.models.SeparatedItem;
+import br.com.neolog.models.Solution;
 import br.com.neolog.repository.ProductRepository;
 
 /**
  * Classe responsável por criar um resultado que será devolvido com base no
  * Solution recebido como parâmetro.
- * 
+ *
  * @author igor.kurman
- * 
  */
 @Component
-public class SolutionConverter {
-	@Autowired
-	private ProductRepository productRepository;
+public class SolutionConverter
+{
+    @Autowired
+    private ProductRepository productRepository;
 
-	/**
-	 * 
-	 * @param solution
-	 *            contém o Set de HolderCodePrice usado para gerar o Map que
-	 *            será retornado para o usuário.
-	 * @return o Map com todos os produtos e quantidades fornecidos pela
-	 *         Solution.
-	 */
-	public PresentationClass convert(Solution solution) {
+    /**
+     * @param solution contém o Set de HolderCodePrice usado para gerar o Map
+     *        que será retornado para o usuário.
+     * @return o Map com todos os produtos e quantidades fornecidos pela
+     *         Solution.
+     */
+    public PresentationSolution convert(
+        final Solution solution )
+    {
 
-		HashMap<Product, Integer> result = new HashMap<Product, Integer>();
-		PresentationClass presentation = new PresentationClass();
+        if( solution.getProducts() == null ) {
+            return PresentationSolution.of( Collections.emptyList(), 0 );
+        }
 
-		if (solution.getProducts() == null) {
-			// return result;
-			return presentation;
-		}
+        final Multiset<Wrapper<HolderCodeValue>> productCodes = HashMultiset.create();
+        for( final HolderCodeValue holder : solution.getProducts() ) {
+            productCodes.add( holderCodeEquivalence.wrap( holder ) );
+        }
 
-		HashSet<String> codes = new HashSet<String>();
+        long total = 0;
+        final List<SeparatedItem> items = new ArrayList<>();
+        for( final Entry<Wrapper<HolderCodeValue>> entry : productCodes.entrySet() ) {
+            final Wrapper<HolderCodeValue> wrapper = entry.getElement();
+            final HolderCodeValue holder = wrapper.get();
+            final int quantity = entry.getCount();
+            final Product product = productRepository.findByCode( holder.getCode() );
+            total += holder.getValue() * quantity;
+            items.add( SeparatedItem.newInstance( product.getCode(), product.getName(), quantity, holder.getValue() ) );
+        }
 
-		for (HolderCodePrice holder : solution.getProducts()) {
-			codes.add(holder.getCode());
-		}
+        return PresentationSolution.of( items, total );
 
-		Iterable<Product> products = productRepository.findByCodeIn(codes);
+    }
 
-		HashMap<String, Product> codeProductMap = new HashMap<String, Product>();
+    private static final Equivalence<HolderCodeValue> holderCodeEquivalence = new Equivalence<HolderCodeValue>() {
 
-		for (Product p : products) {
-			codeProductMap.put(p.getCode(), p);
-		}
+        @Override
+        protected boolean doEquivalent(
+            final HolderCodeValue a,
+            final HolderCodeValue b )
+        {
+            return Objects.equals( a.getCode(), b.getCode() );
+        }
 
-		double totalValue = 0;
-
-		for (HolderCodePrice holder : solution.getProducts()) {
-			if (result.containsKey(codeProductMap.get(holder.getCode()))) {
-
-				result.put(codeProductMap.get(holder.getCode()),
-						result.get(codeProductMap.get(holder.getCode())) + 1);
-				totalValue = totalValue
-						+ codeProductMap.get(holder.getCode()).getPrice();
-
-			} else {
-				result.put(codeProductMap.get(holder.getCode()), 1);
-				totalValue = totalValue
-						+ codeProductMap.get(holder.getCode()).getPrice();
-			}
-		}
-
-		presentation.setProductQuantity(result);
-		presentation.setTotalValue(totalValue);
-		// return result;
-		return presentation;
-
-	}
+        @Override
+        protected int doHash(
+            final HolderCodeValue t )
+        {
+            return Objects.hash( t.getCode() );
+        }
+    };
 }

@@ -1,6 +1,8 @@
 package br.com.neolog.converters;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -8,67 +10,68 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import br.com.neolog.pojo.HolderCodePrice;
-import br.com.neolog.pojo.PresentationClass;
-import br.com.neolog.pojo.Product;
-import br.com.neolog.pojo.Solution;
+import br.com.neolog.models.HolderCodeValue;
+import br.com.neolog.models.PresentationSolution;
+import br.com.neolog.models.Product;
+import br.com.neolog.models.Solution;
 import br.com.neolog.repository.ProductRepository;
 
-@RunWith(MockitoJUnitRunner.class)
-public class SolutionConverterTest {
-	@Mock
-	private ProductRepository productRepository;
+@RunWith( MockitoJUnitRunner.class )
+public class SolutionConverterTest
+{
+    @Mock
+    private ProductRepository productRepository;
 
-	@InjectMocks
-	private SolutionConverter solutionConverter;
+    @InjectMocks
+    private SolutionConverter solutionConverter;
 
-	@Test
-	public void mustResturnAMap() {
-		Solution solution = new Solution();
+    @Test
+    public void mustResturnAMap()
+    {
 
-		HashSet<String> codes = new HashSet<String>();
-		codes.add("");
-		Mockito.when(productRepository.findByCodeIn(codes)).thenReturn(
-				new HashSet<Product>());
+        final HashSet<String> codes = new HashSet<String>();
+        codes.add( "" );
+        Mockito.when( productRepository.findByCodeIn( codes ) ).thenReturn(
+            new ArrayList<Product>() );
 
-		PresentationClass result = solutionConverter.convert(solution);
-		Assert.assertNotNull(result);
+        final PresentationSolution result = solutionConverter.convert( Solution.emptySolution() );
+        Assert.assertNotNull( result );
 
-	}
+    }
 
-	@Test
-	public void mustResturnAMap2() {
-		Solution solution = new Solution();
-		HashSet<HolderCodePrice> products = new HashSet<HolderCodePrice>();
+    @Test
+    public void mustResturnAMap2()
+    {
+        final HashSet<HolderCodeValue> products = new HashSet<HolderCodeValue>();
 
-		HolderCodePrice holder = new HolderCodePrice();
-		holder.setCode("");
-		holder.setPrice(100);
+        final HolderCodeValue holder = new HolderCodeValue();
+        holder.setCode( "" );
+        holder.setValue( 100 );
 
-		HolderCodePrice holder2 = new HolderCodePrice();
-		holder2.setCode("");
-		holder2.setPrice(100);
+        final HolderCodeValue holder2 = new HolderCodeValue();
+        holder2.setCode( "" );
+        holder2.setValue( 100 );
 
-		products.add(holder);
-		products.add(holder2);
-		solution.setProducts(products);
+        products.add( holder );
+        products.add( holder2 );
+        final Solution solution = Solution.create( products );
 
-		HashSet<String> codes = new HashSet<String>();
-		codes.add("");
+        final HashSet<String> codes = new HashSet<String>();
+        codes.add( "" );
 
-		HashSet<Product> hashSetProduct = new HashSet<Product>();
-		Product product = new Product();
-		product.setCode("");
-		hashSetProduct.add(product);
+        final List<Product> hashSetProduct = new ArrayList<Product>();
+        final Product product = new Product();
+        product.setCode( "" );
+        hashSetProduct.add( product );
 
-		Mockito.when(productRepository.findByCodeIn(codes)).thenReturn(
-				hashSetProduct);
+        Mockito.when( productRepository.findByCodeIn( codes ) ).thenReturn(
+            hashSetProduct );
 
-		PresentationClass result = solutionConverter.convert(solution);
+        final PresentationSolution result = solutionConverter.convert( solution );
 
-		Assert.assertNotNull(result);
+        Assert.assertNotNull( result );
 
-	}
+    }
 }

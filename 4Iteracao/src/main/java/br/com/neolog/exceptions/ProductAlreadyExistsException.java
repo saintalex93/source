@@ -1,6 +1,6 @@
 package br.com.neolog.exceptions;
 
-import br.com.neolog.pojo.Product;
+import br.com.neolog.models.Product;
 
 /**
  * Lançada quando o {@link Product} já existe na base de dados.

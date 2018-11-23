@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.neolog.exceptions.CategoryAlreadyExistsException;
 import br.com.neolog.exceptions.CategoryNotFoundException;
-import br.com.neolog.pojo.Category;
+import br.com.neolog.models.Category;
 import br.com.neolog.services.CategoryService;
 
 @RestController

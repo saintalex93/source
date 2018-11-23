@@ -7,7 +7,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.Test;
 
 import br.com.neolog.AbstractIntegrationTest;
-import br.com.neolog.pojo.Product;
+import br.com.neolog.models.Product;
 import io.restassured.http.ContentType;
 
 public class ProductIntegrationTest

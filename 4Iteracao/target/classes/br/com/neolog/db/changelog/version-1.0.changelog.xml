@@ -15,8 +15,8 @@
 			<column name="name" type="varchar(100)" />
 			<column name="price" type="bigint" />
 			<column name="description" type="varchar(100)" />
-			<column name="weight" type="double" />
-			<column name="volume" type="double" />
+			<column name="weight" type="bigint" />
+			<column name="volume" type="bigint" />
 			<column name="category" type="int" />
 		</createTable>
 

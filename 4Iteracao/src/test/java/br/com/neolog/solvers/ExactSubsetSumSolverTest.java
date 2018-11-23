@@ -5,9 +5,9 @@ import java.util.HashSet;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
-import br.com.neolog.pojo.HolderCodePrice;
-import br.com.neolog.pojo.Problem;
-import br.com.neolog.pojo.Solution;
+import br.com.neolog.models.HolderCodeValue;
+import br.com.neolog.models.Problem;
+import br.com.neolog.models.Solution;
 
 public class ExactSubsetSumSolverTest {
 
@@ -16,7 +16,7 @@ public class ExactSubsetSumSolverTest {
 	@Test
 	public void mustReturnAEmptySolutionIfProblemsInternalProductsIsEmpty() {
 		Problem problem = new Problem();
-		problem.setProducts(new HashSet<HolderCodePrice>());
+		problem.setProducts(new HashSet<HolderCodeValue>());
 
 		Solution solution = exactSubsetSumSolver.getClosestSubsetSum(problem);
 		Assertions.assertThat(solution.getProducts()).isNull();
@@ -26,15 +26,15 @@ public class ExactSubsetSumSolverTest {
 	@Test
 	public void MustReturnANewSolution() {
 		Problem problem = new Problem();
-		problem.setProducts(new HashSet<HolderCodePrice>());
+		problem.setProducts(new HashSet<HolderCodeValue>());
 
-		HolderCodePrice holder1 = new HolderCodePrice();
+		HolderCodeValue holder1 = new HolderCodeValue();
 		holder1.setCode("PS4");
-		holder1.setPrice(1);
+		holder1.setValue(1);
 
-		HolderCodePrice holder2 = new HolderCodePrice();
+		HolderCodeValue holder2 = new HolderCodeValue();
 		holder2.setCode("XBOX");
-		holder2.setPrice(5);
+		holder2.setValue(5);
 
 		problem.setTarget(10);
 

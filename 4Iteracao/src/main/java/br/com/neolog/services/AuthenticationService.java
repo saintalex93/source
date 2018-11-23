@@ -11,8 +11,8 @@ import com.google.common.hash.Hashing;
 
 import br.com.neolog.currentuser.CurrentUserHolder;
 import br.com.neolog.exceptions.UserNotFoundException;
-import br.com.neolog.pojo.Customer;
-import br.com.neolog.pojo.Session;
+import br.com.neolog.models.Customer;
+import br.com.neolog.models.Session;
 import br.com.neolog.repository.SessionRepository;
 import br.com.neolog.repository.UserRepository;
 
