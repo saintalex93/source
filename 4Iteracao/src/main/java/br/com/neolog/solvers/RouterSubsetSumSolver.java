@@ -12,7 +12,7 @@ public class RouterSubsetSumSolver
     implements
         SubsetSumSolver
 {
-    Logger logger = Logger.getLogger( this.getClass().getName() );
+    private final Logger logger = Logger.getLogger( this.getClass().getName() );
     @Autowired
     private ExactSubsetSumSolver exactSubsetSumSolver;
     @Autowired

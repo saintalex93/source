@@ -1,6 +1,7 @@
 package br.com.neolog.solvers;
 
 import java.util.Comparator;
+import java.util.Set;
 import java.util.TreeSet;
 
 import org.springframework.stereotype.Component;
@@ -21,12 +22,12 @@ public class AproximatedSubsetSumSolver
         if( problem.getProducts().isEmpty() ) {
             return Solution.emptySolution();
         }
-        final TreeSet<HolderCodeValue> ordenedHolderCodePriceSet = new TreeSet<HolderCodeValue>(
+        final Set<HolderCodeValue> ordenedHolderCodePriceSet = new TreeSet<HolderCodeValue>(
             new ValueComparator() );
 
         ordenedHolderCodePriceSet.addAll( problem.getProducts() );
 
-        final TreeSet<HolderCodeValue> separatedItems = new TreeSet<HolderCodeValue>(
+        final Set<HolderCodeValue> separatedItems = new TreeSet<HolderCodeValue>(
             new ValueComparator() );
 
         double currentValue = 0;

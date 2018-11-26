@@ -49,8 +49,8 @@ public class ProblemConverter
             final int quantity = getMaxPossibleQuantities( target, type, stockItem );
 
             for( int i = 0; i < quantity; i++ ) {
-                final HolderCodeValue holderCodeValue = HolderCodeValue.create( stockItem.getProduct().getCode(), type.getValue( stockItem
-                    .getProduct() ) );
+                final HolderCodeValue holderCodeValue = HolderCodeValue.create( stockItem.getProduct().getCode(), type.getValue(
+                    stockItem.getProduct() ) );
                 separatedHolderItems.add( holderCodeValue );
             }
         }

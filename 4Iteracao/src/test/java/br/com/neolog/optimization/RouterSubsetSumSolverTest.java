@@ -1,4 +1,6 @@
-package br.com.neolog.solvers;
+package br.com.neolog.optimization;
+
+import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
 
@@ -8,11 +10,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import br.com.neolog.models.HolderCodeValue;
 import br.com.neolog.models.Problem;
 import br.com.neolog.models.Solution;
+import br.com.neolog.solvers.AproximatedSubsetSumSolver;
+import br.com.neolog.solvers.ExactSubsetSumSolver;
+import br.com.neolog.solvers.RouterSubsetSumSolver;
 
 @RunWith( MockitoJUnitRunner.class )
 public class RouterSubsetSumSolverTest
@@ -34,17 +39,13 @@ public class RouterSubsetSumSolverTest
         final Problem problem = new Problem();
         final HashSet<HolderCodeValue> set = new HashSet<HolderCodeValue>();
 
-        for( int i = 0; i < 18; i++ ) {
+        for( int i = 0; i < 21; i++ ) {
             set.add( new HolderCodeValue() );
         }
 
-        set.size();
         problem.setProducts( set );
 
         Mockito.when( aproximatedSubsetSumSolver.getClosestSubsetSum( problem ) )
-            .thenReturn( solution );
-
-        Mockito.when( exactSubsetSumSolver.getClosestSubsetSum( problem ) )
             .thenReturn( solution );
 
         final Solution solutionResult = routerSubsetSumSolver
@@ -64,17 +65,11 @@ public class RouterSubsetSumSolverTest
             set.add( new HolderCodeValue() );
         }
 
-        set.size();
         problem.setProducts( set );
 
-        Mockito.when( aproximatedSubsetSumSolver.getClosestSubsetSum( problem ) )
-            .thenReturn( solution );
+        when( exactSubsetSumSolver.getClosestSubsetSum( problem ) ).thenReturn( solution );
 
-        Mockito.when( exactSubsetSumSolver.getClosestSubsetSum( problem ) )
-            .thenReturn( solution );
-
-        final Solution solutionResult = routerSubsetSumSolver
-            .getClosestSubsetSum( problem );
+        final Solution solutionResult = routerSubsetSumSolver.getClosestSubsetSum( problem );
         Assert.assertNotNull( solutionResult );
     }
 

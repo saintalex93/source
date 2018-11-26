@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.jboss.logging.Logger;
 import org.springframework.stereotype.Component;
 
 import br.com.neolog.models.HolderCodeValue;
@@ -21,13 +20,10 @@ public class ExactSubsetSumSolver
         SubsetSumSolver
 {
 
-    Logger logger = Logger.getLogger( this.getClass().getName() );
-
     @Override
     public Solution getClosestSubsetSum(
         final Problem problem )
     {
-        logger.info( "EXACT" );
         if( problem.getProducts().isEmpty() ) {
             return Solution.emptySolution();
         }
@@ -48,45 +44,33 @@ public class ExactSubsetSumSolver
             return bestCombination;
         }
 
-        private long sum(
-            final Set<HolderCodeValue> newSet )
-        {
-            long total = 0;
-            for( final HolderCodeValue h : newSet ) {
-                total = total + h.getValue();
-            }
-
-            return total;
-        }
-
         public Set<Set<HolderCodeValue>> resolve(
             final Problem problem )
         {
 
-            final Set<Set<HolderCodeValue>> returnSet = new HashSet<Set<HolderCodeValue>>();
+            final Set<Set<HolderCodeValue>> returnSet = new HashSet<>();
 
             if( problem.getProducts().isEmpty() ) {
                 returnSet.add( new HashSet<HolderCodeValue>() );
                 return returnSet;
             }
 
-            final List<HolderCodeValue> list = new ArrayList<HolderCodeValue>(
-                problem.getProducts() );
+            final List<HolderCodeValue> listItems = new ArrayList<>( problem.getProducts() );
 
-            final HolderCodeValue head = list.get( 0 );
+            final HolderCodeValue head = listItems.get( 0 );
 
-            final Set<HolderCodeValue> rest = new HashSet<HolderCodeValue>(
-                list.subList( 1, list.size() ) );
+            final Set<HolderCodeValue> restItems = new HashSet<>(
+                listItems.subList( 1, listItems.size() ) );
 
-            problem.setProducts( rest );
+            problem.setProducts( restItems );
 
-            for( final Set<HolderCodeValue> aCombination : resolve( problem ) ) {
+            for( final Set<HolderCodeValue> combination : resolve( problem ) ) {
 
-                final Set<HolderCodeValue> newSet = new HashSet<HolderCodeValue>();
+                final Set<HolderCodeValue> newSet = new HashSet<>();
                 newSet.add( head );
-                newSet.addAll( aCombination );
+                newSet.addAll( combination );
                 returnSet.add( newSet );
-                returnSet.add( aCombination );
+                returnSet.add( combination );
 
                 final long combinationSum = sum( newSet );
 
@@ -100,6 +84,17 @@ public class ExactSubsetSumSolver
 
             return returnSet;
 
+        }
+
+        private long sum(
+            final Set<HolderCodeValue> newSet )
+        {
+            long total = 0;
+            for( final HolderCodeValue h : newSet ) {
+                total = total + h.getValue();
+            }
+
+            return total;
         }
 
     }

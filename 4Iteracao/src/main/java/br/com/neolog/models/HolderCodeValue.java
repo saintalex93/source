@@ -1,5 +1,7 @@
 package br.com.neolog.models;
 
+import com.google.common.base.MoreObjects;
+
 public class HolderCodeValue
 {
     private String code;
@@ -11,18 +13,18 @@ public class HolderCodeValue
 
     public static HolderCodeValue create(
         final String code,
-        final long price )
+        final long value )
     {
-        return new HolderCodeValue( code, price );
+        return new HolderCodeValue( code, value );
     }
 
     private HolderCodeValue(
         final String code,
-        final long price )
+        final long value )
     {
         super();
         this.code = code;
-        this.value = price;
+        this.value = value;
     }
 
     public String getCode()
@@ -42,9 +44,17 @@ public class HolderCodeValue
     }
 
     public void setValue(
-        final long price )
+        final long value )
     {
-        this.value = price;
+        this.value = value;
+    }
+
+    @Override
+    public String toString()
+    {
+
+        return MoreObjects.toStringHelper( this.getClass() ).add( "CODE", code ).add( "VALUE", value ).toString();
+
     }
 
 }
