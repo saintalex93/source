@@ -1,0 +1,118 @@
+package br.com.neolog.services;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import br.com.neolog.exceptions.CategoryNotFoundException;
+import br.com.neolog.exceptions.ProductAlreadyExistsException;
+import br.com.neolog.exceptions.ProductInStockException;
+import br.com.neolog.exceptions.ProductNotFoundException;
+import br.com.neolog.models.Category;
+import br.com.neolog.models.Product;
+import br.com.neolog.models.Stock;
+import br.com.neolog.repository.CategoryRepository;
+import br.com.neolog.repository.ProductRepository;
+import br.com.neolog.repository.StockRepository;
+
+@Component
+public class ProductService
+{
+
+    @Autowired
+    public ProductRepository productRepository;
+    @Autowired
+    public StockRepository stockRepository;
+    @Autowired
+    public CategoryRepository categoryRepository;
+
+    @Transactional
+    public Product add(
+        final Product product )
+        throws ProductAlreadyExistsException,
+            CategoryNotFoundException
+    {
+        final Category category = categoryRepository.findByCode( product.getCategory()
+            .getCode() );
+
+        final Product productFromDatabase = productRepository.findByCode( product
+            .getCode() );
+        if( productFromDatabase != null ) {
+            throw new ProductAlreadyExistsException(
+                "Este produto Já encontra-se na base de dados, Impossível adicionar!!!" );
+        }
+        if( category == null ) {
+            throw new CategoryNotFoundException(
+                "Informe uma categoria Válida!!!" );
+        }
+        product.setCategory( category );
+        return productRepository.save( product );
+    }
+
+    public String remove(
+        final String code )
+        throws ProductNotFoundException,
+            ProductInStockException
+    {
+        final Product product = productRepository.findByCode( code );
+        final Stock stock = stockRepository.findByProductCode( code );
+        if( product == null ) {
+            throw new ProductNotFoundException( "Produto Não existe!!!" );
+        }
+        if( stock == null ) {
+            productRepository.delete( product );
+            return "Producto deletado com Succesfull!";
+        } else {
+            throw new ProductInStockException(
+                "Produto encontra-se no estoque, remova-o do estoque antes de excluí-lo!!!" );
+        }
+    }
+
+    @Transactional
+    public Product update(
+        final Product product )
+        throws ProductNotFoundException,
+            CategoryNotFoundException
+    {
+        final Product productFromDatabase = productRepository.findByCode( product
+            .getCode() );
+
+        if( productFromDatabase != null ) {
+            if( product.getCategory().getCode()
+                .equals( productFromDatabase.getCategory().getCode() ) ) {
+                product.setCategory( productFromDatabase.getCategory() );
+            } else {
+                final Category category = categoryRepository.findByCode( product
+                    .getCategory().getCode() );
+                if( category == null ) {
+                    throw new CategoryNotFoundException(
+                        "Categoria não encontrada no sistema, informe uma categoria vÃ¡lida!!!" );
+                }
+                product.setCategory( category );
+            }
+
+            product.setId( productFromDatabase.getId() );
+            return productRepository.save( product );
+        } else {
+            throw new ProductNotFoundException( "Produto Não existe!!!" );
+        }
+    }
+
+    public Product find(
+        final String code )
+        throws ProductNotFoundException
+    {
+        final Product product = productRepository.findByCode( code );
+        if( product == null ) {
+            throw new ProductNotFoundException( "" );
+        }
+        return product;
+    }
+
+    public List<Product> findAll()
+    {
+        return productRepository.findAll();
+    }
+}
